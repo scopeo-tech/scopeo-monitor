@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "main": "src/index.ts",
   "scripts": {
-  "dev": "nodemon src/index.ts",
-  "start": "node dist/index.js",
-  "build": "tsc"
-},
+    "dev": "nodemon src/index.ts",
+    "start": "node dist/index.js",
+    "build": "tsc"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -15,6 +15,7 @@
     "@types/express": "^5.0.0",
     "@types/node": "^22.13.4",
     "express": "^4.21.2",
+    "server": "file:",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3"
   }
