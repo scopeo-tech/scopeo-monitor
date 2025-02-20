@@ -1,4 +1,4 @@
-import mongoose,{InferSchemaType, Schema, model} from "mongoose";
+import mongoose,{InferSchemaType, Schema, Model} from "mongoose";
 
 const notificationSchema = new Schema({
     message:{
@@ -20,5 +20,5 @@ const notificationSchema = new Schema({
 
 type INotification = InferSchemaType<typeof notificationSchema>;
 
-const Notification = model<INotification>("Notification",notificationSchema);
+const Notification = Model<INotification>("Notification",notificationSchema);
 export default Notification;
