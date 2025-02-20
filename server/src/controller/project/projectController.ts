@@ -28,4 +28,4 @@ const createProject = async (req: Request, res: Response, next: NextFunction) =>
 };
 
 
-export { getApiKey, getPassKey };
+export { getApiKey, getPassKey , createProject };
