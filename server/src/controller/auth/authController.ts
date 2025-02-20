@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import User from "./";
+import User from "../../model/userModel";
 import { loginSchema, registerSchema } from "../../lib/bodyValidations/auth";
 import bcrypt from "bcryptjs"
 const userRegister = async (req: Request, res: Response) => {
