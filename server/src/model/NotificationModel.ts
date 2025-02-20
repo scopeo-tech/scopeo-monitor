@@ -25,4 +25,4 @@ const notificationSchema = new Schema({
 type INotification = InferSchemaType<typeof notificationSchema>;
 
 const Notification = model<INotification>("Notification",notificationSchema);
-export {Notification,INotification};
+export default Notification;
