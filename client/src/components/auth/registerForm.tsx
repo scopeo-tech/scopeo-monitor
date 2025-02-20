@@ -65,54 +65,37 @@ const RegisterForm = () => {
           >
             {({ isSubmitting }) => (
               <Form className="flex flex-col space-y-5">
-                {/* Username Field */}
                 <div className="relative">
                   <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-green-500" />
                   <Field name="username" type="text" placeholder="Username" className="w-full pl-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-green-500" />
                   <ErrorMessage name="username" component="div" className="text-red-500 text-sm mt-1" />
                 </div>
-
-                {/* Email Field */}
                 <div className="relative">
                   <FaEnvelope className="absolute left-3 top-1/2 transform -translate-y-1/2 text-green-500" />
                   <Field name="email" type="email" placeholder="Email" className="w-full pl-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-green-500" />
                   <ErrorMessage name="email" component="div" className="text-red-500 text-sm mt-1" />
                 </div>
-
-                {/* Password Field */}
                 <div className="relative">
                   <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-green-500" />
                   <Field name="password" type="password" placeholder="Password" className="w-full pl-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-green-500" />
                   <ErrorMessage name="password" component="div" className="text-red-500 text-sm mt-1" />
                 </div>
-
-                {/* Confirm Password Field */}
                 <div className="relative">
                   <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-green-500" />
                   <Field name="confirmPassword" type="password" placeholder="Confirm Password" className="w-full pl-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-green-500" />
                   <ErrorMessage name="confirmPassword" component="div" className="text-red-500 text-sm mt-1" />
                 </div>
-
-                {/* Terms Checkbox */}
                 <div className="flex items-center">
                   <Field name="terms" type="checkbox" className="mr-2 form-checkbox text-green-500 focus:ring-green-500" />
                   <label className="text-sm text-gray-500">I Agree To The Terms & Conditions</label>
                   <ErrorMessage name="terms" component="div" className="text-red-500 text-sm ml-2" />
                 </div>
-
-                {error && <div className="text-red-500 text-sm">{error}</div>}
-
-                {/* Register Button */}
                 <button type="submit" className="w-full bg-green-500 text-white py-3 rounded-full hover:bg-green-600 transition" disabled={isSubmitting || loading}>
                   {loading ? "Registering..." : "Register"}
                 </button>
-
-                {/* OR Divider */}
                 <div className="flex items-center justify-center my-2">
                   <span className="px-3 text-gray-400 text-sm">or</span>
                 </div>
-
-                {/* Google Login Button */}
                 <button type="button" className="w-full flex items-center justify-center border border-gray-300 py-3 rounded-full text-gray-700 hover:bg-gray-50 transition">
                   <FcGoogle className="mr-2 text-lg" /> Login with Google
                 </button>
