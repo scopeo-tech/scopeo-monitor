@@ -19,5 +19,13 @@ const getPassKey = async (req: Request, res: Response, next: NextFunction) => {
     return res.status(200).json({ status: "success", message: "Pass key generated", data:passKey });
 };
 
+const createProject = async (req: Request, res: Response, next: NextFunction) => {
+    const { name, apiKey, passKey ,notificationStatus} = req.body;
+    const user = req?.user;
+    const project = await Project.create({ name, 
+        user, notificationStatus, apiKey, passKey });
+    return res.status(201).json({ status: "success", message: "Project created" });
+};
+
 
 export { getApiKey, getPassKey };
