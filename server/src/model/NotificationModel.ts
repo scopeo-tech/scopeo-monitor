@@ -5,7 +5,6 @@ const notificationSchema = new Schema({
         type:String,
         required:true,
     },
-   
     project:{
         type:Schema.Types.ObjectId,
         ref:"Project",
