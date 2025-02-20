@@ -25,7 +25,7 @@ const LoginForm = () => {
             const response = await loginUser(data);
             const { user } = response as { user: User };  
             setUser(user)
-            router.push("/dashboard")
+            router.push("/home")
         } catch (error) {
             setError((error as Error).message);
         } finally {
