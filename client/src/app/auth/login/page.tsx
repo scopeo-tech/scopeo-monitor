@@ -1,4 +1,4 @@
-"use client";
+
 
 import LoginForm from "@/components/auth/loginForm";
 
