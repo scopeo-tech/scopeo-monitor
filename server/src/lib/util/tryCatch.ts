@@ -1,16 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 
-
-type Controller = (req: Request, res: Response, next: NextFunction) => Promise<void>;
-
 const tryCatch =
-  (controller: Controller) =>
-    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      try {
-        await controller(req, res, next);
-      } catch (error) {
-        return next(error)
-      }
-    };
+  <T>(fn: (req: Request, res: Response, next: NextFunction) => Promise<T>) =>
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await fn(req, res, next); 
+    } catch (error) {
+      next(error); 
+    }
+  };
 
 export default tryCatch;
