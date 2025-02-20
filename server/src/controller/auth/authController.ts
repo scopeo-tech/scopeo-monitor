@@ -4,6 +4,7 @@ import { loginSchema, registerSchema } from "../../lib/bodyValidations/auth";
 import bcrypt from "bcryptjs"
 import { CustomError } from "../../lib/util/CustomError";
 import { createAccessToken } from "../../lib/jwt";
+
 const userRegister = async (req: Request, res: Response , next: NextFunction)  => {
   const { username, email, password } = registerSchema.parse(req.body);
   const userNameExists = await User.findOne({ username });
@@ -32,7 +33,7 @@ const userLogin = async (req: Request, res: Response) => {
     throw new CustomError(400, "Invalid password");
   }
   const token = createAccessToken(user._id.toString(), process.env.JWT_TOKEN as string);
-  return res.status(200).json({status: "success", message: "User", user });
+  return res.status(200).json({status: "success", message: "User logged successfully", user,token });
 };
 
 export { userRegister, userLogin };
