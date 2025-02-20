@@ -11,9 +11,11 @@ const userRegister = async (req: Request, res: Response , next: NextFunction)  =
   const userNameExists = await User.findOne({ username });
   if (userNameExists){
     return next(new CustomError(400, "Username already exists"));
-  }  const emailExists = await User.findOne({ email });
-  if (emailExists)
-    next(new CustomError(400, "Email already exists"));
+  }  
+  const emailExists = await User.findOne({ email });
+  if (emailExists){
+    return next(new CustomError(400, "Email already exists"));
+  }
   const hashedPassword = await bcrypt.hash(password, 12);
   await User.create({
     username,
@@ -26,13 +28,9 @@ const userRegister = async (req: Request, res: Response , next: NextFunction)  =
 const userLogin = async (req: Request, res: Response, next : NextFunction) => {
   const { username, email, password } = loginSchema.parse(req.body);
   const user = await User.findOne({ $or: [{ username }, { email }] });
-  if (!user){
-    return next(new CustomError(400, "User not found"));
-  }
+  if (!user) return next(new CustomError(400, "User not found"));
   const validPassword = await bcrypt.compare(password, user.password);
-  if (!validPassword){
-    return next(new CustomError(400, "Invalid password"));
-  }
+  if (!validPassword) return next(new CustomError(400, "Invalid password"));
   const token = createAccessToken(user._id.toString(), process.env.JWT_TOKEN as string);
   const refreshToken = createRefreshToken(user._id.toString(), process.env.JWT_REFRESH_TOKEN as string);
 
@@ -62,11 +60,11 @@ const refreshingToken = async (req: Request, res: Response, next: NextFunction) 
     if (!refreshToken) {
       return next(new CustomError(401, "No refresh token provided"));
     }
-    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_TOKEN as string) as { id: string };
-    if (!decoded || !decoded.id) {
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_TOKEN as string) as { _id: string };
+    if (!decoded || !decoded._id) {
       return next(new CustomError(403, "Invalid refresh token"));
     }
-    const accessToken = createAccessToken(decoded.id, process.env.JWT_TOKEN as string);
+    const accessToken = createAccessToken(decoded._id, process.env.JWT_TOKEN as string);
     res.status(200).json({
       status: "success",
       message: "Token refreshed successfully",
