@@ -1,10 +1,9 @@
-import { Request, Response, NextFunction } from "express";
+import {  Response, NextFunction } from "express";
+import { AuthenticatedRequest } from "../lib/types/type";
+
 import jwt from "jsonwebtoken";
 import { CustomError } from "../lib/util/CustomError";
 
-interface AuthenticatedRequest extends Request {
-  user?: string;
-}
 
 const verifyToken = (
   req: AuthenticatedRequest,

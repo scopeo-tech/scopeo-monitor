@@ -18,7 +18,7 @@ const logSchema = new Schema({
 },  
 },{ timestamps: true });
 
-type LogType = InferSchemaType<typeof logSchema>;
+type ILog = InferSchemaType<typeof logSchema>;
 
-const Log:Model<LogType>=mongoose.model("Log", logSchema);
+const Log:Model<ILog>=mongoose.model("Log", logSchema);
 export default Log 
