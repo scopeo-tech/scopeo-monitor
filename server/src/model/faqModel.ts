@@ -11,7 +11,7 @@ const faqSchema = new Schema({
   },
 }, { timestamps: true });
 
-type FAQType = InferSchemaType<typeof faqSchema>;
+type IFAQ = InferSchemaType<typeof faqSchema>;
 
- const FAQ:Model<FAQType>=mongoose.model("FAQ", faqSchema);
+ const FAQ:Model<IFAQ>=mongoose.model("FAQ", faqSchema);
  export default FAQ

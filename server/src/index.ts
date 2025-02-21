@@ -4,6 +4,7 @@ import cors from "cors";
 import dbConnect from "./config/dbConnect";
 import globalErrorHandler from "./middleware/globalErrorHandler";
 import authRouter from "./routes/authRoutes";
+import projectRouter from "./routes/projectRoute";
 
 const app = e();
 dotenv.config();
@@ -13,6 +14,7 @@ app.use(e.json());
 
 
 app.use("/api/auth",authRouter) 
+app.use("/api/project",projectRouter)
 
 
 app.use(globalErrorHandler)
