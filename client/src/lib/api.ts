@@ -1,7 +1,8 @@
 import axios from "axios";
+import {userDetails } from "./interface";
 
 export const api = axios.create({
-    baseURL: "http://localhost:3000/api",
+    baseURL: "http://localhost:3001/api",
     withCredentials: true,
 });
 
@@ -23,3 +24,10 @@ export const logoutUser =async() => {
     return response.data
 }
 
+//userData
+
+export const getUserData =async(): Promise<userDetails> => {
+    const response = await api.get<userDetails>("/user/info")
+    console.log(response.data)
+    return response.data
+}
