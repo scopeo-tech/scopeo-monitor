@@ -1,20 +1,20 @@
 import axios from "axios";
 
 export const api = axios.create({
-    baseURL: "http://localhost:3000/api",
+    baseURL: "http://localhost:3001/api",
     withCredentials: true,
 });
 
 
 //authentication
 
-export const loginUser =async(data:{email: string, password: string}) => {
-    const response = await api.post("/auth/login", {data})
+export const loginUser = async(data:{email: string, password: string}) => {
+    const response = await api.post("/auth/login", data)
     return response.data
 }
 
-export const registerUser =async(data:{name: string, email: string, password: string}) => {
-    const response = await api.post("/auth/register", {data})
+export const registerUser =async(data:{username: string, email: string, password: string}) => {
+    const response = await api.post("/auth/register", data)
     return response.data
 }
 
@@ -23,3 +23,14 @@ export const logoutUser =async() => {
     return response.data
 }
 
+// Send OTP for registration
+export const sendOtpForRegister = async (email: string) => {
+    const response = await api.post("/auth/send-otp", { email });
+    return response.data;
+  };
+  
+  // Verify OTP
+  export const verifyOtp = async (data: { email: string; otp: string }) => {
+    const response = await api.post("/auth/verify-otp", data);
+    return response.data;
+  };

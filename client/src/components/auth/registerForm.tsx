@@ -15,9 +15,14 @@ const RegisterForm = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
+  const [isOtpVerified, setIsOtpVerified] = useState(false);
+  const [otp, setOtp] = useState("");
+
   const setUser = useAuthStore((state) => state.setUser);
 
-  const handleRegister = async (data: { name: string; email: string; password: string }) => {
+  const handleRegister = async (data: { username: string; email: string; password: string }) => {
     setLoading(true);
     setError(null);
     try {
@@ -62,7 +67,7 @@ const RegisterForm = () => {
                 .required("Required"),
               terms: Yup.boolean().oneOf([true], "You must accept the terms"),
             })}
-            onSubmit={(values) => handleRegister({ name: values.username, email: values.email, password: values.password })}
+            onSubmit={(values) => handleRegister({ username: values.username, email: values.email, password: values.password })}
           >
             {({ isSubmitting }) => (
               <Form className="flex flex-col space-y-5">
