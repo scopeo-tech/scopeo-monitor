@@ -17,7 +17,7 @@ const errorSchema = new Schema({
 type IError = InferSchemaType<typeof errorSchema>;
 
 
-const Error: Model<ErrorType>=mongoose.model("Error", errorSchema);
+const Error: Model<IError>=mongoose.model("Error", errorSchema);
 export default Error
 
 
