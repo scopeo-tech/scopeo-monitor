@@ -26,6 +26,12 @@ const createProject = async (req:AuthenticatedRequest, res: Response, next: Next
     if(!name || !apiKey || !passKey) {
         return next(new CustomError(400, "Missing required fields"));
     }
+    const nameExists = await Project.findOne({ name });
+    const apiKeyExists = await Project.findOne({ apiKey });
+    const passKeyExists = await Project.findOne({ passKey });
+    if (nameExists || apiKeyExists || passKeyExists) {
+        return next(new CustomError(400, "Project name already exists"));
+    }
     const user = req?.user;
     if(!user) {
         return next (new CustomError(400, "User not found"));
