@@ -2,7 +2,7 @@ import {  Response, NextFunction } from "express";
 import { AuthenticatedRequest } from "../lib/types/type";
 
 import jwt from "jsonwebtoken";
-import { CustomError } from "../lib/util/CustomError";
+import  CustomError  from "../lib/util/CustomError";
 
 
 const verifyToken = (
