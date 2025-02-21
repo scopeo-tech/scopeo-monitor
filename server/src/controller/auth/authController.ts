@@ -7,7 +7,7 @@ import {
   verifyOtpSchema,
 } from "../../lib/bodyValidations/auth";
 import bcrypt from "bcryptjs";
-import { CustomError } from "../../lib/util/CustomError";
+import CustomError from "../../lib/util/CustomError";
 import { createAccessToken, createRefreshToken } from "../../lib/jwt";
 import jwt from "jsonwebtoken";
 import { sendRegisterOtpMail } from "../../lib/sendMail";
@@ -103,6 +103,7 @@ const userRegister = async (
     email,
     password: hashedPassword,
   });
+  await Otp.findOneAndDelete({ email });
   return res
     .status(201)
     .json({ status: "success", message: "User created successfully" });
