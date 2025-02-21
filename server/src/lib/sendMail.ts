@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import { CustomError } from "./util/CustomError";
+import  CustomError from "./util/CustomError";
 const sendMail = async (email: string, title: string, body: string) => {
   try {
     const transporter = nodemailer.createTransport({
