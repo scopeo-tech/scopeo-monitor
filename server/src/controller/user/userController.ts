@@ -1,6 +1,7 @@
 import { Response,NextFunction } from "express";
 import { AuthenticatedRequest } from "../../lib/types/type";
 import User from "../../model/userModel";
+import Project from "../../model/projectModel";
 import CustomError from "../../lib/util/CustomError";
 
 const getUserById = async (req:AuthenticatedRequest, res:Response, next:NextFunction) =>{
@@ -17,4 +18,21 @@ const getUserById = async (req:AuthenticatedRequest, res:Response, next:NextFunc
     res.status(200).json({status:"success", message:"UserDetails", Data})
 }
 
-export {getUserById}
+const getProjectList = async (req:AuthenticatedRequest, res:Response, next:NextFunction) =>{
+    const userId=req.user
+
+    if(!userId){
+        return next (new CustomError(404,"user not found"))
+    }
+    const projects = await Project.find({ user: userId });
+  const totalProjects = projects.length
+
+  res.status(200).json({
+    status: "success",
+    message: "Project list retrieved",
+    totalProjects,  
+    data: projects || [], 
+  });
+};
+
+export {getUserById,getProjectList}
