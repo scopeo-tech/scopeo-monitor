@@ -25,7 +25,7 @@ const LoginForm = () => {
             const response = await loginUser(data);
             const { user } = response as { user: User };  
             setUser(user)
-            router.push("/dashboard")
+            router.push("/home")
         } catch (error) {
             setError((error as Error).message);
         } finally {
@@ -67,7 +67,6 @@ return (
           >
             {({ isSubmitting }) => (
               <Form className="flex flex-col space-y-6">
-                {/* Email Field */}
                 <div className="relative">
                   <FaUser className="absolute left-0 top-1/2 transform -translate-y-1/2 text-green-500" />
                   <Field
@@ -78,8 +77,6 @@ return (
                   />
                   <ErrorMessage name="email" component="div" className="text-red-500 text-sm" />
                 </div>
-  
-                {/* Password Field */}
                 <div className="relative">
                   <FaLock className="absolute left-0 top-1/2 transform -translate-y-1/2 text-green-500" />
                   <Field
@@ -90,13 +87,9 @@ return (
                   />
                   <ErrorMessage name="password" component="div" className="text-red-500 text-sm" />
                 </div>
-  
-                {/* Forgot Password */}
                 <div className="text-right text-sm text-gray-400 cursor-pointer hover:text-green-500 mt-2">
                   Forgot Password?
                 </div>
-  
-                {/* Login Button */}
                 <button
                   type="submit"
                   className="w-full bg-green-500 text-white py-3 rounded-full hover:bg-green-600 transition mt-4"
@@ -107,13 +100,9 @@ return (
               </Form>
             )}
           </Formik>
-  
-          {/* OR Divider */}
           <div className="flex items-center justify-center my-6">
             <span className="px-3 text-gray-400 text-sm">or</span>
           </div>
-  
-          {/* Google Login Button */}
           <button className="w-full flex items-center justify-center border border-gray-300 py-3 rounded-full text-gray-700 hover:bg-gray-50 transition">
             <FcGoogle className="mr-2 text-lg" /> Login with Google
           </button>

@@ -85,7 +85,8 @@ const userRegister = async (
   const userNameExists = await User.findOne({ username });
   if (userNameExists) {
     return next(new CustomError(400, "Username already exists"));
-  }
+  }  
+  
   const emailExists = await User.findOne({ email });
   if (emailExists) {
     return next(new CustomError(400, "Email already exists"));
@@ -109,21 +110,15 @@ const userRegister = async (
 
 const userLogin = async (req: Request, res: Response, next: NextFunction) => {
   const { username, email, password } = loginSchema.parse(req.body);
-
+  
   const user = await User.findOne({ $or: [{ username }, { email }] });
   if (!user) return next(new CustomError(400, "User not found"));
-
+  
   const validPassword = await bcrypt.compare(password, user.password);
   if (!validPassword) return next(new CustomError(400, "Invalid password"));
 
-  const token = createAccessToken(
-    user._id.toString(),
-    process.env.JWT_TOKEN as string
-  );
-  const refreshToken = createRefreshToken(
-    user._id.toString(),
-    process.env.JWT_REFRESH_TOKEN as string
-  );
+  const token = createAccessToken(user._id.toString(), process.env.JWT_TOKEN as string);
+  const refreshToken = createRefreshToken(user._id.toString(), process.env.JWT_REFRESH_TOKEN as string);
 
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
