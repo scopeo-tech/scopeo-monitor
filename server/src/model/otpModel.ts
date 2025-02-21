@@ -7,8 +7,8 @@ const otpSchema = new Schema({
   expiresAt: { type: Date, required: true },
 });
 
-type OtpType = InferSchemaType<typeof otpSchema>;
+type IOtp = InferSchemaType<typeof otpSchema>;
 
- const Otp:Model<OtpType>=mongoose.model("Otp", otpSchema);
+ const Otp:Model<IOtp>=mongoose.model("Otp", otpSchema);
  
  export default Otp;
