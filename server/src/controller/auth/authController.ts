@@ -91,8 +91,8 @@ const userRegister = async (
   if (emailExists) {
     return next(new CustomError(400, "Email already exists"));
   }
+  
   const otpVerified = await Otp.findOne({ email, verified: true });
-
   if (!otpVerified) {
     return next (new CustomError(400,"Email not verified"));
   }
@@ -156,17 +156,13 @@ const refreshingToken = async (
     if (!refreshToken) {
       return next(new CustomError(401, "No refresh token provided"));
     }
-    const decoded = jwt.verify(
-      refreshToken,
-      process.env.JWT_REFRESH_TOKEN as string
-    ) as { _id: string };
+
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_TOKEN as string) as { _id: string };
     if (!decoded || !decoded._id) {
       return next(new CustomError(403, "Invalid refresh token"));
     }
-    const accessToken = createAccessToken(
-      decoded._id,
-      process.env.JWT_TOKEN as string
-    );
+    const accessToken = createAccessToken(decoded._id, process.env.JWT_TOKEN as string);
+    
     res.status(200).json({
       status: "success",
       message: "Token refreshed successfully",
