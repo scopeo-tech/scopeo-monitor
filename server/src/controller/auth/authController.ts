@@ -103,6 +103,7 @@ const userRegister = async (
     email,
     password: hashedPassword,
   });
+  await Otp.findOneAndDelete({ email });
   return res
     .status(201)
     .json({ status: "success", message: "User created successfully" });
