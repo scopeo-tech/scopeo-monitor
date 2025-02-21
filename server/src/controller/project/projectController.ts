@@ -1,6 +1,7 @@
 import { Response,NextFunction } from "express";
 import { AuthenticatedRequest } from "../../lib/types/type";
 import Project from "../../model/projectModel";
+import CustomError from "../../lib/util/CustomError";
 import crypto from "crypto";
 
 const generateApiKey = () => {
@@ -23,11 +24,11 @@ const getPassKey = async (req:AuthenticatedRequest, res: Response, next: NextFun
 const createProject = async (req:AuthenticatedRequest, res: Response, next: NextFunction) => {
     const { name, apiKey, passKey ,notificationStatus} = req.body;
     if(!name || !apiKey || !passKey) {
-        return res.status(400).json({ status: "error", message: "All fields are required" });
+        return next(new CustomError(400, "Missing required fields"));
     }
     const user = req?.user;
     if(!user) {
-        return res.status(400).json({ status: "error", message: "User not found" });
+        return next (new CustomError(400, "User not found"));
     }
     await Project.create({ name, 
         user, notificationStatus, apiKey, passKey });
