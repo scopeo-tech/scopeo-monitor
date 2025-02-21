@@ -20,7 +20,7 @@ const healthSchema = new Schema({
 },  
 },{ timestamps: true });
 
-type HealthType = InferSchemaType<typeof healthSchema>;
+type IHealth = InferSchemaType<typeof healthSchema>;
 
- const Health:Model<HealthType>=mongoose.model("Health", healthSchema);
+ const Health:Model<IHealth>=mongoose.model("Health", healthSchema);
  export default Health
