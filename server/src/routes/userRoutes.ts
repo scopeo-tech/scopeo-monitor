@@ -6,6 +6,6 @@ import verifyToken from '../middleware/verifyToken';
 const userRoutes = express.Router();
 
 userRoutes
-.get('/',verifyToken,tryCatch(getUserById))
+.get('/info',verifyToken,tryCatch(getUserById))
 
 export default userRoutes;
