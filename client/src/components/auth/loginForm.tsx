@@ -11,6 +11,7 @@ import { FaUser, FaLock } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 
 
+
 const LoginForm = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -26,8 +27,10 @@ const LoginForm = () => {
             const { user } = response as { user: User };  
             setUser(user)
             router.push("/home")
-        } catch (error) {
-            setError((error as Error).message);
+        } catch (err) {
+            setError((err as Error).message);
+            console.log("error",error);
+            
         } finally {
             setLoading(false);
         }
