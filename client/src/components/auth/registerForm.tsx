@@ -25,8 +25,9 @@ const RegisterForm = () => {
       const { user } = response as { user: User };
       setUser(user);
       router.push("/home");
-    } catch (error) {
-      setError((error as Error).message);
+    } catch (err) {
+      setError((err as Error).message);
+      console.log("error", error);
     } finally {
       setLoading(false);
     }
