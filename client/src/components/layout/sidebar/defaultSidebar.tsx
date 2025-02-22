@@ -2,16 +2,16 @@
 
 
 import { useQuery } from "@tanstack/react-query";
-import { getUserData, logoutUser } from "@/lib/api";
+import { getUserInfo, logoutUser } from "@/lib/api";
 import { FaCog, FaQuestionCircle, FaSignOutAlt } from "react-icons/fa";
-import { userDetails } from "@/lib/interface";
+// import { userDetails } from "@/lib/interface";
 
 
 const Sidebar = () => {
-    const {data:user,isLoading,isError} = useQuery<userDetails,Error>({
-        queryKey: ["user"],
-        queryFn: () => getUserData() as Promise<userDetails>
-    })
+    const { data: user, isLoading, isError } = useQuery({
+      queryKey: ["userInfo"],
+      queryFn: getUserInfo,
+    });
 
     const handleLogout =async () => {
         await logoutUser()
@@ -34,7 +34,7 @@ const Sidebar = () => {
         <div className="mt-6 p-3 bg-white text-black rounded-lg shadow-md">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-pink-500 text-white flex items-center justify-center rounded-full text-lg font-bold">
-              {user?user.username[0].toUpperCase():"user Name"}
+              {user?.username[0].toUpperCase()}
             </div>
             <div>
               <h2 className="text-lg font-semibold">{user?user.username:"user Name"}</h2>

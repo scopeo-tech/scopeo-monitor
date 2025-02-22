@@ -15,18 +15,16 @@ const OtpModal: React.FC<OtpModalProps> = ({ email, otp, setOtp, handleVerifyOtp
 
   // Handle OTP input change
   const handleChange = (index: number, value: string) => {
-    if (!/^\d?$/.test(value)) return; // Allow only digits
+    if (!/^\d?$/.test(value)) return; 
     const otpArray = otp.split("");
     otpArray[index] = value;
     setOtp(otpArray.join(""));
-
-    // Move to next input box
     if (value && index < 5) {
       inputRefs.current[index + 1]?.focus();
     }
   };
 
-  // Handle backspace to move focus back
+  
   const handleKeyDown = (index: number, event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Backspace" && !otp[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();

@@ -1,6 +1,8 @@
 
+import axiosInstance from "./util/axiosInstance"; 
 import axios from "axios";
-import {userDetails } from "./interface";
+import { userDetails } from "./interface";
+
 
 export const api = axios.create({
     baseURL: "http://localhost:3001/api",
@@ -46,4 +48,11 @@ export const googleLogin = async (idToken: string) => {
     const response = await api.post("/auth/google-login", { idToken });
     return response.data;
   };
-  
+
+
+//get user info
+export const getUserInfo = async (): Promise<userDetails> => {
+    const response = await axiosInstance.get("/user/info");
+    console.log(response.data);
+    return response.data.Data; 
+};

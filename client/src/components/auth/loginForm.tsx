@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { User } from "@/lib/interface";
-import { useAuthStore } from "@/lib/authStore";
+import { useAuthStore } from "@/lib/stores/authStore";
 import { useRouter } from "next/navigation";
 import { googleLogin, loginUser } from "@/lib/api";
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -57,7 +57,7 @@ const LoginForm = () => {
         setUser(user)
         console.log(user)
         console.log("login Succefully")
-        // router.push("/home")
+        router.push("/")
         
     } catch (err) {
         setError((err as Error).message);
