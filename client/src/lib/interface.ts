@@ -3,5 +3,6 @@ export interface User {
     username: string;
     email: string;
     joinedDate: string;
+    googleId?: string;
   }
   

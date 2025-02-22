@@ -179,7 +179,7 @@ const googleLogin = async (req: Request, res: Response) => {
         username: existingUser.username,
       },
       process.env.JWT_TOKEN!,
-      { expiresIn: "7d" }
+      { expiresIn: "1h" }
     );
 
     const { password, createdAt, ...safeUser } = existingUser.toObject();
