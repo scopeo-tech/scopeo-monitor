@@ -42,23 +42,34 @@ const LoginForm = () => {
     }
   };
 
-  const handleLogin = async (data: { email: string; password: string }) => {
+  const handleLogin = async (data: {  emailOrUsername: string; password: string }) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await loginUser(data);
-      const { user } = response as { user: User };
-      setUser(user);
-      console.log(user);
-      console.log("login Succefully");
-      // router.push("/home")
+      const isEmail = data.emailOrUsername.includes("@");
+
+      const requestData = isEmail
+          ? { email: data.emailOrUsername, password: data.password }
+          : { username: data.emailOrUsername, password: data.password };
+        const response = await loginUser(requestData);
+        const { user } = response as { user: User };
+        const { token } = response as { token: string };
+        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("token", token);
+        setUser(user)
+        console.log(user)
+        console.log("login Succefully")
+        // router.push("/home")
+        
     } catch (err) {
-      setError((err as Error).message);
-      console.log("error", error);
+        setError((err as Error).message);
+        console.log("error",error);
+        
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
+
+}
 
   return (
     <div className="flex h-screen items-center justify-center bg-white">
@@ -74,7 +85,7 @@ const LoginForm = () => {
           <p className="mt-8 mb-4">Don&apos;t have an account?</p>
           <button
             className="px-8 py-2 border border-white rounded-full text-white hover:bg-white hover:text-green-500 transition w-64"
-            onClick={() => router.push("auth/register")}
+            onClick={() => router.push("/auth/register")}
           >
             Register now
           </button>

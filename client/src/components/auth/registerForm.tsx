@@ -7,16 +7,14 @@ import { registerUser } from "@/lib/api";
 import { sendOtpForRegister } from "@/lib/api";
 import { verifyOtp } from "@/lib/api";
 import OtpModal from "../modal/otpModal";
-// import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/lib/authStore";
-import { User } from "@/lib/interface";
+import { useRouter } from "next/navigation";
 import * as Yup from "yup";
 import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import Image from "next/image";
 
 const RegisterForm = () => {
-  // const router = useRouter();
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
@@ -24,7 +22,7 @@ const RegisterForm = () => {
   const [isOtpVerified, setIsOtpVerified] = useState(false);
   const [otp, setOtp] = useState("");
 
-  const setUser = useAuthStore((state) => state.setUser);
+  
 
 
   const handleGetOtp = async (email: string) => {
@@ -66,13 +64,8 @@ const RegisterForm = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await registerUser(data);
-      console.log(response);
-      const { user } = response as { user: User };
-      setUser(user);
-      console.log(user);
-      console.log("register Succefully");
-      // router.push("/home");
+      await registerUser(data);
+      router.push("/auth/login");
     } catch (err) {
       setError((err as Error).message);
       console.log("error", error);
