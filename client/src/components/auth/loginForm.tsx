@@ -1,16 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { User } from "@/lib/interface";
 import { useAuthStore } from "@/lib/authStore";
 import { useRouter } from "next/navigation";
-import { loginUser } from "@/lib/api";
+import { googleLogin, loginUser } from "@/lib/api";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { FaUser, FaLock } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-
-
+import { signIn, useSession } from "next-auth/react";
 
 const LoginForm = () => {
     const [loading, setLoading] = useState(false);
@@ -18,6 +17,28 @@ const LoginForm = () => {
     const setUser = useAuthStore((state) => state.setUser);
     const router = useRouter()
 
+    const { data: session } = useSession();
+
+    useEffect(() => {
+      if (session?.idToken) {
+        handleGoogleLogin(session.idToken);
+      }
+    }, [session]);
+  
+    const handleGoogleLogin = async (idToken: string) => {
+      setLoading(true);
+      try {
+        const response = await googleLogin(idToken);
+        setUser(response.user);
+        console.log("Google login successful:", response.user);
+        router.push("/home");
+      } catch (error) {
+        console.error("Google login failed:", error);
+        setError("Google login failed. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
     const handleLogin = async (data: { email: string; password: string }) => {
         setLoading(true);
@@ -112,7 +133,7 @@ return (
           <div className="flex items-center justify-center my-6">
             <span className="px-3 text-gray-400 text-sm">or</span>
           </div>
-          <button className="w-full flex items-center justify-center border border-gray-300 py-3 rounded-full text-gray-700 hover:bg-gray-50 transition">
+          <button onClick={() => signIn("google")} className="w-full flex items-center justify-center border border-gray-300 py-3 rounded-full text-gray-700 hover:bg-gray-50 transition">
             <FcGoogle className="mr-2 text-lg" /> Login with Google
           </button>
         </div>
