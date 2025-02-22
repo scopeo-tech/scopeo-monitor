@@ -38,3 +38,10 @@ export const sendOtpForRegister = async (email: string) => {
     const response = await api.post("/auth/verify-otp", data);
     return response.data;
   };
+
+ // Google Login
+export const googleLogin = async (idToken: string) => {
+    const response = await api.post("/auth/google-login", { idToken });
+    return response.data;
+  };
+  
