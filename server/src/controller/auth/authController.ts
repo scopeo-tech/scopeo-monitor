@@ -13,6 +13,7 @@ import jwt from "jsonwebtoken";
 import { sendRegisterOtpMail } from "../../lib/sendMail";
 import otpGenerator from "otp-generator";
 import Otp from "../../model/otpModel";
+import { OAuth2Client } from "google-auth-library";
 
 export const sendOtpForRegister = async (
   req: Request,
@@ -141,6 +142,40 @@ const userLogin = async (req: Request, res: Response, next: NextFunction) => {
       token,
     });
 };
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+const googleLogin = async (req: Request, res: Response) => {
+  console.log("herllo")
+  const { idToken } = req.body;
+
+  if (!idToken) {
+    return res.status(400).json({ error: "ID token is required" });
+  }
+
+    const ticket = await client.verifyIdToken({
+      idToken,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    if (!payload) {
+      return res.status(401).json({ error: "Invalid token" });
+    }
+
+    const { email, name, sub, picture } = payload;
+
+    const appToken = jwt.sign(
+      { id: sub, email, name, picture },
+      process.env.JWT_TOKEN as string,
+      { expiresIn: "1h" }
+    );
+
+    res.status(200).json({
+      message: "Google login successful",
+      token: appToken,
+      user: { id: sub, email, name, picture },
+    });
+  }
 
 const userLogout = async (req: Request, res: Response) => {
   res.clearCookie("refreshToken");
@@ -174,4 +209,4 @@ const refreshingToken = async (
   }
 };
 
-export { userRegister, userLogin, userLogout, refreshingToken };
+export { userRegister, userLogin, userLogout, refreshingToken , googleLogin };
