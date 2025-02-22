@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { registerUser } from "@/lib/api";
 import { sendOtpForRegister } from "@/lib/api";
 import { verifyOtp } from "@/lib/api";
 import OtpModal from "../modal/otpModal";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/lib/authStore";
 import { User } from "@/lib/interface";
 import * as Yup from "yup";
@@ -15,7 +16,7 @@ import { FcGoogle } from "react-icons/fc";
 import Image from "next/image";
 
 const RegisterForm = () => {
-  const router = useRouter();
+  // const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
@@ -42,7 +43,9 @@ const RegisterForm = () => {
     }
   };
 
-
+  useEffect(() => {
+    console.log("OTP Verified state changed:", isOtpVerified);
+  }, [isOtpVerified]);
   const handleVerifyOtp = async () => {
     setLoading(true);
     setError(null);
@@ -50,6 +53,8 @@ const RegisterForm = () => {
       await verifyOtp({ email: userEmail, otp });
       setIsOtpVerified(true);
       setIsOtpModalOpen(false);
+      console.log("otp verified");
+      
     } catch (err) {
       setError((err as Error).message);
       console.log("error", error);
@@ -62,9 +67,12 @@ const RegisterForm = () => {
     setError(null);
     try {
       const response = await registerUser(data);
+      console.log(response);
       const { user } = response as { user: User };
       setUser(user);
-      router.push("/home");
+      console.log(user);
+      console.log("register Succefully");
+      // router.push("/home");
     } catch (err) {
       setError((err as Error).message);
       console.log("error", error);
@@ -102,15 +110,20 @@ const RegisterForm = () => {
                 .required("Required"),
               terms: Yup.boolean().oneOf([true], "You must accept the terms"),
             })}
-            onSubmit={(values) => {
+            onSubmit={async(values) => {
               if (!isOtpVerified) {
-                handleGetOtp(values.email);
+                await handleGetOtp(values.email);
               } else {
-                handleRegister({ username: values.username, email: values.email, password: values.password });
+               
+                await handleRegister({ 
+                  username: values.username, 
+                  email: values.email, 
+                  password: values.password 
+                });
               }
             }}
           >
-            {({ isSubmitting, values }) => (
+            {({ isSubmitting }) => (
               <Form className="flex flex-col space-y-5">
                 <div className="relative">
                   <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-green-500" />
