@@ -21,10 +21,8 @@ const LoginForm = () => {
 
   useEffect(() => {
     if (session?.idToken) {
-      console.log("session", session.idToken);
       handleGoogleLogin(session.idToken);
     }
-    console.log("hello")
   }, [session?.idToken]);
 
   const handleGoogleLogin = async (idToken: string) => {
