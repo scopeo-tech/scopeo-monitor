@@ -19,12 +19,20 @@ const LoginForm = () => {
     const router = useRouter()
 
 
-    const handleLogin = async (data: { email: string; password: string }) => {
+    const handleLogin = async (data: {  emailOrUsername: string; password: string }) => {
         setLoading(true);
         setError(null);
         try {
-            const response = await loginUser(data);
-            const { user } = response as { user: User };  
+          const isEmail = data.emailOrUsername.includes("@");
+
+          const requestData = isEmail
+              ? { email: data.emailOrUsername, password: data.password }
+              : { username: data.emailOrUsername, password: data.password };
+            const response = await loginUser(requestData);
+            const { user } = response as { user: User };
+            const { token } = response as { token: string };
+            localStorage.setItem("user", JSON.stringify(user));
+            localStorage.setItem("token", token);
             setUser(user)
             console.log(user)
             console.log("login Succefully")
@@ -56,7 +64,7 @@ return (
           <p className="mt-8 mb-4">Don&apos;t have an account?</p>
           <button
             className="px-8 py-2 border border-white rounded-full text-white hover:bg-white hover:text-green-500 transition w-64"
-            onClick={() => router.push("auth/register")} 
+            onClick={() => router.push("/auth/register")} 
           >
             Register now
           </button>
@@ -67,9 +75,18 @@ return (
           <h2 className="text-2xl font-medium text-green-500 mb-8">Login</h2>
   
           <Formik
-            initialValues={{ email: "", password: "" }}
+            initialValues={{ emailOrUsername: "", password: "" }}
             validationSchema={Yup.object({
-              email: Yup.string().email("Invalid email").required("Required"),
+              emailOrUsername: Yup.string()
+                .test(
+                  "email-or-username",
+                  "Invalid email or username",
+                  (value) => {
+                    if (!value) return false;
+                  return value.includes("@") ? Yup.string().email().isValidSync(value) : true;
+                }
+              )
+              .required("Required"),
               password: Yup.string().required("Required"),
             })}
             onSubmit={handleLogin}
@@ -79,8 +96,8 @@ return (
                 <div className="relative">
                   <FaUser className="absolute left-0 top-1/2 transform -translate-y-1/2 text-green-500" />
                   <Field
-                    name="email"
-                    type="email"
+                    name="emailOrUsername"
+                    type="text"
                     placeholder="username / email"
                     className="w-full pl-6 pb-2 border-b border-gray-300 focus:outline-none focus:border-green-500 bg-white"
                   />

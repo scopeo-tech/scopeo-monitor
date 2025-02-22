@@ -11,7 +11,7 @@ import { useAuthStore } from "@/lib/authStore";
 import { User } from "@/lib/interface";
 import * as Yup from "yup";
 import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
-// import { FcGoogle } from "react-icons/fc";
+import { FcGoogle } from "react-icons/fc";
 import Image from "next/image";
 
 const RegisterForm = () => {
@@ -139,6 +139,12 @@ const RegisterForm = () => {
                 </div>
                 <button type="submit" className="w-full bg-green-500 text-white py-3 rounded-full hover:bg-green-600 transition" disabled={isSubmitting || loading}>
                   {isOtpVerified ? "Register" : "Get OTP"}
+                </button>
+                <div className="flex items-center justify-center my-2">
+                  <span className="px-3 text-gray-400 text-sm">or</span>
+                </div>
+                <button type="button" className="w-full flex items-center justify-center border border-gray-300 py-3 rounded-full text-gray-700 hover:bg-gray-50 transition">
+                  <FcGoogle className="mr-2 text-lg" /> Login with Google
                 </button>
               </Form>
             )}
