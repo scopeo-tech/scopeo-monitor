@@ -1,8 +1,11 @@
+import Navbar from "@/components/layout/navbar";
 import Sidebar from "@/components/layout/sidebar/defaultSidebar";
-
-const HomePage = () => {
+import { FC } from "react"
+const HomePage: FC = () => {
     return (
-        <div className="flex h-screen bg-gray-100 overflow-hidden dark:bg-gray-900 dark:text-gray-200 ">
+       
+        <div>
+            <Navbar/>
             <Sidebar />
         </div>
     );

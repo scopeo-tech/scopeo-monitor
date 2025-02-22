@@ -3,11 +3,12 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { getUserInfo, logoutUser } from "@/lib/api";
+import { FC } from "react";
 import { FaCog, FaQuestionCircle, FaSignOutAlt } from "react-icons/fa";
-// import { userDetails } from "@/lib/interface";
 
 
-const Sidebar = () => {
+
+const Sidebar: FC = () => {
     const { data: user, isLoading, isError } = useQuery({
       queryKey: ["userInfo"],
       queryFn: getUserInfo,
@@ -24,7 +25,7 @@ const Sidebar = () => {
     return (
         <div className="w-64 bg-green-400 text-white h-[calc(100vh-64px)] p-4 fixed left-0 top-16 shadow-lg">
       <div className="text-center">
-        <h1 className="text-2xl font-semibold mb-4">Scopeo</h1>
+        
         <button className="text-sm text-white hover:underline flex items-center justify-center">
           Create new project ✏
         </button>
