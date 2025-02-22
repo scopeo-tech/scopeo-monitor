@@ -36,7 +36,7 @@ export const sendOtpForRegister = async (email: string) => {
     return response.data;
   };
 
-  // Google Login
+ // Google Login
 export const googleLogin = async (idToken: string) => {
     const response = await api.post("/auth/google-login", { idToken });
     return response.data;

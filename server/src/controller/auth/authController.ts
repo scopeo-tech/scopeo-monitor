@@ -142,40 +142,42 @@ const userLogin = async (req: Request, res: Response, next: NextFunction) => {
       token,
     });
 };
+
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const googleLogin = async (req: Request, res: Response) => {
-  console.log("herllo")
   const { idToken } = req.body;
+console.log(idToken)
+  if (!idToken) return res.status(400).json({ error: "ID token missing" });
 
-  if (!idToken) {
-    return res.status(400).json({ error: "ID token is required" });
-  }
-
+  try {
     const ticket = await client.verifyIdToken({
       idToken,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
 
     const payload = ticket.getPayload();
-    if (!payload) {
-      return res.status(401).json({ error: "Invalid token" });
-    }
+    if (!payload) return res.status(401).json({ error: "Invalid token" });
 
-    const { email, name, sub, picture } = payload;
-
-    const appToken = jwt.sign(
-      { id: sub, email, name, picture },
-      process.env.JWT_TOKEN as string,
-      { expiresIn: "1h" }
+    const token = jwt.sign(
+      {
+        id: payload.sub,
+        email: payload.email,
+        name: payload.name,
+      },
+      process.env.JWT_TOKEN!,
+      { expiresIn: "7d" }
     );
 
-    res.status(200).json({
-      message: "Google login successful",
-      token: appToken,
-      user: { id: sub, email, name, picture },
-    });
+    res.status(200).json({ token, user: payload });
+  } catch (error) {
+    console.error("Token verification failed:", error);
+    res.status(401).json({ error: "Invalid token" });
   }
+};
+
+
+
 
 const userLogout = async (req: Request, res: Response) => {
   res.clearCookie("refreshToken");
