@@ -26,10 +26,12 @@ export const logoutUser =async() => {
 
 // Send OTP for registration
 export const sendOtpForRegister = async (email: string) => {
+
     const response = await api.get(`/auth/register/${email}`);
     console.log(response.data);
     return response.data;
 };
+
   
   // Verify OTP
   export const verifyOtp = async (data: { email: string; otp: string }) => {
