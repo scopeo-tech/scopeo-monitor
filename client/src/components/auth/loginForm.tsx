@@ -26,7 +26,10 @@ const LoginForm = () => {
             const response = await loginUser(data);
             const { user } = response as { user: User };  
             setUser(user)
-            router.push("/home")
+            console.log(user)
+            console.log("login Succefully")
+            // router.push("/home")
+            
         } catch (err) {
             setError((err as Error).message);
             console.log("error",error);
@@ -51,7 +54,10 @@ return (
           </p>
           
           <p className="mt-8 mb-4">Don&apos;t have an account?</p>
-          <button className="px-8 py-2 border border-white rounded-full text-white hover:bg-white hover:text-green-500 transition w-64">
+          <button
+            className="px-8 py-2 border border-white rounded-full text-white hover:bg-white hover:text-green-500 transition w-64"
+            onClick={() => router.push("auth/register")} 
+          >
             Register now
           </button>
         </div>
