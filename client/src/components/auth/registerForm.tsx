@@ -1,17 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import { useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { registerUser } from "@/lib/api";
 import { sendOtpForRegister } from "@/lib/api";
 import { verifyOtp } from "@/lib/api";
 import OtpModal from "../modal/otpModal";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/lib/authStore";
-import { User } from "@/lib/interface";
 import * as Yup from "yup";
 import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
-// import { FcGoogle } from "react-icons/fc";
+import { FcGoogle } from "react-icons/fc";
 import Image from "next/image";
 
 const RegisterForm = () => {
@@ -23,7 +22,7 @@ const RegisterForm = () => {
   const [isOtpVerified, setIsOtpVerified] = useState(false);
   const [otp, setOtp] = useState("");
 
-  const setUser = useAuthStore((state) => state.setUser);
+  
 
 
   const handleGetOtp = async (email: string) => {
@@ -42,7 +41,9 @@ const RegisterForm = () => {
     }
   };
 
-
+  useEffect(() => {
+    console.log("OTP Verified state changed:", isOtpVerified);
+  }, [isOtpVerified]);
   const handleVerifyOtp = async () => {
     setLoading(true);
     setError(null);
@@ -50,6 +51,8 @@ const RegisterForm = () => {
       await verifyOtp({ email: userEmail, otp });
       setIsOtpVerified(true);
       setIsOtpModalOpen(false);
+      console.log("otp verified");
+      
     } catch (err) {
       setError((err as Error).message);
       console.log("error", error);
@@ -61,10 +64,8 @@ const RegisterForm = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await registerUser(data);
-      const { user } = response as { user: User };
-      setUser(user);
-      router.push("/home");
+      await registerUser(data);
+      router.push("/auth/login");
     } catch (err) {
       setError((err as Error).message);
       console.log("error", error);
@@ -102,15 +103,20 @@ const RegisterForm = () => {
                 .required("Required"),
               terms: Yup.boolean().oneOf([true], "You must accept the terms"),
             })}
-            onSubmit={(values) => {
+            onSubmit={async(values) => {
               if (!isOtpVerified) {
-                handleGetOtp(values.email);
+                await handleGetOtp(values.email);
               } else {
-                handleRegister({ username: values.username, email: values.email, password: values.password });
+               
+                await handleRegister({ 
+                  username: values.username, 
+                  email: values.email, 
+                  password: values.password 
+                });
               }
             }}
           >
-            {({ isSubmitting, values }) => (
+            {({ isSubmitting }) => (
               <Form className="flex flex-col space-y-5">
                 <div className="relative">
                   <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-green-500" />
@@ -139,6 +145,12 @@ const RegisterForm = () => {
                 </div>
                 <button type="submit" className="w-full bg-green-500 text-white py-3 rounded-full hover:bg-green-600 transition" disabled={isSubmitting || loading}>
                   {isOtpVerified ? "Register" : "Get OTP"}
+                </button>
+                <div className="flex items-center justify-center my-2">
+                  <span className="px-3 text-gray-400 text-sm">or</span>
+                </div>
+                <button type="button" className="w-full flex items-center justify-center border border-gray-300 py-3 rounded-full text-gray-700 hover:bg-gray-50 transition">
+                  <FcGoogle className="mr-2 text-lg" /> Login with Google
                 </button>
               </Form>
             )}
