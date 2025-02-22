@@ -7,12 +7,14 @@ export const registerSchema = z.object({
     "Username can only contain lowercase letters, numbers, and underscores"
   ),
   password: z.string().min(8, "Password must be at least 8 characters long"),
+  googleId: z.string().optional(),
 });
 
 export const loginSchema = z.object({
     username: z.string().optional(),
     email: z.string().email().optional(),
     password: z.string(),
+    googleId: z.string().optional(),
   }).refine((data) => data.username || data.email, {
     message: "Either username or email is required",
     path: ["username", "email"], 
