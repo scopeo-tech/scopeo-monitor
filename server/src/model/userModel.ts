@@ -3,6 +3,7 @@ import mongoose, { Schema, InferSchemaType ,Model} from "mongoose";
 const UserSchema = new Schema({
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
+    googleId: { type: String , required: false , unique: true},
     password: { type: String, required: true }
 }, { timestamps: true });
 

@@ -1,3 +1,4 @@
+
 import axios from "axios";
 import {userDetails } from "./interface";
 
@@ -9,13 +10,13 @@ export const api = axios.create({
 
 //authentication
 
-export const loginUser =async(data:{email: string, password: string}) => {
-    const response = await api.post("/auth/login", {data})
+export const loginUser = async(data:{email: string, password: string}) => {
+    const response = await api.post("/auth/login", data)
     return response.data
 }
 
-export const registerUser =async(data:{name: string, email: string, password: string}) => {
-    const response = await api.post("/auth/register", {data})
+export const registerUser =async(data:{username: string, email: string, password: string}) => {
+    const response = await api.post("/auth/register", data)
     return response.data
 }
 
@@ -24,10 +25,24 @@ export const logoutUser =async() => {
     return response.data
 }
 
-//userData
+// Send OTP for registration
+export const sendOtpForRegister = async (email: string) => {
 
-export const getUserData =async(): Promise<userDetails> => {
-    const response = await api.get<userDetails>("/user/info")
-    console.log(response.data)
-    return response.data
-}
+    const response = await api.get(`/auth/register/${email}`);
+    console.log(response.data);
+    return response.data;
+};
+
+  
+  // Verify OTP
+  export const verifyOtp = async (data: { email: string; otp: string }) => {
+    const response = await api.post("/auth/verify-otp", data);
+    return response.data;
+  };
+
+ // Google Login
+export const googleLogin = async (idToken: string) => {
+    const response = await api.post("/auth/google-login", { idToken });
+    return response.data;
+  };
+  
