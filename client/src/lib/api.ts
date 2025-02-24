@@ -1,5 +1,3 @@
-
-import axiosInstance from "./util/axiosInstance"; 
 import axiosInstance from "./util/axiosInstance"; 
 import axios from "axios";
 import { Project, userDetails } from "./interface";
