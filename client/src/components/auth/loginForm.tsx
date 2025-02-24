@@ -50,12 +50,11 @@ const LoginForm: FC = () => {
     try {
       const response = await googleLogin(idToken);
       const { user, token } = response as { user: User; token: string };
-      console.log(user, token, "user and token");
       if (user && token) {
         localStorage.setItem("user", JSON.stringify(user));
         localStorage.setItem("token", token);
-        setUser(user);
-        await router.push("/");
+        useAuthStore.getState().setUser(user);
+        router.push("/home");
       }
     } catch (error) {
       setError((error as Error).message);

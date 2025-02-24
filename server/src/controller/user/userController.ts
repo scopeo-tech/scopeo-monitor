@@ -20,8 +20,7 @@ const getUserById = async (req:AuthenticatedRequest, res:Response, next:NextFunc
 }
 
 const getProjectList = async (req:AuthenticatedRequest, res:Response, next:NextFunction) =>{
-    const userId=req.user
-
+    const userId = req.user
     if(!userId){
         return next (new CustomError(404,"user not found"))
     }
