@@ -2,7 +2,6 @@ import { Response,NextFunction } from "express";
 import { AuthenticatedRequest } from "../../lib/types/type";
 import User from "../../model/userModel";
 import Project from "../../model/projectModel";
-import Project from "../../model/projectModel";
 import CustomError from "../../lib/util/CustomError";
 
 const getUserById = async (req:AuthenticatedRequest, res:Response, next:NextFunction) =>{
