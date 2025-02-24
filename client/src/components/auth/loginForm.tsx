@@ -92,7 +92,7 @@ const LoginForm: FC = () => {
       setUser(user);
       console.log(user);
       console.log("login Succefully");
-      // router.push("/home")
+      router.push("/home")
     } catch (err) {
       setError((err as Error).message);
       console.log("error", error);
