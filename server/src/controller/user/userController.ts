@@ -13,7 +13,8 @@ const getUserById = async (req:AuthenticatedRequest, res:Response, next:NextFunc
         user : user._id,
         username:user.username,
         email:user.email,
-        joinedDate : user.createdAt 
+        joinedDate : user.createdAt ,
+        
     }
     res.status(200).json({status:"success", message:"UserDetails", Data})
 }
