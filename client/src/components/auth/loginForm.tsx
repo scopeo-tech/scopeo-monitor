@@ -11,7 +11,6 @@ import { FC } from "react";
 import { FaUser, FaLock } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { getSession, signIn, useSession } from "next-auth/react";
-import { getSession, signIn, signOut, useSession } from "next-auth/react";
 import axios from "axios";
 
 const LoginForm: FC = () => {
@@ -47,25 +46,6 @@ const LoginForm: FC = () => {
   };
   
     const handleGoogleLogin = async (idToken: string) => {
-  }, [session?.idToken]);
-
-  const handleSignIn = () => {
-    signIn("google").then((response) => {
-      if (response?.error) {
-        setError(response.error);
-        return;
-      }
-      
-    
-      getSession().then((session) => {
-        if (session?.idToken) {
-          handleGoogleLogin(session.idToken);
-        }
-      });
-    });
-  };
-
-  const handleGoogleLogin = async (idToken: string) => {
     setLoading(true);
     try {
       console.log("before")
@@ -78,13 +58,6 @@ const LoginForm: FC = () => {
         setUser(user);
         await router.push("/");
       }
-      const { user } = response as { user: User };
-      const { token } = response as { token: string };
-      localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("token", token);
-      setUser(user);
-      console.log("Google login successful:", response);
-      router.push("/");
     } catch (error) {
       setError((error as Error).message);
       if (axios.isAxiosError(error) && 
@@ -94,17 +67,11 @@ const LoginForm: FC = () => {
       console.error("Google login failed", error);
       localStorage.removeItem("user");
       localStorage.removeItem("token");
-      setError((error as Error).message);
-      console.error("Google login failed:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleLogin = async (data: {
-    emailOrUsername: string;
-    password: string;
-  }) => {
   const handleLogin = async (data: {
     emailOrUsername: string;
     password: string;
@@ -126,27 +93,12 @@ const LoginForm: FC = () => {
       console.log(user);
       console.log("login Succefully");
       // router.push("/home")
-        ? { email: data.emailOrUsername, password: data.password }
-        : { username: data.emailOrUsername, password: data.password };
-      const response = await loginUser(requestData);
-      const { user } = response as { user: User };
-      const { token } = response as { token: string };
-      localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("token", token);
-      setUser(user);
-      console.log(user);
-      console.log("login Succefully");
-      // router.push("/home")
     } catch (err) {
-      setError((err as Error).message);
-      console.log("error", error);
       setError((err as Error).message);
       console.log("error", error);
     } finally {
       setLoading(false);
-      setLoading(false);
     }
-  };
   };
 
   return (
@@ -182,14 +134,12 @@ const LoginForm: FC = () => {
                   "Invalid email or username",
                   (value) => {
                     if (!value) return false;
-                      return value.includes("@")
-                     
+                    return value.includes("@")
                       ? Yup.string().email().isValidSync(value)
-                     
                       : true;
-                    }
-                  )
-                  .required("Required"),
+                  }
+                )
+                .required("Required"),
               password: Yup.string().required("Required"),
             })}
             onSubmit={handleLogin}
@@ -241,7 +191,6 @@ const LoginForm: FC = () => {
             <span className="px-3 text-gray-400 text-sm">or</span>
           </div>
           <button
-            onClick={handleSignIn}
             onClick={handleSignIn}
             className="w-full flex items-center justify-center border border-gray-300 py-3 rounded-full text-gray-700 hover:bg-gray-50 transition"
           >
