@@ -10,7 +10,7 @@ import * as Yup from "yup";
 import { FC } from "react";
 import { FaUser, FaLock } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import { signIn, useSession } from "next-auth/react";
+import { getSession, signIn, useSession } from "next-auth/react";
 
 const LoginForm: FC = () => {
   const [loading, setLoading] = useState(false);
@@ -26,49 +26,69 @@ const LoginForm: FC = () => {
     }
   }, [session?.idToken]);
 
+  const handleSignIn = () => {
+    signIn("google").then((response) => {
+      if (response?.error) {
+        setError(response.error);
+        return;
+      }
+      
+    
+      getSession().then((session) => {
+        if (session?.idToken) {
+          handleGoogleLogin(session.idToken);
+        }
+      });
+    });
+  };
+
   const handleGoogleLogin = async (idToken: string) => {
     setLoading(true);
     try {
       const response = await googleLogin(idToken);
-      setUser(response.user);
+      const { user } = response as { user: User };
+      const { token } = response as { token: string };
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", token);
+      setUser(user);
       console.log("Google login successful:", response);
       router.push("/");
     } catch (error) {
+      setError((error as Error).message);
       console.error("Google login failed:", error);
-      setError("Google login failed. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleLogin = async (data: {  emailOrUsername: string; password: string }) => {
+  const handleLogin = async (data: {
+    emailOrUsername: string;
+    password: string;
+  }) => {
     setLoading(true);
     setError(null);
     try {
       const isEmail = data.emailOrUsername.includes("@");
 
       const requestData = isEmail
-          ? { email: data.emailOrUsername, password: data.password }
-          : { username: data.emailOrUsername, password: data.password };
-        const response = await loginUser(requestData);
-        const { user } = response as { user: User };
-        const { token } = response as { token: string };
-        localStorage.setItem("user", JSON.stringify(user));
-        localStorage.setItem("token", token);
-        setUser(user)
-        console.log(user)
-        console.log("login Succefully")
-        router.push("/")
-        
+        ? { email: data.emailOrUsername, password: data.password }
+        : { username: data.emailOrUsername, password: data.password };
+      const response = await loginUser(requestData);
+      const { user } = response as { user: User };
+      const { token } = response as { token: string };
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", token);
+      setUser(user);
+      console.log(user);
+      console.log("login Succefully");
+      // router.push("/home")
     } catch (err) {
-        setError((err as Error).message);
-        console.log("error",error);
-        
+      setError((err as Error).message);
+      console.log("error", error);
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-
-}
+  };
 
   return (
     <div className="flex h-screen items-center justify-center bg-white">
@@ -103,10 +123,12 @@ const LoginForm: FC = () => {
                   "Invalid email or username",
                   (value) => {
                     if (!value) return false;
-                  return value.includes("@") ? Yup.string().email().isValidSync(value) : true;
-                }
-              )
-              .required("Required"),
+                    return value.includes("@")
+                      ? Yup.string().email().isValidSync(value)
+                      : true;
+                  }
+                )
+                .required("Required"),
               password: Yup.string().required("Required"),
             })}
             onSubmit={handleLogin}
@@ -158,7 +180,7 @@ const LoginForm: FC = () => {
             <span className="px-3 text-gray-400 text-sm">or</span>
           </div>
           <button
-            onClick={() => signIn("google")}
+            onClick={handleSignIn}
             className="w-full flex items-center justify-center border border-gray-300 py-3 rounded-full text-gray-700 hover:bg-gray-50 transition"
           >
             <FcGoogle className="mr-2 text-lg" /> Login with Google

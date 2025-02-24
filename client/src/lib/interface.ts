@@ -9,6 +9,6 @@ export interface userDetails {
     username: string;
     email: string;
     joinedDate: string;
-    totalProjects: number;  
+    googleId?: string;
   }
   
