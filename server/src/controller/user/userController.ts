@@ -2,6 +2,7 @@ import { Response,NextFunction } from "express";
 import { AuthenticatedRequest } from "../../lib/types/type";
 import User from "../../model/userModel";
 import Project from "../../model/projectModel";
+import Project from "../../model/projectModel";
 import CustomError from "../../lib/util/CustomError";
 
 const getUserById = async (req:AuthenticatedRequest, res:Response, next:NextFunction) =>{
@@ -13,7 +14,8 @@ const getUserById = async (req:AuthenticatedRequest, res:Response, next:NextFunc
         user : user._id,
         username:user.username,
         email:user.email,
-        joinedDate : user.createdAt 
+        joinedDate : user.createdAt ,
+        
     }
     res.status(200).json({status:"success", message:"UserDetails", Data})
 }
