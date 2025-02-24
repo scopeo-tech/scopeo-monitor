@@ -10,7 +10,8 @@ import * as Yup from "yup";
 import { FC } from "react";
 import { FaUser, FaLock } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import { getSession, signIn, useSession } from "next-auth/react";
+import { getSession, signIn, signOut, useSession } from "next-auth/react";
+import axios from "axios";
 
 const LoginForm: FC = () => {
   const [loading, setLoading] = useState(false);
@@ -18,44 +19,54 @@ const LoginForm: FC = () => {
   const setUser = useAuthStore((state) => state.setUser);
   const router = useRouter();
 
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   useEffect(() => {
-    if (session?.idToken) {
+    if (status === "authenticated" && session?.idToken) {
+      console.log("Session loaded:", session);
       handleGoogleLogin(session.idToken);
     }
-  }, [session?.idToken]);
+  }, [session, status]);
 
-  const handleSignIn = () => {
-    signIn("google").then((response) => {
-      if (response?.error) {
-        setError(response.error);
-        return;
-      }
-      
-    
-      getSession().then((session) => {
-        if (session?.idToken) {
-          handleGoogleLogin(session.idToken);
+  const handleSignIn = async () => {
+    try {
+      await signIn("google", { redirect: false }).then(async (response) => {
+        if (!response?.error) {
+          const updatedSession = await getSession();
+          if (updatedSession?.idToken) {
+            await handleGoogleLogin(updatedSession.idToken);
+          }
+        } else {
+          setError(response.error);
         }
       });
-    });
+    } catch (error) {
+      console.error("Google sign-in error:", error);
+    }
   };
-
-  const handleGoogleLogin = async (idToken: string) => {
+  
+    const handleGoogleLogin = async (idToken: string) => {
     setLoading(true);
     try {
+      console.log("before")
       const response = await googleLogin(idToken);
-      const { user } = response as { user: User };
-      const { token } = response as { token: string };
-      localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("token", token);
-      setUser(user);
-      console.log("Google login successful:", response);
-      router.push("/");
+      const { user, token } = response as { user: User; token: string };
+      console.log(user,token,"user and token")
+      if (user && token) {
+        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("token", token);
+        setUser(user);
+        await router.push("/");
+      }
     } catch (error) {
       setError((error as Error).message);
-      console.error("Google login failed:", error);
+      if (axios.isAxiosError(error) && 
+      error.response?.data?.message?.includes("Expiration time")) {
+    return;
+  }
+      console.error("Google login failed", error);
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
     } finally {
       setLoading(false);
     }

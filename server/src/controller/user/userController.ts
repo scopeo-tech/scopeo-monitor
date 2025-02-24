@@ -36,4 +36,19 @@ const getProjectList = async (req:AuthenticatedRequest, res:Response, next:NextF
   });
 };
 
-export {getUserById,getProjectList}
+const getUserProjectCount = async (req:AuthenticatedRequest, res:Response, next:NextFunction) =>{
+    const userId=req.user
+
+    if(!userId){
+        return next (new CustomError(404,"user not found"))
+    }
+    const totalProjects = await Project.countDocuments({ user: userId });
+
+  res.status(200).json({
+    status: "success",
+    message: "Project count retrieved",
+    data:  totalProjects
+  });
+};
+
+export {getUserById,getProjectList,getUserProjectCount}
