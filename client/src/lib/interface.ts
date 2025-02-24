@@ -11,4 +11,12 @@ export interface userDetails {
     joinedDate: string;
     googleId?: string;
   }
+
+export interface Project {
+    _id: string;
+    name: string;
+    apiKey: string;
+    passKey: string;
+    notificationStatus: boolean;
+  }
   
