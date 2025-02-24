@@ -9,11 +9,12 @@ import { verifyOtp } from "@/lib/api";
 import OtpModal from "../modal/otpModal";
 import { useRouter } from "next/navigation";
 import * as Yup from "yup";
+import { FC } from "react";
 import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import Image from "next/image";
 
-const RegisterForm = () => {
+const RegisterForm: FC = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
