@@ -5,11 +5,14 @@ import { useAuthStore } from "@/lib/stores/authStore";
 import { useQuery } from "@tanstack/react-query";
 import { getUserProjects } from "@/lib/api";
 import { Project } from "@/lib/interface";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import CreateProjectModal from "../modal/createProjectModal";
 
 
 const DefaultPage: FC = () => {
+  const [formattedDate, setFormattedDate] = useState<string>("");
+  const [day, setDay] = useState<string>("");
+
     const { data: projects, isLoading, isError } = useQuery<Project[]>({
         queryKey: ["userProjects"],
         queryFn: getUserProjects,
@@ -18,6 +21,11 @@ const DefaultPage: FC = () => {
     
     const userName = useAuthStore((state) => state.user?.username);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    useEffect(() => {
+      const today = new Date();
+      setFormattedDate(today.toLocaleDateString("en-GB")); // DD-MM-YYYY format
+      setDay(today.toLocaleDateString(undefined, { weekday: "long" }));
+    }, []);
 
     return (
         <div className="p-6 bg-gray-50 min-h-screen">
@@ -77,6 +85,10 @@ const DefaultPage: FC = () => {
               </table>
             )}
           </div>
+          <div className="absolute bottom-4 right-6 text-gray-600 text-sm text-right">
+        <p>{formattedDate}</p>
+        <p>{day}</p>
+      </div>
           <CreateProjectModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
         </div>
       );
