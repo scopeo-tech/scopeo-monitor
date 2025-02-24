@@ -2,7 +2,7 @@
 
 
 import { useQuery } from "@tanstack/react-query";
-import { getUserInfo, logoutUser } from "@/lib/api";
+import { getUserInfo, logoutUser ,getUserProjectCount} from "@/lib/api";
 import { FC } from "react";
 import { FaCog, FaQuestionCircle, FaSignOutAlt } from "react-icons/fa";
 
@@ -14,13 +14,18 @@ const Sidebar: FC = () => {
       queryFn: getUserInfo,
     });
 
+    const { data: projectCount, isLoading: countLoading, isError: countError } = useQuery({
+      queryKey: ["userProjectCount"],
+      queryFn: getUserProjectCount,
+    });
+
     const handleLogout =async () => {
         await logoutUser()
         window.location.reload()
     }
 
-    if(isLoading) return <div>Loading...</div>
-    if(isError) return <div>Error</div>
+    if(isLoading||countLoading) return <div>Loading...</div>
+    if(isError||countError) return <div>Error</div>
 
     return (
         <div className="w-64 bg-green-400 text-white h-[calc(100vh-64px)] p-4 fixed left-0 top-16 shadow-lg">
@@ -46,7 +51,7 @@ const Sidebar: FC = () => {
             <strong>Joined on:</strong> {user?user.joinedDate:"Joined Date"}
           </p>
           <p className="text-sm">
-            <strong>Total Projects:</strong> {user?user.totalProjects:"Total Projects"}
+            <strong>Total Projects:</strong> {projectCount ?? "0"}
           </p>
         </div>
       )}

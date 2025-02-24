@@ -15,7 +15,7 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, onClose
   const [notificationStatus, setNotificationStatus] = useState(false);
   const queryClient = useQueryClient();
 
-  // Fetch API Key
+ 
   const { data: apiData, refetch: fetchApiKey, isFetching: apiLoading } = useQuery<{ data: string }>({
     queryKey: ["apiKey"],
     queryFn: getApiKey,
@@ -23,7 +23,7 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, onClose
    
   });
 
-  // Fetch Pass Key
+
   const { data: passData, refetch: fetchPassKey, isFetching: passLoading } = useQuery<{ data: string }>({
     queryKey: ["passKey"],
     queryFn: getPassKey,
@@ -45,8 +45,6 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, onClose
   });
 
   if (!isOpen) return null;
-
-  // Fetch both API Key & Pass Key
   const fetchKeys = async () => {
     await fetchApiKey();
     await fetchPassKey();
@@ -72,7 +70,6 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, onClose
   return (
     <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg">
-        {/* Close Button */}
         <div className="flex justify-end">
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
             <AiOutlineClose size={20} />
@@ -80,7 +77,6 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, onClose
         </div>
 
         <div className="border p-6 rounded-md">
-          {/* Project Name */}
           <div className="flex items-center gap-2 mb-3">
             <label className="w-1/3 text-gray-600">Project Name:</label>
             <input
@@ -112,7 +108,6 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, onClose
             />
           </div>
 
-          {/* Get Keys Button */}
           <button
             onClick={fetchKeys}
             className="bg-blue-500 text-white px-4 py-2 rounded w-full mb-4"
@@ -121,7 +116,6 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, onClose
             {apiLoading || passLoading ? "Fetching Keys..." : "Get API & Pass Key"}
           </button>
 
-          {/* Notification Toggle */}
           <div className="flex items-center gap-2 mb-6">
             <label className="w-1/3 text-gray-600">Notification:</label>
             <input

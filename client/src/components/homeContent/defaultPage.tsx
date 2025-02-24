@@ -5,6 +5,8 @@ import { useAuthStore } from "@/lib/stores/authStore";
 import { useQuery } from "@tanstack/react-query";
 import { getUserProjects } from "@/lib/api";
 import { Project } from "@/lib/interface";
+import { useState } from "react";
+import CreateProjectModal from "../modal/createProjectModal";
 
 
 const DefaultPage: FC = () => {
@@ -15,6 +17,7 @@ const DefaultPage: FC = () => {
     
     
     const userName = useAuthStore((state) => state.user?.username);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     return (
         <div className="p-6 bg-gray-50 min-h-screen">
@@ -24,9 +27,13 @@ const DefaultPage: FC = () => {
               <h1 className="text-lg font-semibold">{userName}’s projects -</h1>
               <p className="text-gray-500">{Array.isArray(projects) ? projects.length : 0} projects</p>
             </div>
-            <a href="#" className="text-blue-500 hover:underline">
+
+            <button
+              className="text-blue-500 hover:underline"
+              onClick={() => setIsModalOpen(true)}
+            >
               Start a new project ✏️
-            </a>
+            </button>
           </div>
     
           {/* Project List */}
@@ -70,6 +77,7 @@ const DefaultPage: FC = () => {
               </table>
             )}
           </div>
+          <CreateProjectModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
         </div>
       );
 }
