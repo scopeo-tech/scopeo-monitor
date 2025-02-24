@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import { User } from "./interface";
-import { logoutUser } from "./api";
+import { User } from "../interface";
+import { logoutUser } from "../api";
 
 interface AuthState {
   user: User | null;

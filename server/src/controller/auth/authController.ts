@@ -149,62 +149,69 @@ const userLogin = async (req: Request, res: Response, next: NextFunction) => {
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-const googleLogin = async (req: Request, res: Response) => {
+const googleLogin = async (req: Request, res: Response , next: NextFunction) => {
   const { idToken } = req.body;
 
-  if (!idToken) return res.status(400).json({ error: "ID token missing" });
+  if (!idToken) return next(new CustomError(400, "No idToken provided"));
 
-    const ticket = await client.verifyIdToken({
-      idToken,
-      audience: process.env.GOOGLE_CLIENT_ID,
-      maxExpiry: 60 * 60,
-    });
+  const randomPassword = Math.random().toString(36).slice(-12);
+  const hashedPassword = await bcrypt.hash(randomPassword, 10);
 
-    const payload = ticket.getPayload();
-    if (!payload) return res.status(401).json({ error: "Invalid token" });
+  const ticket = await client.verifyIdToken({
+    idToken,
+    audience: process.env.GOOGLE_CLIENT_ID,
+  });
 
-    const existingUser = await User.findOne({ email: payload.email });
+  const payload = ticket.getPayload();
+  if (!payload) return next(new CustomError(400, "Invalid idToken"));
 
-    if (existingUser) {
-      const token = jwt.sign(
-        {
-          _id: existingUser._id,
-          email: existingUser.email,
-          username: existingUser.username,
-        },
-        process.env.JWT_TOKEN!,
-        { expiresIn: "7d" }
-      );
+  const existingUser = await User.findOne({ email: payload.email });
 
-      const { password, createdAt, ...safeUser } = existingUser.toObject();
-
-      return res.status(200).json({ token, user: safeUser });
-    }
-
-    const newUser = new User({
-      username: payload.name?.toLocaleLowerCase().replace(" ", "_"),
-      email: payload.email,
-      googleId: payload.sub,
-      password: "1232309213903",
-      createdAt: new Date(),
-    });
-
-    const savedUser = await newUser.save();
+  if (existingUser) {
+    existingUser.password = hashedPassword;
+    await existingUser.save();
 
     const token = jwt.sign(
       {
-        _id: savedUser._id,
-        email: savedUser.email,
-        username: savedUser.username,
+        _id: existingUser._id,
+        email: existingUser.email,
+        username: existingUser.username,
       },
       process.env.JWT_TOKEN!,
-      { expiresIn: "7d" }
+      { expiresIn: "1h" }
     );
 
-    const { password, createdAt, ...safeUser } = savedUser.toObject();
+    const { password, createdAt, ...safeUser } = existingUser.toObject();
 
-    res.status(200).json({ token, user: safeUser });
+    return res.status(200).json({ token, user: safeUser });
   }
+
+ 
+
+  const newUser = new User({
+    username: payload.name?.toLocaleLowerCase().replace(" ", "_"),
+    email: payload.email,
+    googleId: payload.sub,
+    password: hashedPassword,
+    createdAt: new Date(),
+  });
+
+  const savedUser = await newUser.save();
+
+  const token = jwt.sign(
+    {
+      _id: savedUser._id,
+      email: savedUser.email,
+      username: savedUser.username,
+    },
+    process.env.JWT_TOKEN!,
+    { expiresIn: "7d" }
+  );
+
+  const { password, createdAt, ...safeUser } = savedUser.toObject();
+
+  res.status(200).json({ token, user: safeUser });
+};
 
 const userLogout = async (req: Request, res: Response) => {
   res.clearCookie("refreshToken");

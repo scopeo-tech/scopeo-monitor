@@ -2,65 +2,97 @@
 
 import { useEffect, useState } from "react";
 import { User } from "@/lib/interface";
-import { useAuthStore } from "@/lib/authStore";
+import { useAuthStore } from "@/lib/stores/authStore";
 import { useRouter } from "next/navigation";
 import { googleLogin, loginUser } from "@/lib/api";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { FC } from "react";
 import { FaUser, FaLock } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import { signIn, useSession } from "next-auth/react";
+import { getSession, signIn, useSession } from "next-auth/react";
+import axios from "axios";
 
-const LoginForm = () => {
+const LoginForm: FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const setUser = useAuthStore((state) => state.setUser);
   const router = useRouter();
 
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   useEffect(() => {
-    if (session?.idToken) {
-      console.log("session", session.idToken);
+    if (status === "authenticated" && session?.idToken) {
+      console.log("Session loaded:", session);
       handleGoogleLogin(session.idToken);
     }
-    console.log("hello")
-  }, [session?.idToken]);
+  }, [session, status]);
 
-  const handleGoogleLogin = async (idToken: string) => {
+  const handleSignIn = async () => {
+    try {
+      await signIn("google", { redirect: false }).then(async (response) => {
+        if (!response?.error) {
+          const updatedSession = await getSession();
+          if (updatedSession?.idToken) {
+            await handleGoogleLogin(updatedSession.idToken);
+          }
+        } else {
+          setError(response.error);
+        }
+      });
+    } catch (error) {
+      console.error("Google sign-in error:", error);
+    }
+  };
+  
+    const handleGoogleLogin = async (idToken: string) => {
     setLoading(true);
     try {
+      console.log("before")
       const response = await googleLogin(idToken);
-      setUser(response.user);
-      console.log("Google login successful:", response);
-      router.push("/");
+      const { user, token } = response as { user: User; token: string };
+      console.log(user,token,"user and token")
+      if (user && token) {
+        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("token", token);
+        setUser(user);
+        await router.push("/");
+      }
     } catch (error) {
-      console.error("Google login failed:", error);
-      setError("Google login failed. Please try again.");
+      setError((error as Error).message);
+      if (axios.isAxiosError(error) && 
+      error.response?.data?.message?.includes("Expiration time")) {
+    return;
+  }
+      console.error("Google login failed", error);
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleLogin = async (data: {  emailOrUsername: string; password: string }) => {
+  const handleLogin = async (data: {
+    emailOrUsername: string;
+    password: string;
+  }) => {
     setLoading(true);
     setError(null);
     try {
       const isEmail = data.emailOrUsername.includes("@");
 
       const requestData = isEmail
-          ? { email: data.emailOrUsername, password: data.password }
-          : { username: data.emailOrUsername, password: data.password };
-        const response = await loginUser(requestData);
-        const { user } = response as { user: User };
-        const { token } = response as { token: string };
-        localStorage.setItem("user", JSON.stringify(user));
-        localStorage.setItem("token", token);
-        setUser(user)
-        console.log(user)
-        console.log("login Succefully")
-        // router.push("/home")
-        
+        ? { email: data.emailOrUsername, password: data.password }
+        : { username: data.emailOrUsername, password: data.password };
+      const response = await loginUser(requestData);
+      const { user } = response as { user: User };
+      const { token } = response as { token: string };
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", token);
+      setUser(user);
+      console.log(user);
+      console.log("login Succefully");
+      router.push("/home")
     } catch (err) {
         setError((err as Error).message);
         console.log("error",error);
@@ -104,10 +136,12 @@ const LoginForm = () => {
                   "Invalid email or username",
                   (value) => {
                     if (!value) return false;
-                  return value.includes("@") ? Yup.string().email().isValidSync(value) : true;
-                }
-              )
-              .required("Required"),
+                    return value.includes("@")
+                      ? Yup.string().email().isValidSync(value)
+                      : true;
+                  }
+                )
+                .required("Required"),
               password: Yup.string().required("Required"),
             })}
             onSubmit={handleLogin}
@@ -159,7 +193,7 @@ const LoginForm = () => {
             <span className="px-3 text-gray-400 text-sm">or</span>
           </div>
           <button
-            onClick={() => signIn("google")}
+            onClick={handleSignIn}
             className="w-full flex items-center justify-center border border-gray-300 py-3 rounded-full text-gray-700 hover:bg-gray-50 transition"
           >
             <FcGoogle className="mr-2 text-lg" /> Login with Google

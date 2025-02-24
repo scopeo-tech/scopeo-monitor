@@ -1,5 +1,7 @@
-
+import axiosInstance from "./util/axiosInstance"; 
 import axios from "axios";
+import { Project, userDetails } from "./interface";
+
 
 export const api = axios.create({
     baseURL: "http://localhost:3001/api",
@@ -22,6 +24,7 @@ export const registerUser =async(data:{username: string, email: string, password
 
 export const logoutUser =async() => {
     const response = await api.post("/auth/logout")
+    console.log(response.data);
     return response.data
 }
 
@@ -45,4 +48,38 @@ export const googleLogin = async (idToken: string) => {
     const response = await api.post("/auth/google-login", { idToken });
     return response.data;
   };
-  
+
+
+//get user info
+export const getUserInfo = async (): Promise<userDetails> => {
+    const response = await axiosInstance.get("/user/info");
+    return response.data.Data; 
+};
+
+//get user projects
+export const getUserProjects = async (): Promise<Project[]> => {
+    const response = await axiosInstance.get("/user/list");
+    return response.data.data; 
+};
+
+
+//create project
+
+ export const createProject = async (data: { name: string; apiKey: string; passKey: string; notificationStatus: boolean }):Promise<Project> => {
+    const response = await axiosInstance.post("/project/create-project",data);
+    console.log(response.data);
+    return response.data;
+  };
+
+export const getApiKey = async () => {
+    const response = await axiosInstance.get("/project/api-key");
+    console.log(response.data);
+    return response.data;
+  };
+
+export const getPassKey = async () => {
+    const response = await axiosInstance.get("/project/pass-key");
+    console.log(response.data);
+    return response.data;
+  };
+
