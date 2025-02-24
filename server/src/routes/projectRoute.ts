@@ -1,5 +1,5 @@
 import express from "express";
-import { createProject ,getApiKey, getPassKey} from "../controller/project/projectController";
+import { createProject ,getApiKey, getPassKey, getProjectPassKey} from "../controller/project/projectController";
 import verifyToken from "../middleware/verifyToken";
 import tryCatch from "../lib/util/tryCatch";
 
@@ -13,6 +13,7 @@ router
 
 .post("/create-project", tryCatch(createProject))
 .get("/api-key", tryCatch(getApiKey))
-.get("/pass-key", tryCatch(getPassKey));
+.get("/pass-key", tryCatch(getPassKey))
+.get("/get-project-passkey",tryCatch(getProjectPassKey))
 
 export default router

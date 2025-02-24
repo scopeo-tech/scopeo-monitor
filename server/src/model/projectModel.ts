@@ -6,6 +6,7 @@ const projectSchema = new Schema(
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
     apiKey: { type: String, required: true, unique: true },
     passKey: { type: String, required: true, unique: true },
+    status: { type: Boolean, default: true},
     notificationStatus: { type: Boolean, default: false },
   },
   { timestamps: true }
