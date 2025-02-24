@@ -41,5 +41,20 @@ const createProject = async (req:AuthenticatedRequest, res: Response, next: Next
     return res.status(201).json({ status: "success", message: "Project created" });
 };
 
+const getProjectPassKey = async (req:AuthenticatedRequest, res:Response, next:NextFunction) =>{
+    const {projectId} = req.body
+    const user = req.user
+    if (!projectId) {
+      return next(new CustomError(404, "Project ID not provided"));
+  }
+    const project = await Project.findOne({user, _id: projectId}, { passKey: 1 });
+    if (!project) {
+        return next(new CustomError(404, "Project not found"));
+    }
+    return res.status(200).json({ status: "success", message: "Project found", data: project.passKey });
+  }
 
-export { getApiKey, getPassKey , createProject };
+
+
+
+export { getApiKey, getPassKey , createProject, getProjectPassKey};

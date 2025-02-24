@@ -25,7 +25,7 @@ const getProjectList = async (req:AuthenticatedRequest, res:Response, next:NextF
     if(!userId){
         return next (new CustomError(404,"user not found"))
     }
-    const projects = await Project.find({ user: userId });
+    const projects = await Project.find({ user: userId }, { passKey: 0 });
   const totalProjects = projects.length
 
   res.status(200).json({
@@ -35,6 +35,8 @@ const getProjectList = async (req:AuthenticatedRequest, res:Response, next:NextF
     data: projects || [], 
   });
 };
+
+
 
 const getUserProjectCount = async (req:AuthenticatedRequest, res:Response, next:NextFunction) =>{
     const userId=req.user
