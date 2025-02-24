@@ -171,14 +171,9 @@ const googleLogin = async (req: Request, res: Response , next: NextFunction) => 
     existingUser.password = hashedPassword;
     await existingUser.save();
 
-    const token = jwt.sign(
-      {
-        _id: existingUser._id,
-        email: existingUser.email,
-        username: existingUser.username,
-      },
-      process.env.JWT_TOKEN!,
-      { expiresIn: "1h" }
+    const token = createAccessToken(
+      existingUser._id.toString(),
+      process.env.JWT_TOKEN as string
     );
 
     const { password, createdAt, ...safeUser } = existingUser.toObject();
