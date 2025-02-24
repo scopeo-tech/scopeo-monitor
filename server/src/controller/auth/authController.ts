@@ -149,10 +149,10 @@ const userLogin = async (req: Request, res: Response, next: NextFunction) => {
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-const googleLogin = async (req: Request, res: Response) => {
+const googleLogin = async (req: Request, res: Response , next: NextFunction) => {
   const { idToken } = req.body;
 
-  if (!idToken) return res.status(400).json({ error: "ID token missing" });
+  if (!idToken) return next(new CustomError(400, "No idToken provided"));
 
   const randomPassword = Math.random().toString(36).slice(-12);
   const hashedPassword = await bcrypt.hash(randomPassword, 10);
@@ -160,11 +160,10 @@ const googleLogin = async (req: Request, res: Response) => {
   const ticket = await client.verifyIdToken({
     idToken,
     audience: process.env.GOOGLE_CLIENT_ID,
-    maxExpiry: 60 * 60,
   });
 
   const payload = ticket.getPayload();
-  if (!payload) return res.status(401).json({ error: "Invalid token" });
+  if (!payload) return next(new CustomError(400, "Invalid idToken"));
 
   const existingUser = await User.findOne({ email: payload.email });
 
