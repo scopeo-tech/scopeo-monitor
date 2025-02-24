@@ -10,7 +10,7 @@ import * as Yup from "yup";
 import { FC } from "react";
 import { FaUser, FaLock } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import { getSession, signIn, signOut, useSession } from "next-auth/react";
+import { getSession, signIn, useSession } from "next-auth/react";
 import axios from "axios";
 
 const LoginForm: FC = () => {
