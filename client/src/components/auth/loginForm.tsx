@@ -90,7 +90,6 @@ const LoginForm: FC = () => {
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("token", token);
       setUser(user);
-      console.log(user);
       console.log("login Succefully");
       router.push("/home")
     } catch (err) {
