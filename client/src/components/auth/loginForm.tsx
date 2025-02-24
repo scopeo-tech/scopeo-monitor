@@ -94,12 +94,14 @@ const LoginForm: FC = () => {
       console.log("login Succefully");
       router.push("/home")
     } catch (err) {
-      setError((err as Error).message);
-      console.log("error", error);
+        setError((err as Error).message);
+        console.log("error",error);
+        
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
+
+}
 
   return (
     <div className="flex h-screen items-center justify-center bg-white">
