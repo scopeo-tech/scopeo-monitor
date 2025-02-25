@@ -10,13 +10,25 @@ interface UserState {
 }
 
 // Create Zustand store
-export const userStore = create<UserState>((set) => ({
-  user: null,
-  setUser: (user) => set({ user }),
+export const useUserStore = create<UserState>((set) => ({
+  user: typeof window !== "undefined"
+    ? JSON.parse(localStorage.getItem("user") || "null")
+    : null,
+
+  setUser: (user) => {
+    set({ user });
+    if (typeof window !== "undefined") {
+      localStorage.setItem("user", JSON.stringify(user));
+    }
+  },
+
   logout: async () => {
     try {
       await logoutUser();
       set({ user: null });
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("user");
+      }
       console.log("User logged out successfully.");
     } catch (error) {
       console.error("Logout failed:", error);

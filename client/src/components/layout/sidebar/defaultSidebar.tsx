@@ -5,8 +5,13 @@ import { getUserInfo, logoutUser, getUserProjectCount } from "@/lib/api";
 import { FC } from "react";
 import { useRouter } from "next/navigation";
 import { FaCog, FaQuestionCircle, FaSignOutAlt } from "react-icons/fa";
+import {useState} from "react";
+import {FiEdit} from "react-icons/fi";
+import CreateProjectModal from "@/components/modal/createProjectModal";
+
 
 const Sidebar: FC = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
     const { data: user, isLoading, isError } = useQuery({
       queryKey: ["userInfo"],
@@ -41,16 +46,17 @@ const Sidebar: FC = () => {
   if(isError||countError) return <div>Error</div>
 
   return (
-    <div className="w-64 bg-emerald-400 text-white h-[calc(100vh-64px)] p-4 fixed left-0 top-16">
-      <div className="text-center">
-        <button className="text-sm text-white hover:underline flex items-center justify-center gap-1">
+    <div className="w-64 bg-emerald-400 text-white h-[100vh] p-10 fixed left-0 top-14 pl-12">
+      <div className="text-center pt-7">
+        <button className="text-sm text-white hover:underline flex items-center justify-center gap-1"
+        onClick={() => setIsModalOpen(true)}>
           Create new project
-          <span className="text-xs">⎇</span>
+          <FiEdit className="ml-1" />
         </button>
       </div>
 
       {user && (
-        <div className="mt-6  p-4 rounded-lg">
+        <div className="mt-6  rounded-lg">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-rose-500 text-white flex items-center justify-center rounded-full text-lg">
              {user?.username[0].toUpperCase()} 
@@ -73,7 +79,7 @@ const Sidebar: FC = () => {
         </div>
       )}
 
-      <div className="mt-48 space-y-4 p-4">
+      <div className="mt-64 space-y-4 ">
         <button className="flex items-center space-x-2 text-white hover:text-white/80">
           <FaCog />
           <span>Settings</span>
@@ -90,7 +96,9 @@ const Sidebar: FC = () => {
           <span>Logout</span>
         </button>
       </div>
+      <CreateProjectModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
+
   );
 };
 
