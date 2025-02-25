@@ -2,9 +2,6 @@ import axiosInstance from "./util/axiosInstance";
 import axios from "axios";
 import { Project, userDetails } from "./interface";
 
-
-
-
 export const api = axios.create({
     baseURL: "http://localhost:3001/api",
     withCredentials: true,
@@ -66,6 +63,12 @@ export const getUserProjects = async (): Promise<Project[]> => {
     const response = await axiosInstance.get("/user/list");
     return response.data.data; 
 };
+
+
+export const getUserProjectCount = async (): Promise<number> => {
+    const response = await axiosInstance.get("user/project/count");
+    return response.data.data;
+}
 
 
 //create project
