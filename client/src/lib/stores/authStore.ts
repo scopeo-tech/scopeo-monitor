@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { User } from "../interface";
 import { logoutUser } from "../api";
+import { persist } from "zustand/middleware";
 
 interface AuthState {
   user: User | null;
@@ -8,16 +9,28 @@ interface AuthState {
   logout: () => Promise<void>;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  user: null,
-  setUser: (user) => set({ user }),
-  logout: async () => {
-    try {
-      await logoutUser();
-      set({ user: null });
-      console.log("Logged out successfully!");
-    } catch (error) {
-      console.error("Logout failed:", error);
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      user: JSON.parse(localStorage.getItem("user") || "null"), 
+      setUser: (user) => {
+        set({ user });
+        localStorage.setItem("user", JSON.stringify(user));
+      },
+      logout: async () => {
+        try {
+          await logoutUser();
+          set({ user: null });
+          localStorage.removeItem("user"); 
+          localStorage.removeItem("token");
+          console.log("Logged out successfully!");
+        } catch (error) {
+          console.error("Logout failed:", error);
+        }
+      },
+    }),
+    {
+      name: "auth-storage", 
     }
-  },
-}));
+  )
+);

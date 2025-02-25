@@ -63,7 +63,7 @@ const getProjectPassKey = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { projectId } = req.body;
+  const { projectId } = req.params;
   const user = req.user;
   if (!projectId) {
     return next(new CustomError(404, "Project ID not provided"));
@@ -100,8 +100,6 @@ const updateProjectStatus = async (
   }else{
     return next(new CustomError(404, "Project not found , make sure you provided correct apikey and passkey"));
   }
-
-  console.log(project,"project");
   await project.save();
 
   return res

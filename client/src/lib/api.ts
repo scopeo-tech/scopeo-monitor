@@ -91,3 +91,10 @@ export const getPassKey = async () => {
     return response.data;
   };
 
+  export const getProjectPassKey = async (data: { projectId: string }) =>  {
+    const response = await axiosInstance.get(`/project/get-project-passkey/${data.projectId}`, { params: data });
+    console.log(response.data.data);
+    return response.data.data;
+  };
+  
+
