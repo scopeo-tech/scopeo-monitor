@@ -4,23 +4,28 @@
 import { useQuery } from "@tanstack/react-query";
 import { getUserInfo, logoutUser ,getUserProjectCount} from "@/lib/api";
 import { FC } from "react";
+import { useRouter } from "next/navigation";
 import { FaCog, FaQuestionCircle, FaSignOutAlt } from "react-icons/fa";
 
 
 
 const Sidebar: FC = () => {
+  const router = useRouter();
     const { data: user, isLoading, isError } = useQuery({
       queryKey: ["userInfo"],
       queryFn: getUserInfo,
     });
+
 
     const { data: projectCount, isLoading: countLoading, isError: countError } = useQuery({
       queryKey: ["userProjectCount"],
       queryFn: getUserProjectCount,
     });
 
+
     const handleLogout =async () => {
         await logoutUser()
+        router.push("/")
         window.location.reload()
     }
 
