@@ -11,6 +11,7 @@ import { FC } from "react";
 import { FaUser, FaLock } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { getSession, signIn, useSession } from "next-auth/react";
+import axios from "axios";
 
 const LoginForm: FC = () => {
   const [loading, setLoading] = useState(false);
@@ -18,44 +19,54 @@ const LoginForm: FC = () => {
   const setUser = useAuthStore((state) => state.setUser);
   const router = useRouter();
 
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   useEffect(() => {
-    if (session?.idToken) {
-      handleGoogleLogin(session.idToken);
+    if (status === "authenticated" && session?.idToken) {
+      console.log("Session loaded :", session);
+      handleGoogleLogin(session?.idToken);
     }
-  }, [session?.idToken]);
+  }, [session, status]);
 
-  const handleSignIn = () => {
-    signIn("google").then((response) => {
-      if (response?.error) {
-        setError(response.error);
-        return;
-      }
-      
-    
-      getSession().then((session) => {
-        if (session?.idToken) {
-          handleGoogleLogin(session.idToken);
+  const handleSignIn = async () => {
+    try {
+      await signIn("google", { redirect: false }).then(async (response) => {
+        if (!response?.error) {
+          const updatedSession = await getSession();
+          if (updatedSession?.idToken) {
+            await handleGoogleLogin(updatedSession?.idToken);
+          }
+        } else {
+          setError(response?.error);
         }
       });
-    });
+    } catch (error) {
+      console.error("Google sign-in error:", error);
+    }
   };
-
+  
   const handleGoogleLogin = async (idToken: string) => {
     setLoading(true);
     try {
       const response = await googleLogin(idToken);
-      const { user } = response as { user: User };
-      const { token } = response as { token: string };
-      localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("token", token);
-      setUser(user);
-      console.log("Google login successful:", response);
-      router.push("/");
+      const { user, token } = response as { user: User; token: string };
+      if (user && token) {
+        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("token", token);
+        useAuthStore.getState().setUser(user);
+        router.push("/home");
+      }
     } catch (error) {
       setError((error as Error).message);
-      console.error("Google login failed:", error);
+      if (
+        axios.isAxiosError(error) &&
+        error.response?.data?.message?.includes("Expiration time")
+      ) {
+        return;
+      }
+      console.error("Google login failed", error);
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
     } finally {
       setLoading(false);
     }
@@ -79,16 +90,18 @@ const LoginForm: FC = () => {
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("token", token);
       setUser(user);
-      console.log(user);
       console.log("login Succefully");
-      // router.push("/home")
+
+      router.push("/home")
     } catch (err) {
-      setError((err as Error).message);
-      console.log("error", error);
+        setError((err as Error).message);
+        console.log("error",error);
+        
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
+
+}
 
   return (
     <div className="flex h-screen items-center justify-center bg-white">
