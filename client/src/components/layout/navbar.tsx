@@ -28,7 +28,7 @@ const Navbar: FC = () => {
       </div>
 
       {/* Sign In Button */}
-      <Link href="/login">
+      <Link href="/auth/login">
         <button className="bg-emerald-500 text-white px-4 py-2 rounded-full hover:bg-emerald-600 transition-colors">
           Sign In
         </button>
