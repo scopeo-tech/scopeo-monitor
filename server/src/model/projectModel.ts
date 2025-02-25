@@ -6,12 +6,13 @@ const projectSchema = new Schema(
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
     apiKey: { type: String, required: true, unique: true },
     passKey: { type: String, required: true, unique: true },
+    status: {connectionStatus: { type: Boolean, default: false },updatedAt: { type: Date, default: Date.now }},
     notificationStatus: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
 
-type IProject = InferSchemaType<typeof projectSchema>;
+export type IProject = InferSchemaType<typeof projectSchema>;
 const Project: Model<IProject> = mongoose.model("Project", projectSchema);
 
 export default Project;

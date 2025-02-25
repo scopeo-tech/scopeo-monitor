@@ -26,6 +26,7 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, onClose
     queryKey: ["passKey"],
     queryFn: getPassKey,
     enabled: false, 
+
   });
 
   const mutation = useMutation({
@@ -40,16 +41,15 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, onClose
   });
 
   if (!isOpen) return null;
-
   const fetchKeys = async () => {
     await fetchApiKey();
     await fetchPassKey();
   };
-
   const handleSubmit = () => {
     if (!projectName || !apiData?.data || !passData?.data) {
       return;
     }
+
     mutation.mutate({
       name: projectName,
       apiKey: apiData.data,
@@ -61,11 +61,13 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, onClose
   return (
     <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-10 px-12 w-[750px]">
+
         <div className="flex justify-end">
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
             <AiOutlineClose size={20} />
           </button>
         </div>
+
 
         <div className="space-y-6">
           <h2 className="text-lg font-semibold text-center mb-10">Create New Project</h2>
@@ -109,10 +111,12 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, onClose
             </div>
 
             <label className="text-sm text-gray-600">Pass Key</label>
+
             <input
               type="text"
               value={passData?.data || ""}
               readOnly
+
               className="w-96 px-3 py-2 border rounded-2xl"
             />
 
@@ -139,10 +143,13 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, onClose
             {mutation.isLoading ? "Creating..." : "Create Project"}
           </button>
           </div>
+
         </div>
       </div>
     </div>
   );
 };
 
+
 export default CreateProjectModal;
+
