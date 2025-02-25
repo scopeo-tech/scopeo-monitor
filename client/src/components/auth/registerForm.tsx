@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { registerUser } from "@/lib/api";
+import { googleLogin, registerUser } from "@/lib/api";
 import { sendOtpForRegister } from "@/lib/api";
 import { verifyOtp } from "@/lib/api";
 import OtpModal from "../modal/otpModal";
@@ -13,6 +13,10 @@ import { FC } from "react";
 import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import Image from "next/image";
+import { getSession, signIn, useSession } from "next-auth/react";
+import { User } from "@/lib/interface";
+import { useAuthStore } from "@/lib/stores/authStore";
+import axios from "axios";
 
 const RegisterForm: FC = () => {
   const router = useRouter();
@@ -23,8 +27,57 @@ const RegisterForm: FC = () => {
   const [isOtpVerified, setIsOtpVerified] = useState(false);
   const [otp, setOtp] = useState("");
 
-  
+  const { data: session, status } = useSession();
+  useEffect(() => {
+    if (status === "authenticated" && session?.idToken) {
+      console.log("Session loaded :", session);
+      handleGoogleLogin(session?.idToken);
+    }
+  }, [session, status]);
 
+  const handleSignIn = async () => {
+    try {
+      await signIn("google", { redirect: false }).then(async (response) => {
+        if (!response?.error) {
+          const updatedSession = await getSession();
+          if (updatedSession?.idToken) {
+            await handleGoogleLogin(updatedSession?.idToken);
+          }
+        } else {
+          setError(response?.error);
+        }
+      });
+    } catch (error) {
+      console.error("Google sign-in error:", error);
+    }
+  };
+
+  const handleGoogleLogin = async (idToken: string) => {
+    setLoading(true);
+    try {
+      const response = await googleLogin(idToken);
+      const { user, token } = response as { user: User; token: string };
+      if (user && token) {
+        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("token", token);
+        useAuthStore.getState().setUser(user);
+        router.push("/home");
+      }
+    } catch (error) {
+      setError((error as Error).message);
+      if (
+        axios.isAxiosError(error) &&
+        error.response?.data?.message?.includes("Expiration time")
+      ) {
+        return;
+      }
+      console.error("Google login failed", error);
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleGetOtp = async (email: string) => {
     setLoading(true);
@@ -150,7 +203,7 @@ const RegisterForm: FC = () => {
                 <div className="flex items-center justify-center my-2">
                   <span className="px-3 text-gray-400 text-sm">or</span>
                 </div>
-                <button type="button" className="w-full flex items-center justify-center border border-gray-300 py-3 rounded-full text-gray-700 hover:bg-gray-50 transition">
+                <button onClick={handleSignIn} type="button" className="w-full flex items-center justify-center border border-gray-300 py-3 rounded-full text-gray-700 hover:bg-gray-50 transition">
                   <FcGoogle className="mr-2 text-lg" /> Login with Google
                 </button>
               </Form>
