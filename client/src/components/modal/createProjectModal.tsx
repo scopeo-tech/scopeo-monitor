@@ -34,7 +34,7 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, onClose
       queryClient.invalidateQueries({ queryKey: ["projects"] });
       onClose();
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       console.log(error, "Failed to create project");
     },
   });
