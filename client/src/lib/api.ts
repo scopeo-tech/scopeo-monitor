@@ -2,11 +2,11 @@ import axiosInstance from "./util/axiosInstance";
 import axios from "axios";
 import { Project, userDetails } from "./interface";
 
-
 export const api = axios.create({
     baseURL: "http://localhost:3001/api",
     withCredentials: true,
 });
+
 
 
 //authentication
@@ -25,6 +25,8 @@ export const registerUser =async(data:{username: string, email: string, password
 export const logoutUser =async() => {
     const response = await api.post("/auth/logout")
     console.log(response.data);
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     return response.data
 }
 
@@ -61,6 +63,12 @@ export const getUserProjects = async (): Promise<Project[]> => {
     const response = await axiosInstance.get("/user/list");
     return response.data.data; 
 };
+
+
+export const getUserProjectCount = async (): Promise<number> => {
+    const response = await axiosInstance.get("user/project/count");
+    return response.data.data;
+}
 
 
 //create project
