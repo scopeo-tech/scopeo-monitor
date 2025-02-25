@@ -23,8 +23,18 @@ const Sidebar: FC = () => {
     const handleLogout =async () => {
         await logoutUser()
         router.push("/")
-        window.location.reload()
+       
     }
+
+    const formatJoinedDate = (dateString: string) => {
+      if (!dateString) return "";
+      
+      const date = new Date(dateString);
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}-${month}-${year}`;
+    };
 
 
   if(isLoading||countLoading) return <div>Loading...</div>
@@ -53,7 +63,7 @@ const Sidebar: FC = () => {
           <div className="mt-4 space-y-1 text-sm">
             <p className="flex gap-2">
               <span className="opacity-80">Joined on</span>
-              <span>: {user?.joinedDate}</span>
+              <span>:{formatJoinedDate (user?.joinedDate)}</span>
             </p>
             <p className="flex gap-2">
               <span className="opacity-80">Total Projects</span>
