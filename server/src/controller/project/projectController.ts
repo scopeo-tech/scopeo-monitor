@@ -116,6 +116,63 @@ const flagOldStatuses=async ()=> {
     );
   }
 
+//updateProject
+const updateProject = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  const {projectId} = req.params
+  const {passKey,name } = req.body
+  if(!projectId){
+    return next(new CustomError(404, "Project ID not provided"));
+  }
+  const project = await Project.findOne({ _id: projectId });
+  if (!project) {
+    return next(new CustomError(404, "Project not found"));
+  }
+  if (name) {
+    const nameExists = await Project.findOne({ name });
+    if (nameExists && nameExists.id !== projectId) {
+      return next(new Error("Project name already exists."));
+    }
+    project.name = name;
+  }
+  if(passKey){
+    project.passKey = passKey;
+  }
+  await project.save();
+  res.json({ success: true, message: "Project updated successfully.", project });
+};
+
+
+const checkProjectName = async (req: AuthenticatedRequest, res: Response) => {
+  const {name} = req.body
+  if(!name){
+    return res.status(400).json({ status: false, message: "Project name is required" });
+  }
+  const existingProject = await Project.findOne({ name });
+  console.log(existingProject)
+  if (existingProject) {
+    return res.json({ exists: !!existingProject });
+  }
+  return res.json({ exists: !!existingProject });
+};
+
+const deleteProject = async (req: AuthenticatedRequest, res: Response,next:NextFunction) => {
+  const { projectId } = req.params;
+  const user = req.user;
+  if (!projectId) {
+    return next(new CustomError(404, "Project ID not provided"));
+  }
+  const project = await Project.findOneAndDelete({ user, _id: projectId });
+  if (!project) {
+    return next(new CustomError(404, "Project not found"));
+  }
+  return res
+    .status(200)
+    .json({ status: "success", message: "Project deleted" });
+};
+
+
+
+
   
 
 export {
@@ -124,5 +181,8 @@ export {
   createProject,
   getProjectPassKey,
   updateProjectStatus,
-  flagOldStatuses
+  flagOldStatuses,
+  updateProject,
+  checkProjectName,
+  deleteProject
 };
