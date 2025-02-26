@@ -2,14 +2,12 @@ import { create } from "zustand";
 import { userDetails } from "../interface"; 
 import { logoutUser } from "../api";
 
-// Define the state type
 interface UserState {
   user: userDetails | null;
   setUser: (user: userDetails | null) => void;
   logout: () => Promise<void>;
 }
 
-// Create Zustand store
 export const useUserStore = create<UserState>((set) => ({
   user: typeof window !== "undefined"
     ? JSON.parse(localStorage.getItem("user") || "null")

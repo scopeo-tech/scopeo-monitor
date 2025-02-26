@@ -66,7 +66,7 @@ const DefaultPage: FC = () => {
   };
   
 
-  const getHiddenPassKey = () => "••••••••••";
+  const getHiddenPassKey = () => "•••••••••••••";
 
   return (
     <div className="p-8 min-h-screen">
@@ -105,7 +105,7 @@ const DefaultPage: FC = () => {
             <tbody>
               {Array.isArray(projects) &&
                 projects.map((project: Project) => (
-                  <tr key={project._id} className="border-b text-sm hover:bg-gray-50 hover:cursor-pointer">
+                  <tr key={project._id} className="border-b text-sm hover:bg-gray-50">
                     <td className="py-4 px-4 text-gray-700">{project.name}</td>
                     <td className="py-4 px-4 ml-8">
                       <span
@@ -117,7 +117,7 @@ const DefaultPage: FC = () => {
                       ></span>
                     </td>
                     <td className="py-4 px-4 text-gray-600">{project.apiKey}</td>
-                    <td className="py-4 px-4 text-gray-600 flex items-center">
+                    <td className ="py-4 px-4 text-gray-600 flex items-center w-40">
                       {visiblePassKeys[project._id] ? passKeys[project._id] : getHiddenPassKey()}
                       <button
                         onClick={() => togglePassKeyVisibility(project._id)}
