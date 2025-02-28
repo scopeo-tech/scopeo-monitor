@@ -137,10 +137,10 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, onClose
           <div className="flex justify-center">
           <button
             onClick={handleSubmit}
-            disabled={mutation.isLoading}
+            disabled={mutation.isPending}
             className="w-96 py-2 mt-4 bg-green-500 text-white rounded-2xl hover:bg-green-600 transition-colors"
           >
-            {mutation.isLoading ? "Creating..." : "Create Project"}
+            {mutation.isPending ? "Creating..." : "Create Project"}
           </button>
           </div>
 

@@ -1,16 +1,23 @@
-import { set } from "mongoose";
+import cron from "node-cron";
 import { flagOldStatuses } from "../controller/project/projectController";
 
+let isRunning = false;
 
 const startFlaggingOldStatusesCronJob = async (): Promise<void> => {
-  setInterval(async () => {
+  cron.schedule("*/5 * * * *", async () => {
+    if(isRunning) {
+      console.log("Job is already running");
+      return;
+    }
+    isRunning = true;
     try {
-        await flagOldStatuses();
+      await flagOldStatuses();
     } catch (error) {
       console.error(error);
+    }finally {
+      isRunning = false;
     }
-  }, 5000);
+  })
 };
-
 
 export default startFlaggingOldStatusesCronJob;
