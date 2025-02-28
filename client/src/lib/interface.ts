@@ -10,6 +10,7 @@ export interface userDetails {
     email: string;
     joinedDate: string;
     googleId?: string;
+    
   }
 
 export interface Project {
