@@ -1,6 +1,6 @@
 "use client";
 
-import Navbar from "@/components/layout/navbar/navbar";
+import Navbar from "@/components/layout/navbar";
 import Sidebar from "@/components/layout/sidebar/defaultSidebar";
 
 export default function HomeLayout({ children }: { children: React.ReactNode }) {
