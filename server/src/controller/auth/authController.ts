@@ -24,7 +24,7 @@ export const sendOtpForRegister = async (
 
   const emailExists = await User.findOne({ email });
   if (emailExists) {
-    return next(new CustomError(400, "Email already exists"));
+    return next(new CustomError(400, "User already exists"));
   }
 
   const otp = otpGenerator.generate(6, {

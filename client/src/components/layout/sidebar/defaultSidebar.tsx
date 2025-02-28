@@ -80,11 +80,15 @@ const Sidebar: FC = () => {
       )}
 
       <div className="mt-64 space-y-4 ">
-        <button className="flex items-center space-x-2 text-white hover:text-white/80">
+        <button
+           onClick={() => router.push("/home/settings/project")}
+          className="flex items-center space-x-2 text-white hover:text-white/80">
           <FaCog />
           <span>Settings</span>
         </button>
-        <button className="flex items-center space-x-2 text-white hover:text-white/80">
+        <button
+           onClick={() => router.push("/home/help")} 
+           className="flex items-center space-x-2 text-white hover:text-white/80">
           <FaQuestionCircle />
           <span>Get Help</span>
         </button>
