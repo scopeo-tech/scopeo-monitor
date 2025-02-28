@@ -14,8 +14,6 @@ const DefaultPage: FC = () => {
   const [day, setDay] = useState<string>("");
   const [visiblePassKeys, setVisiblePassKeys] = useState<Record<string, boolean>>({});
   const [passKeys, setPassKeys] = useState<Record<string, string>>({});
-  const [copied, setCopied] = useState(false);
-  const [apiKeys, setApiKeys] = useState<{ [key: string]: string }>({});
   const { user } = useAuthStore();
 
   const { data: projects, isLoading, isError } = useQuery<Project[]>({
@@ -147,16 +145,6 @@ const DefaultPage: FC = () => {
                         <FaCopy />
                       </button>
                     </td>
-
-                    {/* <td className ="py-4 px-4 text-gray-600 flex items-center w-40">
-                      {visiblePassKeys[project._id] ? passKeys[project._id] : getHiddenPassKey()}
-                      <button
-                        onClick={() => togglePassKeyVisibility(project._id)}
-                        className="ml-2 text-gray-500 hover:text-gray-700 focus:outline-none"
-                      >
-                        {visiblePassKeys[project._id] ? <FiEye size={16} /> : <FiEyeOff  size={16} />}
-                      </button>
-                    </td> */}
                     <td className="py-4 px-4 text-gray-600 flex items-center w-40">
                       {visiblePassKeys[project._id] ? (
                         <>
