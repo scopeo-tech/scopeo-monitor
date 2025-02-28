@@ -16,7 +16,7 @@ router
 .get("/pass-key", tryCatch(getPassKey))
 .get("/get-project-passkey/:projectId",tryCatch(getProjectPassKey))
 .put("/update-project/:projectId",tryCatch(updateProject))
-.get("/check-project-name/:name",tryCatch(checkProjectName))
+.post("/check-project-name",tryCatch(checkProjectName))
 .delete("/delete-project/:projectId",tryCatch(deleteProject))
 
 export default router

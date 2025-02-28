@@ -13,7 +13,7 @@ const Navbar: FC = () => {
       <div className="flex items-center " onClick={() => router.push("/home")}>
         <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
           <svg 
-            xmlns="http://www.w3.org/2000/svg" 
+            xmlns="https://www.figma.com/674429f3-5dd1-45ff-9d37-9d54a2a101b8" 
             viewBox="0 0 24 24" 
             fill="white" 
             className="w-5 h-5"

@@ -147,7 +147,7 @@ const updateProject = async (req: AuthenticatedRequest, res: Response, next: Nex
 
 
 const checkProjectName = async (req: AuthenticatedRequest, res: Response, next:NextFunction) => {
-  const {name} = req.params
+  const {name} = req.body
   if(!name){
     return next(new Error("Project name is required."));
   }
