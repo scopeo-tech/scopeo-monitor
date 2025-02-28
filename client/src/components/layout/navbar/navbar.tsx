@@ -3,12 +3,14 @@
 import Link from "next/link";
 import { FC } from "react";
 import { useUserStore } from "@/lib/stores/userStore";
+import { useRouter } from "next/navigation";
 const Navbar: FC = () => {
   const {user}= useUserStore();
+  const router = useRouter();
   return (
     <nav className="flex items-center justify-between px-10 py-3 bg-white border-b shadow-sm ">
       {/* Logo */}
-      <div className="flex items-center ">
+      <div className="flex items-center " onClick={() => router.push("/home")}>
         <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
           <svg 
             xmlns="https://www.figma.com/674429f3-5dd1-45ff-9d37-9d54a2a101b8" 
