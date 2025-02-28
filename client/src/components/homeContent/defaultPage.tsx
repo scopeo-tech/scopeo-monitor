@@ -7,20 +7,23 @@ import { getUserProjects, getProjectPassKey } from "@/lib/api";
 import { Project } from "@/lib/interface";
 import CreateProjectModal from "../modal/createProjectModal";
 import { FiEdit, FiEye, FiEyeOff } from "react-icons/fi";
+import { FaCopy } from "react-icons/fa";
 
 const DefaultPage: FC = () => {
   const [formattedDate, setFormattedDate] = useState<string>("");
   const [day, setDay] = useState<string>("");
   const [visiblePassKeys, setVisiblePassKeys] = useState<Record<string, boolean>>({});
   const [passKeys, setPassKeys] = useState<Record<string, string>>({});
-  const {user} = useAuthStore();
+  const [copied, setCopied] = useState(false);
+  const [apiKeys, setApiKeys] = useState<{ [key: string]: string }>({});
+  const { user } = useAuthStore();
 
   const { data: projects, isLoading, isError } = useQuery<Project[]>({
     queryKey: ["userProjects"],
     queryFn: getUserProjects,
   });
 
- 
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
@@ -34,7 +37,7 @@ const DefaultPage: FC = () => {
       console.error("Error: Project ID is missing!");
       return;
     }
-  
+
     if (visiblePassKeys[projectId]) {
       setVisiblePassKeys((prev) => ({
         ...prev,
@@ -42,7 +45,7 @@ const DefaultPage: FC = () => {
       }));
       return;
     }
-  
+
     try {
       const passKeyData = await getProjectPassKey({ projectId });
       console.log(passKeyData)
@@ -50,12 +53,12 @@ const DefaultPage: FC = () => {
         console.error("Error: No passKey received!");
         return;
       }
-  
+
       setPassKeys((prev) => ({
         ...prev,
         [projectId]: passKeyData,
       }));
-  
+
       setVisiblePassKeys((prev) => ({
         ...prev,
         [projectId]: true,
@@ -64,7 +67,28 @@ const DefaultPage: FC = () => {
       console.error("Failed to fetch passKey:", error);
     }
   };
-  
+
+  const handleCopy = (apiKeys: string) => {
+    if (!apiKeys) {
+      return console.error("Error: No API key to copy!");
+    }
+
+    navigator.clipboard.writeText(apiKeys)
+      .then(() => console.log("API Key copied!"))
+      .catch((err) => console.error("Failed to copy API key:", err));
+  };
+
+  const handleCopyPassKey = (passKeys?: string) => {
+    if (!passKeys) {
+      return console.error("Error: No passKey to copy!");
+
+    }
+    console.log("sad", passKeys);
+    navigator.clipboard.writeText(passKeys)
+      .then(() => console.log("PassKey copied!"))
+      .catch((err) => console.error("Failed to copy passKey:", err));
+  };
+
 
   const getHiddenPassKey = () => "•••••••••••••";
 
@@ -109,15 +133,22 @@ const DefaultPage: FC = () => {
                     <td className="py-4 px-4 text-gray-700">{project.name}</td>
                     <td className="py-4 px-4 ml-8">
                       <span
-                        className={`inline-block w-2 h-2 rounded-full hover: ${
-                          project.status.connectionStatus
+                        className={`inline-block w-2 h-2 rounded-full hover: ${project.status.connectionStatus
                             ? "bg-green-500"
                             : "bg-red-500"
-                        }`}
+                          }`}
                       ></span>
                     </td>
-                    <td className="py-4 px-4 text-gray-600">{project.apiKey}</td>
-                    <td className ="py-4 px-4 text-gray-600 flex items-center w-40">
+                    <td className="py-4 px-4 text-gray-600">{project.apiKey}
+                      <button
+                        onClick={() => handleCopy(project.apiKey)}
+                        className="ml-2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                      >
+                        <FaCopy />
+                      </button>
+                    </td>
+
+                    {/* <td className ="py-4 px-4 text-gray-600 flex items-center w-40">
                       {visiblePassKeys[project._id] ? passKeys[project._id] : getHiddenPassKey()}
                       <button
                         onClick={() => togglePassKeyVisibility(project._id)}
@@ -125,7 +156,30 @@ const DefaultPage: FC = () => {
                       >
                         {visiblePassKeys[project._id] ? <FiEye size={16} /> : <FiEyeOff  size={16} />}
                       </button>
+                    </td> */}
+                    <td className="py-4 px-4 text-gray-600 flex items-center w-40">
+                      {visiblePassKeys[project._id] ? (
+                        <>
+                          {passKeys[project._id]}
+                          <button
+                            onClick={() => handleCopyPassKey(passKeys[project._id])}
+                            className="ml-2 text-blue-500 hover:text-blue-700 focus:outline-none"
+                          >
+                            <FaCopy size={16} />
+                          </button>
+                        </>
+                      ) : (
+                        getHiddenPassKey()
+                      )}
+
+                      <button
+                        onClick={() => togglePassKeyVisibility(project._id)}
+                        className="ml-2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                      >
+                        {visiblePassKeys[project._id] ? <FiEye size={16} /> : <FiEyeOff size={16} />}
+                      </button>
                     </td>
+
                   </tr>
                 ))}
             </tbody>
