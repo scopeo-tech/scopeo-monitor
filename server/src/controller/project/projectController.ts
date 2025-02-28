@@ -1,6 +1,10 @@
 import { Response, NextFunction } from "express";
 import { AuthenticatedRequest } from "../../lib/types/type";
 import Project from "../../model/projectModel";
+import Security from "../../model/securityModel";
+import Health from "../../model/healthModel";
+import Error from "../../model/errorModel";
+import Log from "../../model/logModel";
 import CustomError from "../../lib/util/CustomError";
 import crypto from "crypto";
 
@@ -116,6 +120,64 @@ const flagOldStatuses=async ()=> {
     );
   }
 
+//updateProject
+const updateProject = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  const {projectId} = req.params
+  const {passKey,name } = req.body
+  if(!projectId){
+    return next(new CustomError(404, "Project ID not provided"));
+  }
+  const project = await Project.findOne({ _id: projectId });
+  if (!project) {
+    return next(new CustomError(404, "Project not found"));
+  }
+  if (name) {
+    const nameExists = await Project.findOne({ name });
+    if (nameExists) {
+      return next(new Error("Project name can't be same as previous."));
+    }
+    project.name = name;
+  }
+  if(passKey){
+    project.passKey = passKey;
+  }
+  await project.save();
+  res.status(200).json({ success: true, message: "Project updated successfully.", project });
+};
+
+
+const checkProjectName = async (req: AuthenticatedRequest, res: Response, next:NextFunction) => {
+  const {name} = req.body
+  if(!name){
+    return next(new Error("Project name is required."));
+  }
+  const existingProject = await Project.findOne({ name });
+  if (existingProject) {
+    return res.status(200).json({status:"success", message:"Project name can't be same as previous", data:true });
+  }
+  return res.status(200).json({status:"success", message:"Project name is available", data:false });
+};
+
+const deleteProject = async (req: AuthenticatedRequest, res: Response,next:NextFunction) => {
+  const { projectId } = req.params;
+  const user = req.user;
+  if (!projectId) {
+    return next(new CustomError(404, "Project ID not provided"));
+  }
+  const project = await Project.findOneAndDelete({ user, _id: projectId });
+  if (!project) {
+    return next(new CustomError(404, "Project not found"));
+  }
+  await Promise.all([
+    Health.deleteMany({ project: projectId }),
+    Log.deleteMany({ project: projectId }),
+    Security.deleteMany({ project: projectId }),
+    Error.deleteMany({ project: projectId }),
+  ]);
+  return res
+    .status(200)
+    .json({ status: "success", message: "Project deleted" });
+};
   
 
 export {
@@ -124,5 +186,8 @@ export {
   createProject,
   getProjectPassKey,
   updateProjectStatus,
-  flagOldStatuses
+  flagOldStatuses,
+  updateProject,
+  checkProjectName,
+  deleteProject
 };
