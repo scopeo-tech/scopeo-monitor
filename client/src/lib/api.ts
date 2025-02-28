@@ -32,7 +32,6 @@ export const logoutUser =async() => {
 
 // Send OTP for registration
 export const sendOtpForRegister = async (email: string) => {
-
     const response = await api.get(`/auth/register/${email}`);
     console.log(response.data);
     return response.data;
@@ -96,5 +95,28 @@ export const getPassKey = async () => {
     console.log(response.data.data);
     return response.data.data;
   };
-  
+
+
+  export const updateProject = async (projectId: string, data: { name: string; passKey: string }) => {
+    const response = await axiosInstance.put(`/project/update-project/${projectId}`, data);
+    console.log(response.data);
+    return response.data;
+}; 
+
+
+export const checkProjectName = async ( name: string ) => {
+  const response = await axiosInstance.get(`/project/check-project-name/${name}`);
+  console.log(response.data.data);
+  return response.data;
+};
+
+export const deleteProject = async (projectId: string) => {
+  const response = await axiosInstance.delete(`/project/delete-project/${projectId}`);
+  console.log(response.data);
+  return response.data;
+};
+
+
+
+ 
 

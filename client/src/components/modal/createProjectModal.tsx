@@ -1,9 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getApiKey, getPassKey, createProject } from "@/lib/api";
+import { getApiKey, getPassKey, createProject,checkProjectName } from "@/lib/api";
 import { useAuthStore } from "@/lib/stores/authStore";
 import { AiOutlineClose } from "react-icons/ai";
+
 
 interface CreateProjectModalProps {
   isOpen: boolean;
@@ -12,7 +13,9 @@ interface CreateProjectModalProps {
 
 const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, onClose }) => {
   const [projectName, setProjectName] = useState("");
+  const [isNameTaken, setIsNameTaken] = useState<boolean | null>(null);
   const [notificationStatus, setNotificationStatus] = useState(false);
+  const [resMessage, setResMessage] = useState("");
   const queryClient = useQueryClient();
   const userName = useAuthStore((state) => state.user?.username);
 
@@ -28,6 +31,28 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, onClose
     enabled: false, 
 
   });
+
+   useEffect(() => {
+      if (!projectName) {
+        setIsNameTaken(null);
+        setResMessage("");
+        return;
+      };
+
+      const delayCheck = setTimeout(async () => {
+        try {
+          const response = await checkProjectName(projectName);
+          setIsNameTaken(response.data);
+          setResMessage(response.message);
+        } catch (error) {
+          console.error("Error checking project name:", error);
+          setIsNameTaken(true);
+          setResMessage("Error checking project name");
+        }
+      }, 500); 
+  
+      return () => clearTimeout(delayCheck);
+    }, [projectName]);
 
   const mutation = useMutation({
     mutationFn: createProject,
@@ -77,14 +102,17 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, onClose
             <div className="relative">
               <input
                 type="text"
+                required
                 value={projectName}
                 onChange={(e) => setProjectName(e.target.value)}
                 className="w-96 px-3 py-2 border rounded-2xl"
                 placeholder="Enter project name"
               />
-              {projectName && (
-                <div className="text-xs text-green-500 mt-1">Project name is available</div>
-              )}
+             {isNameTaken !== null && (
+              <p className={`text-sm ${isNameTaken ? "text-red-600" : "text-green-600"}`}>
+                {isNameTaken ? `❌ ${resMessage}` : `✅ ${resMessage}`}
+              </p>
+            )}
             </div>
 
             <label className="text-sm text-gray-600">Created by</label>
