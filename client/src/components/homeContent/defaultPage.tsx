@@ -162,9 +162,8 @@ const DefaultPage: FC = () => {
 
                       <button
                         onClick={() => togglePassKeyVisibility(project._id)}
-                        className="ml-2 text-gray-500 hover:text-gray-700 focus:outline-none"
-                      >
-                        {visiblePassKeys[project._id] ? <FiEye size={16} /> : <FiEyeOff size={16} />}
+                        className="ml-2 text-gray-500 hover:text-gray-700 focus:outline-none">
+                        {visiblePassKeys[project._id] ? <FiEye size={16} /> : <FiEyeOff  size={16} />}
                       </button>
                     </td>
 
