@@ -7,6 +7,6 @@ import tryCatch from "../lib/util/tryCatch";
 const packageRouter = express.Router();
 
 packageRouter
-.post("/project/status",tryCatch(updateProjectStatus))
+.post("/status",tryCatch(updateProjectStatus))
 
 export default packageRouter
