@@ -178,6 +178,22 @@ const deleteProject = async (req: AuthenticatedRequest, res: Response,next:NextF
     .status(200)
     .json({ status: "success", message: "Project deleted" });
 };
+
+
+const getProjectById = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  const { projectId } = req.params;
+  const user = req.user;
+  if (!projectId) {
+    return next(new CustomError(404, "Project ID not provided"));
+  }
+  const project = await Project.findOne({ user, _id: projectId });
+  if (!project) {
+    return next(new CustomError(404, "Project not found"));
+  }
+  return res
+    .status(200)
+    .json({ status: "success", message: "Project found", data: project });
+};
   
 
 export {
@@ -189,5 +205,6 @@ export {
   flagOldStatuses,
   updateProject,
   checkProjectName,
-  deleteProject
+  deleteProject,
+  getProjectById
 };
