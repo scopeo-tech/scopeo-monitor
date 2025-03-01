@@ -2,6 +2,7 @@ import express from "express";
 import { checkProjectName, createProject ,getApiKey, getPassKey, getProjectPassKey,updateProject,deleteProject, getErrorStats} from "../controller/project/projectController";
 import verifyToken from "../middleware/verifyToken";
 import tryCatch from "../lib/util/tryCatch";
+import { getCommonError, getErrorMethodPercentages, getLatestError } from "../controller/agent/errorTrack";
 
 
 const router = express.Router();
@@ -18,6 +19,11 @@ router
 .put("/update-project/:projectId",tryCatch(updateProject))
 .post("/check-project-name",tryCatch(checkProjectName))
 .delete("/delete-project/:projectId",tryCatch(deleteProject))
-.get("/error-stats",tryCatch(getErrorStats))
+
+//Error Stats
+.get("/get-error-stats/:projectId",tryCatch(getErrorStats))
+.get("/get-error-common/:projectId",tryCatch(getCommonError))
+.get("/get-error-latest/:projectId",tryCatch(getLatestError))
+.get("/get-error-method/:projectId",tryCatch(getErrorMethodPercentages))
 
 export default router
