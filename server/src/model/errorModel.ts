@@ -1,25 +1,33 @@
 import mongoose, { Schema, InferSchemaType, Model } from "mongoose";
 
-const errorSchema = new Schema({
-    type: {
-      type: [String], 
-      enum: ["404", "400", "500", "auth"], 
+const errorSchema = new Schema(
+  {
+    projectId: {
+      type: Schema.Types.ObjectId,
+      ref: "Project",
       required: true,
     },
-    project:{
-        type:Schema.Types.ObjectId,
-        ref:"Project",
-        required:true,
-    },  
-  },{ timestamps: true }
+    statusCode: {
+      type: Number,
+      required: true,
+    },
+    method: {
+      type: String,
+      required: true,
+    },
+    route: {
+      type: String,
+      required: true,
+    },
+    message: {
+      type: String,
+      required: true,
+    }
+  },
+  { timestamps: true }
 );
 
 type IError = InferSchemaType<typeof errorSchema>;
 
-
-const Error: Model<IError>=mongoose.model("Error", errorSchema);
-export default Error
-
-
-
-
+const Error: Model<IError> = mongoose.model("Error", errorSchema);
+export default Error;

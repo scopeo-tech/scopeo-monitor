@@ -7,6 +7,9 @@ import Error from "../../model/errorModel";
 import Log from "../../model/logModel";
 import CustomError from "../../lib/util/CustomError";
 import crypto from "crypto";
+import mongoose from "mongoose";
+
+const { ObjectId } = mongoose.Types;
 
 const generateApiKey = () => {
   return crypto.randomBytes(8).toString("hex");
@@ -178,7 +181,89 @@ const deleteProject = async (req: AuthenticatedRequest, res: Response,next:NextF
     .status(200)
     .json({ status: "success", message: "Project deleted" });
 };
-  
+
+
+
+const getErrorStats = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise<Response | void> => {
+  const { projectId } = req.params;
+
+  if (!projectId) {
+    return next(new CustomError(400, "Project ID is required"));
+  }
+
+  const stats = await Error.aggregate([
+    { $match: { projectId: new ObjectId(projectId) } },
+    {
+      $group: {
+        _id: "$statusCode",
+        count: { $sum: 1 },
+        mostCommonRoute: { $first: "$route" },
+        mostCommonMessage: { $first: "$message" },
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        totalErrors: { $sum: "$count" },
+        authCount: {
+          $sum: {
+            $cond: {
+              if: { $or: [{ $eq: ["$_id", 401] }, { $eq: ["$_id", 403] }] },
+              then: "$count",
+              else: 0,
+            },
+          },
+        },
+        notFoundCount: {
+          $sum: {
+            $cond: { if: { $eq: ["$_id", 404] }, then: "$count", else: 0 },
+          },
+        },
+        internalServerErrorCount: {
+          $sum: {
+            $cond: { if: { $eq: ["$_id", 500] }, then: "$count", else: 0 },
+          },
+        },
+        badRequestCount: {
+          $sum: {
+            $cond: { if: { $eq: ["$_id", 400] }, then: "$count", else: 0 },
+          },
+        },
+        mostCommonErrorCount: { $max: "$count" },
+      },
+    },
+  ]);
+
+  if (stats.length === 0) {
+    return res.status(200).json({
+      totalErrors: 0,
+      authenticationCount: 0,
+      notFoundCount: 0,
+      internalServerErrorCount: 0,
+      badRequestCount: 0,
+      mostCommonErrorCount: 0,
+    });
+  }
+
+  const errorSummary = stats[0];
+
+  const response = {
+    totalErrors: errorSummary.totalErrors,
+    authenticationCount: errorSummary.authCount,
+    notFoundCount: errorSummary.notFoundCount,
+    internalServerErrorCount: errorSummary.internalServerErrorCount,
+    badRequestCount: errorSummary.badRequestCount,
+    mostCommonErrorCount: errorSummary.mostCommonErrorCount,
+  };
+
+  res.status(200).json(response);
+};
+
+
 
 export {
   getApiKey,
@@ -189,5 +274,6 @@ export {
   flagOldStatuses,
   updateProject,
   checkProjectName,
-  deleteProject
+  deleteProject,
+  getErrorStats
 };
