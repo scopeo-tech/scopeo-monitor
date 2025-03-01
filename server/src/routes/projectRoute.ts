@@ -1,5 +1,5 @@
 import express from "express";
-import { checkProjectName, createProject ,getApiKey, getPassKey, getProjectPassKey,updateProject,deleteProject} from "../controller/project/projectController";
+import { checkProjectName, createProject ,getApiKey, getPassKey, getProjectPassKey,updateProject,deleteProject, getErrorStats} from "../controller/project/projectController";
 import verifyToken from "../middleware/verifyToken";
 import tryCatch from "../lib/util/tryCatch";
 
@@ -18,5 +18,6 @@ router
 .put("/update-project/:projectId",tryCatch(updateProject))
 .post("/check-project-name",tryCatch(checkProjectName))
 .delete("/delete-project/:projectId",tryCatch(deleteProject))
+.get("/error-stats",tryCatch(getErrorStats))
 
 export default router
