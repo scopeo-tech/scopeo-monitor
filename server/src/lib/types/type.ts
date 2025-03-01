@@ -12,6 +12,14 @@ export interface ErrorLogPayload {
   message: string;
 }
 
+export interface SecurityLogPayload {
+  statusCode: number;
+  isSuccess: boolean;
+  ip : string;
+  userAgent : string
+  duration : number
+}
+
 
 export interface ErrorStats {
     code: number;

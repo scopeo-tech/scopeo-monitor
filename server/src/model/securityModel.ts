@@ -6,6 +6,7 @@ const securitySchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Project",
       required: true,
+      index: true, 
     },
     statusCode: {
       type: Number,
@@ -17,19 +18,18 @@ const securitySchema = new Schema(
     },
     ip: {
       type: String,
-      required: false,
     },
     userAgent: {
       type: String,
-      required: false,
+    },
+    duration: {
+      type: Number, 
     },
   },
   { timestamps: true }
 );
 
-
 type ISecurity = InferSchemaType<typeof securitySchema>;
-
 
 const Security: Model<ISecurity> = model<ISecurity>("Security", securitySchema);
 export default Security;
