@@ -4,8 +4,10 @@ import Project from "../../model/projectModel";
 import Error from "../../model/errorModel";
 import {AuthenticatedRequest, ErrorLogPayload} from "../../lib/types/type"
 import mongoose from "mongoose";
+import checkProjectOwnership from "../../lib/util/checkProjectOwnership";
 
 const { ObjectId } = mongoose.Types;
+
 
 export const handleIncomingError = async (
   req: Request,
@@ -57,11 +59,112 @@ console.log("..pipi...error incoming from agent..")
 
 //controllers
 
+const getErrorStats = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise<Response | void> => {
+
+  if (!(await checkProjectOwnership(req, next))) return;
+
+  const { projectId } = req.params;
+
+  if (!projectId) {
+    return next(new CustomError(400, "Project ID is required"));
+  }
+
+  const stats = await Error.aggregate([
+    { $match: { projectId: new ObjectId(projectId) } },
+    {
+      $group: {
+        _id: "$statusCode",
+        count: { $sum: 1 },
+        mostCommonRoute: { $first: "$route" },
+        mostCommonMessage: { $first: "$message" },
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        totalErrors: { $sum: "$count" },
+        authCount: {
+          $sum: {
+            $cond: {
+              if: { $or: [{ $eq: ["$_id", 401] }, { $eq: ["$_id", 403] }] },
+              then: "$count",
+              else: 0,
+            },
+          },
+        },
+        notFoundCount: {
+          $sum: {
+            $cond: { if: { $eq: ["$_id", 404] }, then: "$count", else: 0 },
+          },
+        },
+        internalServerErrorCount: {
+          $sum: {
+            $cond: {
+              if: { $and: [{ $gte: ["$_id", 500] }, { $lte: ["$_id", 599] }] },
+              then: "$count",
+              else: 0,
+            },
+          },
+        },
+        badRequestCount: {
+          $sum: {
+            $cond: {
+              if: {
+                $and: [
+                  { $gte: ["$_id", 400] },
+                  { $lte: ["$_id", 499] },
+                  { $not: { $in: ["$_id", [401, 403, 404]] } },
+                ],
+              },
+              then: "$count",
+              else: 0,
+            },
+          },
+        },
+        mostCommonErrorCount: { $max: "$count" },
+      },
+    },
+  ]);
+
+  if (stats.length === 0) {
+    return res.status(200).json({
+      totalErrors: 0,
+      authenticationCount: 0,
+      notFoundCount: 0,
+      internalServerErrorCount: 0,
+      badRequestCount: 0,
+      mostCommonErrorCount: 0,
+    });
+  }
+
+  const errorSummary = stats[0];
+
+  const response = {
+    totalErrors: errorSummary.totalErrors,
+    authenticationCount: errorSummary.authCount,
+    notFoundCount: errorSummary.notFoundCount,
+    internalServerErrorCount: errorSummary.internalServerErrorCount,
+    badRequestCount: errorSummary.badRequestCount,
+    mostCommonErrorCount: errorSummary.mostCommonErrorCount,
+  };
+
+  res.status(200).json(response);
+};
+
+
+
 const getCommonError = async (
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ): Promise<Response | void> => {
+
+  if (!(await checkProjectOwnership(req, next))) return;
+  
   const { projectId } = req.params;
 
   if (!projectId) {
@@ -109,6 +212,9 @@ const getLatestError = async (
   res: Response,
   next: NextFunction
 ): Promise<Response | void> => {
+
+  if (!(await checkProjectOwnership(req, next))) return;
+
   const { projectId } = req.params;
 
   if (!projectId) {
@@ -143,6 +249,9 @@ const getErrorMethodPercentages = async (
   res: Response,
   next: NextFunction
 ): Promise<Response | void> => {
+  
+  if (!(await checkProjectOwnership(req, next))) return;
+
   const { projectId } = req.params;
 
   if (!projectId) {
@@ -197,4 +306,4 @@ const getErrorMethodPercentages = async (
   }
 };
 
-export { getCommonError, getLatestError, getErrorMethodPercentages };
+export { getErrorStats, getCommonError, getLatestError, getErrorMethodPercentages };

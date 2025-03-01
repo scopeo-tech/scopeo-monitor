@@ -1,8 +1,8 @@
 import express from "express";
-import { checkProjectName, createProject ,getApiKey, getPassKey, getProjectPassKey,updateProject,deleteProject, getErrorStats} from "../controller/project/projectController";
+import { checkProjectName, createProject ,getApiKey, getPassKey, getProjectPassKey,updateProject,deleteProject} from "../controller/project/projectController";
 import verifyToken from "../middleware/verifyToken";
 import tryCatch from "../lib/util/tryCatch";
-import { getCommonError, getErrorMethodPercentages, getLatestError } from "../controller/agent/errorTrack";
+import { getErrorStats, getCommonError, getErrorMethodPercentages, getLatestError } from "../controller/agent/errorTrack";
 
 
 const router = express.Router();
