@@ -12,3 +12,10 @@ export interface ErrorLogPayload {
   message: string;
 }
 
+
+export interface ErrorStats {
+    code: number;
+    count: number;
+    route: string;
+    message: string;
+}
