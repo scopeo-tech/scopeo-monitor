@@ -159,12 +159,12 @@ const DefaultPage: FC = () => {
                       ) : (
                         getHiddenPassKey()
                       )}
-
                       <button
-                        onClick={() => togglePassKeyVisibility(project._id)}
+                        onClick={() => handleCopy(project.apiKey)}
                         className="ml-2 text-gray-500 hover:text-gray-700 focus:outline-none"
                       >
                         {visiblePassKeys[project._id] ? <FiEye size={16} /> : <FiEyeOff size={16} />}
+
                       </button>
                     </td>
 
