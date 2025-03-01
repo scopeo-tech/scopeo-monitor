@@ -4,3 +4,18 @@ export interface AuthenticatedRequest extends Request {
   user?: string;
 }
 
+
+export interface ErrorLogPayload {
+  statusCode: number;
+  route: string;
+  method: string;
+  message: string;
+}
+
+
+export interface ErrorStats {
+    code: number;
+    count: number;
+    route: string;
+    message: string;
+}
