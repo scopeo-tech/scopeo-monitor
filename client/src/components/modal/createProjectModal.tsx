@@ -5,10 +5,10 @@ import { getApiKey, getPassKey, createProject } from "@/lib/api";
 import { useAuthStore } from "@/lib/stores/authStore";
 import { AiOutlineClose } from "react-icons/ai";
 
-interface CreateProjectModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
+  interface CreateProjectModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+  }
 
 const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, onClose }) => {
   const [projectName, setProjectName] = useState("");

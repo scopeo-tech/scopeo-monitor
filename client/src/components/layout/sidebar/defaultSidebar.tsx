@@ -8,10 +8,11 @@ import { FaCog, FaQuestionCircle, FaSignOutAlt } from "react-icons/fa";
 import {useState} from "react";
 import {FiEdit} from "react-icons/fi";
 import CreateProjectModal from "@/components/modal/createProjectModal";
-
+import LogoutModal from "@/components/modal/logoutModal";
 
 const Sidebar: FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLogoutOpen, setIsLogoutOpen] = useState(false);
   const router = useRouter();
     const { data: user, isLoading, isError } = useQuery({
       queryKey: ["userInfo"],
@@ -89,7 +90,7 @@ const Sidebar: FC = () => {
           <span>Get Help</span>
         </button>
         <button
-          onClick={handleLogout}
+          onClick={() => setIsLogoutOpen(true)}
           className="flex items-center space-x-2 text-white hover:text-white/80"
         >
           <FaSignOutAlt />
@@ -97,6 +98,7 @@ const Sidebar: FC = () => {
         </button>
       </div>
       <CreateProjectModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+        <LogoutModal isOpen={isLogoutOpen} onClose={() => setIsLogoutOpen(false)} />
     </div>
 
   );
