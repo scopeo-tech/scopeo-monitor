@@ -3,13 +3,13 @@ import { useState,useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getApiKey, getPassKey, createProject,checkProjectName } from "@/lib/api";
 import { useAuthStore } from "@/lib/stores/authStore";
-import { AiOutlineClose } from "react-icons/ai";
-
+import { AiOutlineClose } from "react-icons/ai"
 
 interface CreateProjectModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
+
 
 const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, onClose }) => {
   const [projectName, setProjectName] = useState("");
