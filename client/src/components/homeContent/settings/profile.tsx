@@ -1,56 +1,165 @@
 'use client';
 
-import { useState } from 'react';
-import { Switch } from '@/components/ui/switch';
+import { useState, useEffect } from 'react';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { getUserInfo, updateProfile, checkUsername, deleteProfile } from '@/lib/api';
 
 export default function SettingsPage() {
-  const [notifications, setNotifications] = useState(false);
-  const handleToggle = () => setNotifications(!notifications);
+  const { data: user, isLoading, isError } = useQuery({
+    queryKey: ['userInfo'],
+    queryFn: getUserInfo,
+  });
+
+  const [username, setUsername] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [notificationStatus, setNotificationStatus] = useState(false);
+  const [isNameTaken, setIsNameTaken] = useState<boolean | null>(null);
+  const [resMessage, setResMessage] = useState("");
+  const [hasChangedUsername, setHasChangedUsername] = useState(false);
+  const [errors, setErrors] = useState<{ username?: string; currentPassword?: string; newPassword?: string }>({});
+
+  useEffect(() => {
+    if (user) {
+      setUsername(user.username);
+    }
+  }, [user]);
+
+  const handleToggle = () => setNotificationStatus(!notificationStatus);
+
+  useEffect(() => {
+    if (!username || username === user?.username) {
+      setIsNameTaken(null);
+      setResMessage("");
+      setHasChangedUsername(false);
+      setErrors(prev => ({ ...prev, username: "" }));
+      return;
+    }
+
+    const delayCheck = setTimeout(async () => {
+      try {
+        const response = await checkUsername(username);
+        setIsNameTaken(response.data);
+        setResMessage(response.message);
+        setErrors(prev => ({ ...prev, username: response.data ? response.message : "" }));
+      } catch {
+        setErrors(prev => ({ ...prev, username: "Error checking username" }));
+      }
+    }, 500);
+
+    return () => clearTimeout(delayCheck);
+  }, [username]);
+
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUsername(e.target.value);
+    setHasChangedUsername(true);
+  };
+
+  const updateMutation = useMutation({
+    mutationFn: updateProfile,
+    onSuccess: () => {
+      alert('Profile updated successfully');
+      setErrors({});
+    },
+    onError: () => {
+      setErrors(prev => ({ ...prev, currentPassword: "Incorrect current password" }));
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteProfile,
+    onSuccess: () => {
+      alert('Profile deleted successfully');
+    },
+  });
+
+  const handleSaveChanges = () => {
+    const validationErrors: { username?: string; currentPassword?: string; newPassword?: string } = {};
+    if (!currentPassword) validationErrors.currentPassword = "Current password is required";
+    if (hasChangedUsername && !username.trim()) validationErrors.username = "Username cannot be empty";
+    if (newPassword && newPassword.length < 6) validationErrors.newPassword = "New password must be at least 8 characters";
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    updateMutation.mutate({ username, currentPassword, newPassword });
+  };
+
+  const handleDeleteProfile = () => {
+    if (user) {
+      deleteMutation.mutate(user._id);
+    }
+  };
+
+  const isSubmitDisabled = (!hasChangedUsername && !newPassword) || !currentPassword;
+
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error loading profile</div>;
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg">
-      <h2 className="text-2xl font-semibold mb-4">Settings</h2>
-      
-      {/* Personal Information */}
+    <div className='w-1/2'>
       <div className="mb-6">
         <h3 className="text-lg font-medium mb-2">Personal Information</h3>
         <label className="block text-gray-600">Username</label>
-        <input type="text" className="w-full p-2 border rounded mt-1" value="janesherin" readOnly />
-        
-        <label className="block text-gray-600 mt-3">Add new email</label>
-        <div className="flex items-center gap-2">
-          <input type="email" className="w-full p-2 border rounded" value="janesherin@gmail.com" readOnly />
-          <button className="text-green-500 text-xl">+</button>
-        </div>
+        <input 
+          type="text" 
+          className="w-full p-2 border rounded mt-1" 
+          value={username} 
+          onChange={handleUsernameChange}
+        />
+        {errors.username && <p className="text-sm text-red-600">{errors.username}</p>}
+        {hasChangedUsername && isNameTaken !== null && (
+          <p className={`text-sm ${isNameTaken ? "text-red-600" : "text-green-600"}`}>
+            {isNameTaken ? `❌ ${resMessage}` : `✅ ${resMessage}`}
+          </p>
+        )}
+
+        <label className="block text-gray-600 mt-3">Email</label>
+        <input type="email" className="w-full p-2 border rounded text-gray-500" value={user?.email} readOnly />
       </div>
 
-      {/* Change Password */}
       <div className="mb-6">
         <h3 className="text-lg font-medium mb-2">Change Your Password</h3>
         <label className="block text-gray-600">Current Password</label>
-        <input type="password" className="w-full p-2 border rounded mt-1" />
+        <input 
+          type="password" 
+          className="w-full p-2 border rounded mt-1"
+          onChange={(e) => setCurrentPassword(e.target.value)}
+        />
+        {errors.currentPassword && <p className="text-sm text-red-600">{errors.currentPassword}</p>}
+
         <label className="block text-gray-600 mt-3">New Password</label>
-        <input type="password" className="w-full p-2 border rounded mt-1" />
-        <div className="mt-3 flex gap-3">
-          <button className="px-4 py-2 border rounded">Cancel</button>
-          <button className="px-4 py-2 bg-green-500 text-white rounded">Set Password</button>
-        </div>
+        <input 
+          type="password" 
+          className="w-full p-2 border rounded mt-1" 
+          onChange={(e) => setNewPassword(e.target.value)}
+        />
+        {errors.newPassword && <p className="text-sm text-red-600">{errors.newPassword}</p>}
       </div>
-      
-      {/* Allow Notifications */}
+
       <div className="mb-6 flex items-center justify-between">
         <span className="text-gray-600">Allow Notifications</span>
-        <Switch checked={notifications} onCheckedChange={handleToggle} />
+        <button onClick={handleToggle} className="relative w-12 h-6 rounded-full bg-gray-500">
+          <div className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${notificationStatus ? 'translate-x-6' : 'translate-x-0'}`} />
+        </button>
       </div>
       
-      {/* Save Changes */}
-      <button className="w-full py-2 bg-green-600 text-white rounded">Save Changes</button>
+      <button 
+        onClick={handleSaveChanges} 
+        className={`w-full py-2 text-white rounded ${isSubmitDisabled ? "bg-gray-400 cursor-not-allowed" : "bg-green-600"}`} 
+        disabled={isSubmitDisabled}
+      >
+        Save Changes
+      </button>
       
-      {/* Cancel Profile */}
       <div className="mt-8 p-4 border-t">
         <h3 className="text-lg font-medium text-red-600">Cancel Profile</h3>
-        <p className="text-gray-600 text-sm mb-3">Once you delete your profile, it will be deactivated immediately, and all associated data will be permanently removed within approximately 30 days. This action is irreversible.</p>
-        <button className="px-4 py-2 bg-red-600 text-white rounded">Cancel Profile</button>
+        <p className="text-gray-600 text-sm mb-3">
+          Once you delete your profile, it will be deactivated immediately and all associated data will be permanently removed within approximately 30 days. This action is irreversible.
+        </p>
+        <button onClick={handleDeleteProfile} className="px-4 py-2 bg-red-600 text-white rounded">Cancel Profile</button>
       </div>
     </div>
   );

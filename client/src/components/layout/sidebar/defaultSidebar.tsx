@@ -81,7 +81,7 @@ const Sidebar: FC = () => {
 
       <div className="mt-64 space-y-4 ">
         <button
-           onClick={() => router.push("/home/settings/project")}
+           onClick={() => router.push("/home/settings/profile")}
           className="flex items-center space-x-2 text-white hover:text-white/80">
           <FaCog />
           <span>Settings</span>

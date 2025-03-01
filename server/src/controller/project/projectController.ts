@@ -180,6 +180,7 @@ const deleteProject = async (req: AuthenticatedRequest, res: Response,next:NextF
 };
 
 
+
 const getErrorStats = async (req: AuthenticatedRequest, res: Response , next: NextFunction): Promise<void> => {
         const stats = await Error.aggregate([
             {
@@ -235,7 +236,6 @@ const getErrorStats = async (req: AuthenticatedRequest, res: Response , next: Ne
         };
         res.status(200).json(response);
 };
-
 
 
 
