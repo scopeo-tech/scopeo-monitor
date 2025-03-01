@@ -18,6 +18,7 @@ export interface Project {
     apiKey: string;
     passKey: string;
     notificationStatus: boolean;
+    created: Date;
     status: { connectionStatus: boolean; updatedAt: Date };
   }
   

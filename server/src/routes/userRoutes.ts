@@ -9,8 +9,9 @@ userRoutes
 .get('/info',verifyToken,tryCatch(getUserById))
 .get('/project/count',verifyToken,tryCatch(getUserProjectCount))
 .get('/list',verifyToken,tryCatch(getProjectList))
-.put('/update-profile',verifyToken,tryCatch(updateProfile))
-.delete('delete-profile/:userId',tryCatch(deleteProfile))
+.get("/:projectId",verifyToken,tryCatch(getProjectList))
+.put('/password',verifyToken,tryCatch(updateProfile))
+.delete('/:userId',tryCatch(deleteProfile))
 .get('/:username',tryCatch(checkUsername))
 
 export default userRoutes;

@@ -37,6 +37,21 @@ const getProjectList = async (req:AuthenticatedRequest, res:Response, next:NextF
   });
 };
 
+const getProjectById = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    const { projectId } = req.params;
+    const user = req.user;
+    if (!projectId) {
+      return next(new CustomError(404, "Project ID not provided"));
+    }
+    const project = await Project.findOne({ user, _id: projectId });
+    if (!project) {
+      return next(new CustomError(404, "Project not found"));
+    }
+    return res
+      .status(200)
+      .json({ status: "success", message: "Project found", data: {project,created:project.createdAt} });
+  };
+
 
 
 const getUserProjectCount = async (req:AuthenticatedRequest, res:Response, next:NextFunction) =>{
@@ -144,6 +159,7 @@ const checkUsername = async (req: AuthenticatedRequest, res: Response, next: Nex
 export {
     getUserById,
     getProjectList,
+    getProjectById,
     getUserProjectCount,
     updateProfile,
     deleteProfile,
