@@ -8,7 +8,7 @@ import { handleIncomingError } from "../controller/agent/errorTrack";
 const packageRouter = express.Router();
 
 packageRouter
-.post("/project/status",tryCatch(updateProjectStatus))
-.post("/project/errors",tryCatch(handleIncomingError))
+.post("/status",tryCatch(updateProjectStatus))
+.post("/errors",tryCatch(handleIncomingError))
 
 export default packageRouter
