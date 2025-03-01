@@ -117,3 +117,20 @@ export const deleteProject = async (projectId: string) => {
 };
 
 
+export const updateProfile = async (data: {username: string; currentPassword: string; newPassword: string }) => {
+  const response = await axiosInstance.put("/user/update-profile", data);
+  console.log(response.data);
+  return response.data;
+};
+
+export const checkUsername = async (username: string) => {
+  const response = await axiosInstance.get(`/user/${username}`);
+  console.log(response.data);
+  return response.data;
+};
+
+export const deleteProfile = async (userId: string) => {
+  const response = await axiosInstance.delete(`/user/delete-profile/${userId}`);
+  console.log(response.data);
+  return response.data;
+};
