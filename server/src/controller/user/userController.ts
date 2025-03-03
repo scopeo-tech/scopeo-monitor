@@ -70,6 +70,8 @@ const getUserProjectCount = async (req:AuthenticatedRequest, res:Response, next:
 };
 
 const updateProfile = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    console.log("hi");
+    
     const user = await User.findById(req.user);
 
     if (!user) {

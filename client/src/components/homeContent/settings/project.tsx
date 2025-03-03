@@ -42,6 +42,7 @@ export default function ProjectPage() {
       try {
         const response = await checkProjectName(projectName);
         setIsNameTaken(response.data);
+        console.log(response.data);
         setResMessage(response.message);
       } catch (error) {
         console.error("Error checking project name:", error);
@@ -119,10 +120,10 @@ export default function ProjectPage() {
   if (isError) return <div>Error loading projects</div>;
 
   return (
-    <div className="max-w-3xl mx-auto">
-      <h2 className="text-2xl font-semibold mb-4">Project Management:</h2>
+    <div className="w-1/2">
+      <h2 className="text-xl font-semibold mb-4">Project Management:</h2>
 
-      <label className="block text-gray-700 text-sm font-medium mb-1">Project:</label>
+      <label className="block text-gray-600 text-sm font-normal mb-1">Project:</label>
       <select className="w-full p-2 border rounded-md mb-4" value={selectedProject} onChange={(e) => setSelectedProject(e.target.value)}>
         {projects?.map((project) => (
           <option key={project._id} value={project._id}>
@@ -131,7 +132,7 @@ export default function ProjectPage() {
         ))}
       </select>
 
-      <label className="block text-gray-700 text-sm font-medium mb-1">Change Project Name:</label>
+      <label className="block text-gray-600 text-sm font-normal mb-1">Change Project Name:</label>
       <input
         type="text"
         className="w-full p-2 border rounded-md mb-2"
@@ -144,7 +145,7 @@ export default function ProjectPage() {
         </p>
       )}
 
-      <label className="block text-gray-700 text-sm font-medium mb-1">Change Passkey:</label>
+      <label className="block text-gray-600 text-sm font-normal mb-1">Change Passkey:</label>
       <input 
         type="password" 
         className="w-full p-2 border rounded-md mb-2" 
@@ -158,7 +159,7 @@ export default function ProjectPage() {
       )}
 
     <div className="mt-2">
-      <label className="text-gray-700 text-sm font-medium mr-2 mt-12">Allow Notifications</label>
+      <label className="text-gray-600 text-sm font-normal mr-2 mt-12">Allow Notifications</label>
       <div className="flex justify-end">
         <button
           onClick={() => setNotificationStatus(!notificationStatus)}
