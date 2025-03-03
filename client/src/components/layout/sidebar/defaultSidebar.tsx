@@ -1,7 +1,7 @@
 "use client"
 
 import { useQuery } from "@tanstack/react-query";
-import { getUserInfo, logoutUser, getUserProjectCount } from "@/lib/api";
+import { getUserInfo,getUserProjectCount } from "@/lib/api";
 import { FC } from "react";
 import { useRouter } from "next/navigation";
 import { FaCog, FaQuestionCircle, FaSignOutAlt } from "react-icons/fa";
@@ -25,13 +25,6 @@ const Sidebar: FC = () => {
       queryFn: getUserProjectCount,
     });
 
-
-    const handleLogout =async () => {
-        await logoutUser()
-        router.push("/")
-       
-    }
-
     const formatJoinedDate = (dateString: string) => {
       if (!dateString) return "";
       
@@ -41,7 +34,6 @@ const Sidebar: FC = () => {
       const year = date.getFullYear();
       return `${day}-${month}-${year}`;
     };
-
 
   if(isLoading||countLoading) return <div>Loading...</div>
   if(isError||countError) return <div>Error</div>
@@ -82,7 +74,7 @@ const Sidebar: FC = () => {
 
       <div className="mt-64 space-y-4 ">
         <button
-           onClick={() => router.push("/home/settings/profile")}
+           onClick={() => router.push("home/settings/profile")}
           className="flex items-center space-x-2 text-white hover:text-white/80">
           <FaCog />
           <span>Settings</span>

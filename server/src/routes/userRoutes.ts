@@ -1,5 +1,5 @@
 import express from 'express';
-import { getUserProjectCount, getProjectList, getUserById, updateProfile, deleteProfile, checkUsername } from '../controller/user/userController';
+import { getUserProjectCount, getProjectList, getUserById, updateProfile, deleteProfile, checkUsername ,getProjectById} from '../controller/user/userController';
 import tryCatch from '../lib/util/tryCatch';
 import verifyToken from '../middleware/verifyToken';
 
@@ -9,9 +9,9 @@ userRoutes
 .get('/info',verifyToken,tryCatch(getUserById))
 .get('/project/count',verifyToken,tryCatch(getUserProjectCount))
 .get('/list',verifyToken,tryCatch(getProjectList))
-.get("/:projectId",verifyToken,tryCatch(getProjectList))
-.put('/password',verifyToken,tryCatch(updateProfile))
-.delete('/:userId',tryCatch(deleteProfile))
-.get('/:username',tryCatch(checkUsername))
+.get("/project/:projectId",verifyToken,tryCatch(getProjectById))
+.put('/update-profile',verifyToken,tryCatch(updateProfile))
+.delete('/:userId',verifyToken,tryCatch(deleteProfile))
+.get('/check/:username',verifyToken,tryCatch(checkUsername))
 
 export default userRoutes;
