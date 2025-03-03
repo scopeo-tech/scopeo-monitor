@@ -99,8 +99,8 @@ export const getPassKey = async () => {
 
 
   export const getProjectById = async (  projectId: string ) =>  {
-    const response = await axiosInstance.get(`/project/${projectId}`);
-    console.log(response.data.data);
+    const response = await axiosInstance.get(`/user/project/${projectId}`);
+    console.log(response.data);
     return response.data.data;
   }
 

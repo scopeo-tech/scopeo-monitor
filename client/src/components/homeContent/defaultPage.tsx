@@ -133,7 +133,7 @@ const DefaultPage: FC = () => {
               {Array.isArray(projects) &&
                 projects.map((project: Project) => (
                   <tr key={project._id} className="border-b text-sm hover:bg-gray-50"
-                  onClick={() => router.push(`/${project._id}/security`)}>
+                  onClick={() => router.push(`/${project._id}/error`)}>
                     <td className="py-4 px-4 text-gray-700">{project.name}</td>
                     <td className="py-4 px-4 ml-8">
                       <span
