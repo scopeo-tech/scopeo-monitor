@@ -141,3 +141,25 @@ export const deleteProfile = async (userId: string) => {
   console.log(response.data);
   return response.data;
 };
+
+
+//error stats
+export const errorStats = async (projectId: string) => {
+  const response = await axiosInstance.get(`/project/get-error-stats/${projectId}`);
+  return response.data;
+};
+
+export const commonErros = async (projectId: string) => {
+  const response = await axiosInstance.get(`/project/get-error-common/${projectId}`);
+  return response.data;
+};
+
+export const latestErrors = async (projectId: string) => {
+  const response = await axiosInstance.get(`/project/get-error-latest/${projectId}`);
+  return response.data;
+};
+
+export const errorMethods = async (projectId: string) => {
+  const response = await axiosInstance.get(`/project/get-error-method/${projectId}`);
+  return response.data;
+};
