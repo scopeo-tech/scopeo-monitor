@@ -61,16 +61,6 @@ function ErrorTrack() {
   });
 
 
-  // useEffect(() => {
-  //   if (isAllZero && !showPopup) {
-  //     setShowPopup(true);
-  //     setTimeout(() => setShowPopup(false), 3000);
-  //   }
-  // }, [showPopup]);
-  
-
-  if (isLoading) return <p>Loading error data...</p>;
-  if (!projectID) return <p>No project selected.</p>;
 
   const pieData = [
     {
@@ -85,16 +75,27 @@ function ErrorTrack() {
     { name: "Bad Request", value: totalErrors?.badRequestCount || 0.01 },
   ];
 
+
   const isAllZero =
     totalErrors.authenticationCount === 0 &&
     totalErrors.notFoundCount === 0 &&
     totalErrors.internalServerErrorCount === 0 &&
     totalErrors.badRequestCount === 0;
+  
+    useEffect(() => {
+      if (isAllZero && !showPopup) {
+        setShowPopup(true);
+        setTimeout(() => setShowPopup(false), 3000);
+      }
+    }, [isAllZero,showPopup]);
 
-  console.log(errorMethods);
-  return (
+
+
+    if (isLoading) return <p>Loading error data...</p>;
+    if (!projectID) return <p>No project selected.</p>;
+    
+    return (
     <div className="relative grid grid-cols-1 md:grid-cols-2 gap-4 p-4 h-screen overflow-hidden">
-
       <div className="p-4 absolute right-10">
         <label htmlFor="filter" className="block text-lg font-bold mb-2">
           Filter Errors By:
