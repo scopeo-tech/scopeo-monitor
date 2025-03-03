@@ -191,7 +191,7 @@ const getCommonError = async (
     ]);
 
     if (commonError.length === 0) {
-      return res.status(200).json({ message: "No errors found for this project" });
+      return res.status(200).json({message:"No errors found for this project",data:[]});
     }
 
     const mostCommonError = commonError[0];
