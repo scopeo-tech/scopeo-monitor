@@ -8,13 +8,17 @@ import { Project } from "@/lib/interface";
 import CreateProjectModal from "../modal/createProjectModal";
 import { FiEdit, FiEye, FiEyeOff } from "react-icons/fi";
 import { FaCopy } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 const DefaultPage: FC = () => {
   const [formattedDate, setFormattedDate] = useState<string>("");
   const [day, setDay] = useState<string>("");
   const [visiblePassKeys, setVisiblePassKeys] = useState<Record<string, boolean>>({});
   const [passKeys, setPassKeys] = useState<Record<string, string>>({});
+  const [copiedApiKey, setCopiedApiKey] = useState<string | null>(null);
+  const [copiedPassKey, setCopiedPassKey] = useState<string | null>(null);
   const { user } = useAuthStore();
+  const router = useRouter();
 
   const { data: projects, isLoading, isError } = useQuery<Project[]>({
     queryKey: ["userProjects"],
@@ -45,7 +49,7 @@ const DefaultPage: FC = () => {
     }
 
     try {
-      const passKeyData = await getProjectPassKey({ projectId });
+      const passKeyData = await getProjectPassKey(projectId);
       console.log(passKeyData)
       if (!passKeyData) {
         console.error("Error: No passKey received!");
@@ -66,27 +70,28 @@ const DefaultPage: FC = () => {
     }
   };
 
-  const handleCopy = (apiKeys: string) => {
-    if (!apiKeys) {
-      return console.error("Error: No API key to copy!");
+  const handleCopy = (key: string, projectId: string, type: "api" | "pass") => {
+    if (!key) {
+      console.error("Error: No key to copy!");
+      return;
     }
 
-    navigator.clipboard.writeText(apiKeys)
-      .then(() => console.log("API Key copied!"))
-      .catch((err) => console.error("Failed to copy API key:", err));
+    navigator.clipboard.writeText(key)
+      .then(() => {
+        if (type === "api") {
+          setCopiedApiKey(projectId);
+          setCopiedPassKey(null);
+        } else {
+          setCopiedPassKey(projectId);
+          setCopiedApiKey(null);
+        }
+        setTimeout(() => {
+          setCopiedApiKey(null);
+          setCopiedPassKey(null);
+        }, 2000);
+      })
+      .catch((err) => console.error("Failed to copy key:", err));
   };
-
-  const handleCopyPassKey = (passKeys?: string) => {
-    if (!passKeys) {
-      return console.error("Error: No passKey to copy!");
-
-    }
-    console.log("sad", passKeys);
-    navigator.clipboard.writeText(passKeys)
-      .then(() => console.log("PassKey copied!"))
-      .catch((err) => console.error("Failed to copy passKey:", err));
-  };
-
 
   const getHiddenPassKey = () => "•••••••••••••";
 
@@ -127,7 +132,8 @@ const DefaultPage: FC = () => {
             <tbody>
               {Array.isArray(projects) &&
                 projects.map((project: Project) => (
-                  <tr key={project._id} className="border-b text-sm hover:bg-gray-50">
+                  <tr key={project._id} className="border-b text-sm hover:bg-gray-50"
+                  onClick={() => router.push(`/${project._id}/error`)}>
                     <td className="py-4 px-4 text-gray-700">{project.name}</td>
                     <td className="py-4 px-4 ml-8">
                       <span
@@ -137,21 +143,23 @@ const DefaultPage: FC = () => {
                           }`}
                       ></span>
                     </td>
-                    <td className="py-4 px-4 text-gray-600">{project.apiKey}
+                    <td className="py-4 px-4 text-gray-600 relative">
+                      {project.apiKey}
                       <button
-                        onClick={() => handleCopy(project.apiKey)}
-                        className="ml-2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                        onClick={() => handleCopy(project.apiKey, project._id, "api")}
+                        className="ml-2 text-gray-300 hover:text-gray-500 focus:outline-none"
                       >
                         <FaCopy />
                       </button>
+                      {copiedApiKey === project._id && <span className="text-xs text-green-500 absolute -top-4 left-4">Copied!</span>}
                     </td>
-                    <td className="py-4 px-4 text-gray-600 flex items-center w-40">
+                    <td className="py-4 px-4 text-gray-600 flex items-center w-40 relative">
                       {visiblePassKeys[project._id] ? (
                         <>
                           {passKeys[project._id]}
                           <button
-                            onClick={() => handleCopyPassKey(passKeys[project._id])}
-                            className="ml-2 text-blue-500 hover:text-blue-700 focus:outline-none"
+                            onClick={() => handleCopy(passKeys[project._id] || "", project._id,"pass")}
+                            className="ml-2 text-gray-300 hover:text-gray-500 focus:outline-none"
                           >
                             <FaCopy size={16} />
                           </button>
@@ -159,12 +167,12 @@ const DefaultPage: FC = () => {
                       ) : (
                         getHiddenPassKey()
                       )}
+                      {copiedPassKey === project._id && <span className="text-xs text-green-500 absolute -top-4 left-4">Copied!</span>}
                       <button
-                        onClick={() => handleCopy(project.apiKey)}
+                        onClick={() => togglePassKeyVisibility(project._id)}
                         className="ml-2 text-gray-500 hover:text-gray-700 focus:outline-none"
                       >
                         {visiblePassKeys[project._id] ? <FiEye size={16} /> : <FiEyeOff size={16} />}
-
                       </button>
                     </td>
 
@@ -178,7 +186,6 @@ const DefaultPage: FC = () => {
           <p className="capitalize">{day}</p>
         </div>
       </div>
-
       <CreateProjectModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );

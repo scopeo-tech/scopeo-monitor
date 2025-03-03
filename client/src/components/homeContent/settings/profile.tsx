@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { getUserInfo, updateProfile, checkUsername, deleteProfile } from '@/lib/api';
 
-export default function SettingsPage() {
+export default function ProfilePage() {
   const { data: user, isLoading, isError } = useQuery({
     queryKey: ['userInfo'],
     queryFn: getUserInfo,
@@ -40,6 +40,7 @@ export default function SettingsPage() {
       try {
         const response = await checkUsername(username);
         setIsNameTaken(response.data);
+        console.log(response.data);
         setResMessage(response.message);
         setErrors(prev => ({ ...prev, username: response.data ? response.message : "" }));
       } catch {
@@ -50,10 +51,20 @@ export default function SettingsPage() {
     return () => clearTimeout(delayCheck);
   }, [username]);
 
+
+  useEffect(() => {
+    const fetchhh = async () => {
+      const response = await checkUsername(username);
+    console.log(response,"waa")
+    }
+    fetchhh()
+  },[])
+
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
     setHasChangedUsername(true);
   };
+
 
   const updateMutation = useMutation({
     mutationFn: updateProfile,
@@ -101,8 +112,8 @@ export default function SettingsPage() {
   return (
     <div className='w-1/2'>
       <div className="mb-6">
-        <h3 className="text-lg font-medium mb-2">Personal Information</h3>
-        <label className="block text-gray-600">Username</label>
+        <h3 className="text-xl font-medium mb-2">Personal Information</h3>
+        <label className="block font-normal text-gray-600">Username</label>
         <input 
           type="text" 
           className="w-full p-2 border rounded mt-1" 
@@ -116,21 +127,22 @@ export default function SettingsPage() {
           </p>
         )}
 
-        <label className="block text-gray-600 mt-3">Email</label>
+        <label className="block text-gray-600 font-normal mt-3">Email</label>
         <input type="email" className="w-full p-2 border rounded text-gray-500" value={user?.email} readOnly />
       </div>
 
       <div className="mb-6">
         <h3 className="text-lg font-medium mb-2">Change Your Password</h3>
-        <label className="block text-gray-600">Current Password</label>
+        <label className="block text-gray-600 font-normal">Current Password</label>
         <input 
           type="password" 
           className="w-full p-2 border rounded mt-1"
           onChange={(e) => setCurrentPassword(e.target.value)}
         />
+        
         {errors.currentPassword && <p className="text-sm text-red-600">{errors.currentPassword}</p>}
 
-        <label className="block text-gray-600 mt-3">New Password</label>
+        <label className="block text-gray-600 font-normal mt-3">New Password</label>
         <input 
           type="password" 
           className="w-full p-2 border rounded mt-1" 
@@ -140,7 +152,7 @@ export default function SettingsPage() {
       </div>
 
       <div className="mb-6 flex items-center justify-between">
-        <span className="text-gray-600">Allow Notifications</span>
+        <span className="text-gray-600 font-normal">Allow Notifications</span>
         <button onClick={handleToggle} className="relative w-12 h-6 rounded-full bg-gray-500">
           <div className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${notificationStatus ? 'translate-x-6' : 'translate-x-0'}`} />
         </button>
@@ -148,13 +160,13 @@ export default function SettingsPage() {
       
       <button 
         onClick={handleSaveChanges} 
-        className={`w-full py-2 text-white rounded ${isSubmitDisabled ? "bg-gray-400 cursor-not-allowed" : "bg-green-600"}`} 
+        className={`mt-4 px-4 py-2 rounded-md ${isSubmitDisabled ? "bg-gray-400 cursor-not-allowed" : "bg-green-600"}`} 
         disabled={isSubmitDisabled}
       >
         Save Changes
       </button>
       
-      <div className="mt-8 p-4 border-t">
+      <div className="mt-8 p-2 border-t">
         <h3 className="text-lg font-medium text-red-600">Cancel Profile</h3>
         <p className="text-gray-600 text-sm mb-3">
           Once you delete your profile, it will be deactivated immediately and all associated data will be permanently removed within approximately 30 days. This action is irreversible.

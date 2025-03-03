@@ -8,10 +8,10 @@ import { getProjectById } from '@/lib/api';
 import { Project } from '@/lib/interface';
 import { useUserStore } from '@/lib/stores/userStore';
 const MonitoringNavbar = () => {
-    const { projectId } = useParams<{ projectId: string }>();
+    const { projectID } = useParams<{ projectID: string }>();
     const { data: project } = useQuery<Project>({
-      queryKey: ["project", projectId],
-      queryFn: () => getProjectById(projectId),
+      queryKey: ["project", projectID],
+      queryFn: () => getProjectById(projectID),
     });
     const {user}= useUserStore();
   return (

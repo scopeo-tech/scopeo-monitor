@@ -49,7 +49,7 @@ const getProjectById = async (req: AuthenticatedRequest, res: Response, next: Ne
     }
     return res
       .status(200)
-      .json({ status: "success", message: "Project found", data: {project,created:project.createdAt} });
+      .json({ status: "success", message: "Project found", data: {name:project.name,created:project.createdAt} });
   };
 
 
@@ -70,6 +70,8 @@ const getUserProjectCount = async (req:AuthenticatedRequest, res:Response, next:
 };
 
 const updateProfile = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    console.log("hi");
+    
     const user = await User.findById(req.user);
 
     if (!user) {

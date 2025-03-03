@@ -60,6 +60,7 @@ export const getUserInfo = async (): Promise<userDetails> => {
 //get user projects
 export const getUserProjects = async (): Promise<Project[]> => {
     const response = await axiosInstance.get("/user/list");
+    console.log(response.data.data);
     return response.data.data; 
 };
 
@@ -98,8 +99,8 @@ export const getPassKey = async () => {
 
 
   export const getProjectById = async (  projectId: string ) =>  {
-    const response = await axiosInstance.get(`/project/${projectId}`);
-    console.log(response.data.data);
+    const response = await axiosInstance.get(`/user/project/${projectId}`);
+    console.log(response.data);
     return response.data.data;
   }
 
@@ -131,13 +132,34 @@ export const updateProfile = async (data: {username: string; currentPassword: st
 };
 
 export const checkUsername = async (username: string) => {
-  const response = await axiosInstance.get(`/user/${username}`);
-  console.log(response.data);
+  const response = await axiosInstance.get(`/user/check/${username}`);
   return response.data;
 };
 
 export const deleteProfile = async (userId: string) => {
   const response = await axiosInstance.delete(`/user/delete-profile/${userId}`);
   console.log(response.data);
+  return response.data;
+};
+
+
+//error stats
+export const errorStats = async (projectId: string) => {
+  const response = await axiosInstance.get(`/project/get-error-stats/${projectId}`);
+  return response.data;
+};
+
+export const commonErros = async (projectId: string) => {
+  const response = await axiosInstance.get(`/project/get-error-common/${projectId}`);
+  return response.data;
+};
+
+export const latestErrors = async (projectId: string) => {
+  const response = await axiosInstance.get(`/project/get-error-latest/${projectId}`);
+  return response.data;
+};
+
+export const errorMethods = async (projectId: string) => {
+  const response = await axiosInstance.get(`/project/get-error-method/${projectId}`);
   return response.data;
 };
