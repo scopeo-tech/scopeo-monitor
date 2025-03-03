@@ -16,14 +16,21 @@ import {
 } from "react-icons/fi";
 
 const MonitoringSidebar = () => {
-  const { projectId } = useParams<{ projectId: string }>();
+  const { projectID } = useParams<{ projectID: string }>();
   const router = useRouter();
-  const pathname = usePathname(); // Get the current route
+  const pathname = usePathname(); 
 
   const { data: project } = useQuery<Project>({
-    queryKey: ["project", projectId],
-    queryFn: () => getProjectById(projectId),
+    queryKey: ["project", projectID],
+    queryFn: async () => {
+      const res = await getProjectById(projectID);
+      console.log("Fetched project:", res);
+      return res;
+    },
+    enabled: !!projectID,
+    
   });
+  console.log(project);
 
   const { data: user } = useQuery({
     queryKey: ["userInfo"],
@@ -31,16 +38,16 @@ const MonitoringSidebar = () => {
   });
 
   const menuItems = [
-    { name: "Performance & Health Metrics", icon: FiBarChart2, path: `/${projectId}/performance` },
-    { name: "Security & Access Monitoring", icon: FiLock, path: `/${projectId}/security` },
-    { name: "Error & Issue Tracking", icon: FiAlertTriangle, path: `/${projectId}/error` },
-    { name: "Logs & Activity Tracking", icon: FiFileText, path: `/${projectId}/logs` },
+    { name: "Performance & Health Metrics", icon: FiBarChart2, path: `/${projectID}/performance` },
+    { name: "Security & Access Monitoring", icon: FiLock, path: `/${projectID}/accessMonitro` },
+    { name: "Error & Issue Tracking", icon: FiAlertTriangle, path: `/${projectID}/error` },
+    { name: "Logs & Activity Tracking", icon: FiFileText, path: `/${projectID}/logs` },
     { name: "Settings", icon: FiSettings, path: "/home/settings" },
     { name: "Help", icon: FiHelpCircle, path: "/home/help" },
   ];
 
   return (
-    <div className="h-screen w-64 bg-green-400 text-white flex flex-col justify-between p-4">
+    <div className="h-screen w-64 bg-emerald-400 text-white flex flex-col justify-between p-4">
       <div>
         <div className="flex items-center space-x-2">
           <div className="bg-white p-2 rounded-full">
@@ -49,7 +56,9 @@ const MonitoringSidebar = () => {
           <h1 className="text-xl font-bold">Scopeo</h1>
         </div>
         <p className="mt-2 text-sm">{project?.name}</p>
-        <p className="text-xs text-gray-200">{project?.created?.toLocaleDateString()}</p>
+        <p className="text-xs text-gray-200"><p className="text-xs text-gray-200">
+  {project?.created ? new Date(project.created).toISOString().split("T")[0] : "N/A"}
+</p></p>
       </div>
 
       <div className="space-y-4">
