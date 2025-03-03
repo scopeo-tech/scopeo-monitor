@@ -7,6 +7,9 @@ import Error from "../../model/errorModel";
 import Log from "../../model/logModel";
 import CustomError from "../../lib/util/CustomError";
 import crypto from "crypto";
+import mongoose from "mongoose";
+
+const { ObjectId } = mongoose.Types;
 
 const generateApiKey = () => {
   return crypto.randomBytes(8).toString("hex");
@@ -178,7 +181,12 @@ const deleteProject = async (req: AuthenticatedRequest, res: Response,next:NextF
     .status(200)
     .json({ status: "success", message: "Project deleted" });
 };
-  
+
+
+
+
+
+
 
 export {
   getApiKey,
