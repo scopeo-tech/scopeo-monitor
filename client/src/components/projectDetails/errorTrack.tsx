@@ -22,7 +22,7 @@ function ErrorTrack() {
 
   const {
     data: totalErrors = {
-      authenticationCount: 0,
+      authCount: 0,
       notFoundCount: 0,
       internalServerErrorCount: 0,
       badRequestCount: 0,
@@ -65,7 +65,7 @@ function ErrorTrack() {
   const pieData = [
     {
       name: "Authentication Errors",
-      value: totalErrors?.authenticationCount || 0.01,
+      value: totalErrors?.authCount || 0.01,
     },
     { name: "Not Found", value: totalErrors?.notFoundCount || 0.01 },
     {
@@ -77,7 +77,7 @@ function ErrorTrack() {
 
 
   const isAllZero =
-    totalErrors.authenticationCount === 0 &&
+    totalErrors.authCount === 0 &&
     totalErrors.notFoundCount === 0 &&
     totalErrors.internalServerErrorCount === 0 &&
     totalErrors.badRequestCount === 0;
