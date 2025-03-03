@@ -90,11 +90,18 @@ export const getPassKey = async () => {
     return response.data;
   };
 
-  export const getProjectPassKey = async (data: { projectId: string }) =>  {
-    const response = await axiosInstance.get(`/project/get-project-passkey/${data.projectId}`, { params: data });
+  export const getProjectPassKey = async ( projectId: string ) =>  {
+    const response = await axiosInstance.get(`/project/get-project-passkey/${projectId}`);
     console.log(response.data.data);
     return response.data.data;
   };
+
+
+  export const getProjectById = async (  projectId: string ) =>  {
+    const response = await axiosInstance.get(`/project/${projectId}`);
+    console.log(response.data.data);
+    return response.data.data;
+  }
 
 
   export const updateProject = async (projectId: string, data: { name: string; passKey: string }) => {
@@ -117,3 +124,20 @@ export const deleteProject = async (projectId: string) => {
 };
 
 
+export const updateProfile = async (data: {username: string; currentPassword: string; newPassword: string }) => {
+  const response = await axiosInstance.put("/user/update-profile", data);
+  console.log(response.data);
+  return response.data;
+};
+
+export const checkUsername = async (username: string) => {
+  const response = await axiosInstance.get(`/user/${username}`);
+  console.log(response.data);
+  return response.data;
+};
+
+export const deleteProfile = async (userId: string) => {
+  const response = await axiosInstance.delete(`/user/delete-profile/${userId}`);
+  console.log(response.data);
+  return response.data;
+};

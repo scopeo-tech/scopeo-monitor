@@ -9,6 +9,7 @@ userRoutes
 .get('/info',verifyToken,tryCatch(getUserById))
 .get('/project/count',verifyToken,tryCatch(getUserProjectCount))
 .get('/list',verifyToken,tryCatch(getProjectList))
+.get("/:projectId",verifyToken,tryCatch(getProjectList))
 .put('/password',verifyToken,tryCatch(updateProfile))
 .delete('/:userId',tryCatch(deleteProfile))
 .get('/:username',tryCatch(checkUsername))
