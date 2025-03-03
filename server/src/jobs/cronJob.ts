@@ -1,23 +1,14 @@
 import cron from "node-cron";
 import { flagOldStatuses } from "../controller/project/projectController";
 
-let isRunning = false;
-
-const startFlaggingOldStatusesCronJob = async (): Promise<void> => {
-  cron.schedule("*/5 * * * *", async () => {
-    if(isRunning) {
-      console.log("Job is already running");
-      return;
+const flagOldStatusesJob = () => {
+    try{
+      cron.schedule("*/5 * * * * *", flagOldStatuses);
+    }catch(error){
+      console.log(error);
+      throw new Error("Error scheduling cron job");
     }
-    isRunning = true;
-    try {
-      await flagOldStatuses();
-    } catch (error) {
-      console.error(error);
-    }finally {
-      isRunning = false;
-    }
-  })
 };
 
-export default startFlaggingOldStatusesCronJob;
+export default flagOldStatusesJob
+

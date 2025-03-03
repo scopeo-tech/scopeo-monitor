@@ -18,6 +18,9 @@ export interface SecurityLogPayload {
   ip : string;
   userAgent : string
   duration : number
+  isBruteForce : boolean;
+  isUnusual : boolean
+  unusualReason : string
 }
 
 
