@@ -3,7 +3,7 @@ import { checkProjectName, createProject ,getApiKey, getPassKey, getProjectPassK
 import verifyToken from "../middleware/verifyToken";
 import tryCatch from "../lib/util/tryCatch";
 import { getErrorStats, getCommonError, getErrorMethodPercentages, getLatestError } from "../controller/agent/errorTrack";
-import {getBruteForceAttempts,getFailedLogins,getTotalLogins,getUnusualLogins} from "../controller/agent/security"
+import {getBruteForceAttempts,getFailedLogins,getTotalLogins,getUnusualLogins,getSecurityStats} from "../controller/agent/security"
 
 
 const router = express.Router();
@@ -32,5 +32,6 @@ router
 .get("/get-failed-logins/:projectId",tryCatch(getFailedLogins))
 .get("/get-total-logins/:projectId",tryCatch(getTotalLogins))
 .get("/get-unusual-logins/:projectId",tryCatch(getUnusualLogins))
+.get("/get-security-stats/:projectId",tryCatch(getSecurityStats))
 
 export default router

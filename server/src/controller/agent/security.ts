@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { ObjectId } from "mongodb";
 import { AuthenticatedRequest } from "../../lib/types/type";
 import Project from "../../model/projectModel";
 import Security from "../../model/securityModel";
@@ -6,7 +7,6 @@ import CustomError from "../../lib/util/CustomError";
 import { SecurityLogPayload } from "../../lib/types/type";
 import getTimeRange from "../../lib/util/getTimeRange";
 import checkProjectOwnership from "../../lib/util/checkProjectOwnership";
-
 
 const handleIncomingSecurity = async (
   req: Request,
@@ -43,18 +43,18 @@ const getTotalLogins = async (
 ): Promise<Response | void> => {
   if (!(await checkProjectOwnership(req, next))) return;
   const { projectId } = req.params;
-  const {timeFilter = "today"} = req.query;
+  const { timeFilter = "today" } = req.query;
   const timeRange = getTimeRange(timeFilter as string);
 
-  if(!projectId) return next(new CustomError(400, "Project ID is required"));
+  if (!projectId) return next(new CustomError(400, "Project ID is required"));
 
   const logins = await Security.find({
     project: projectId,
     isSuccess: true,
     ...(timeRange && { createdAt: timeRange }),
   }).sort({ createdAt: -1 });
-  
-  res.status(200).json({ status: "success", logins , count: logins.length });
+
+  res.status(200).json({ status: "success", logins, count: logins.length });
 };
 
 const getFailedLogins = async (
@@ -64,10 +64,10 @@ const getFailedLogins = async (
 ): Promise<Response | void> => {
   if (!(await checkProjectOwnership(req, next))) return;
   const { projectId } = req.params;
-  const {timeFilter = "today"} = req.query;
+  const { timeFilter = "today" } = req.query;
   const timeRange = getTimeRange(timeFilter as string);
 
-  if(!projectId) return next(new CustomError(400, "Project ID is required"));
+  if (!projectId) return next(new CustomError(400, "Project ID is required"));
 
   const logins = await Security.find({
     project: projectId,
@@ -75,8 +75,78 @@ const getFailedLogins = async (
     ...(timeRange && { createdAt: timeRange }),
   }).sort({ createdAt: -1 });
 
-  res.status(200).json({ status: "success", logins , count: logins.length });
+  res.status(200).json({ status: "success", logins, count: logins.length });
 };
+
+const getSecurityStats = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise<Response | void> => {
+  if (!(await checkProjectOwnership(req, next))) return;
+
+  const { projectId } = req.params;
+  const { timeFilter = "today" } = req.query;
+  const timeRange = getTimeRange(timeFilter as string);
+
+  if (!projectId) return next(new CustomError(400, "Project ID is required"));
+
+
+  const stats = await Security.aggregate([
+    { $match: { project: new ObjectId(projectId), ...(timeRange && { createdAt: timeRange }) } },
+    {
+      $group: {
+        _id: null,
+        totalLogins: { $sum: 1 },
+        successLogins: { $sum: { $cond: ["$isSuccess", 1, 0] } },
+        failedLogins: { $sum: { $cond: ["$isSuccess", 0, 1] } },
+        totalUnusual: { $sum: { $cond: ["$isUnusual", 1, 0] } },
+        unusualHighFreq: {
+          $sum: {
+            $cond: [
+              {
+                $eq: [
+                  "$unusualReason",
+                  "Unusually high number of logins within 24 hours",
+                ],
+              },
+              1,
+              0,
+            ],
+          },
+        },
+        unusualConsecSuccess: {
+          $sum: {
+            $cond: [
+              {
+                $eq: [
+                  "$unusualReason",
+                  "Rapid consecutive login failures followed by success",
+                ],
+              },
+              1,
+              0,
+            ],
+          },
+        },
+        bruteForce: { $sum: { $cond: ["$isBruteForce", 1, 0] } },
+      },
+    },
+  ]);
+
+  const result = stats[0] || {
+    totalLogins: 0,
+    successLogins: 0,
+    failedLogins: 0,
+    totalUnusual: 0,
+    unusualHighFreq: 0,
+    unusualConsecSuccess: 0,
+    bruteForce: 0,
+  };
+
+  res.status(200).json({ status: "success", stats: result });
+};
+
 
 const getBruteForceAttempts = async (
   req: AuthenticatedRequest,
@@ -95,16 +165,18 @@ const getBruteForceAttempts = async (
     ...(timeRange && { createdAt: timeRange }),
   }).sort({ createdAt: -1 });
 
-  // Group by IP
-  const groupedByIP = logins.reduce((acc, login) => {
-    acc[login.ip] = (acc[login.ip] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
+  const groupedByIP = logins.reduce(
+    (acc, login) => {
+      acc[login.ip] = (acc[login.ip] || 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>
+  );
 
-  // Most attacked IP
-  const mostAttackedIP = Object.keys(groupedByIP).reduce((a, b) =>
-    groupedByIP[a] > groupedByIP[b] ? a : b
-  , "");
+  const mostAttackedIP = Object.keys(groupedByIP).reduce(
+    (a, b) => (groupedByIP[a] > groupedByIP[b] ? a : b),
+    ""
+  );
 
   res.status(200).json({
     status: "success",
@@ -136,12 +208,14 @@ const getUnusualLogins = async (
     ...(timeRange && { createdAt: timeRange }),
   }).sort({ createdAt: -1 });
 
-  // Group by reason
-  const reasonsCount = logins.reduce((acc, login) => {
-    const reason = login.unusualReason || "Unknown";
-    acc[reason] = (acc[reason] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
+  const reasonsCount = logins.reduce(
+    (acc, login) => {
+      const reason = login.unusualReason || "Unknown";
+      acc[reason] = (acc[reason] || 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>
+  );
 
   res.status(200).json({
     status: "success",
@@ -155,6 +229,11 @@ const getUnusualLogins = async (
   });
 };
 
-
-
-export { handleIncomingSecurity , getTotalLogins, getFailedLogins, getBruteForceAttempts, getUnusualLogins };
+export {
+  handleIncomingSecurity,
+  getTotalLogins,
+  getFailedLogins,
+  getSecurityStats,
+  getBruteForceAttempts,
+  getUnusualLogins,
+};
