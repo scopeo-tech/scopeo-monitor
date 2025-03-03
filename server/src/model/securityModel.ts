@@ -6,7 +6,7 @@ const securitySchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Project",
       required: true,
-      index: true, 
+      index: true,
     },
     statusCode: {
       type: Number,
@@ -18,12 +18,29 @@ const securitySchema = new Schema(
     },
     ip: {
       type: String,
+      required: true,
     },
     userAgent: {
       type: String,
     },
     duration: {
-      type: Number, 
+      type: Number,
+    },
+    isBruteForce: {
+      type: Boolean,
+      default: false,
+    },
+    isUnusual: {
+      type: Boolean,
+      default: false, 
+    },
+    unusualReason: {
+      type: String, 
+      enum: [
+        "Rapid consecutive login failures followed by success",
+        "Unusually high number of logins within 24 hours",
+      ],
+      default: null,
     },
   },
   { timestamps: true }
