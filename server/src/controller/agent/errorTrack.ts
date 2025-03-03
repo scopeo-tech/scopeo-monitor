@@ -62,16 +62,19 @@ console.log("..pipi...error incoming from agent..")
 const getTimeFilter = (filter: string) => {
   const now = new Date();
   switch (filter) {
-    case "today":
-      return { createdAt: { $gte: new Date(now.setHours(0, 0, 0, 0)) } };
-    case "week":
-      return { createdAt: { $gte: new Date(now.setDate(now.getDate() - 7)) } };
-    case "month":
-      return { createdAt: { $gte: new Date(now.setMonth(now.getMonth() - 1)) } };
+    case "1h":
+      return { createdAt: { $gte: new Date(now.getTime() - 60 * 60 * 1000) } };
+    case "24h":
+      return { createdAt: { $gte: new Date(now.getTime() - 24 * 60 * 60 * 1000) } };
+    case "7d":
+      return { createdAt: { $gte: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000) } };
+    case "30d":
+      return { createdAt: { $gte: new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000) } }; 
     default:
-      return {};
+      return {}; 
   }
 };
+
 
 
 

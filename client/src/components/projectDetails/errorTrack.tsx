@@ -61,14 +61,12 @@ function ErrorTrack() {
   });
 
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setShowPopup(true);
-      setTimeout(() => setShowPopup(false), 3000);
-    }, 5000);
-  
-    return () => clearInterval(interval);
-  }, []);
+  // useEffect(() => {
+  //   if (isAllZero && !showPopup) {
+  //     setShowPopup(true);
+  //     setTimeout(() => setShowPopup(false), 3000);
+  //   }
+  // }, [showPopup]);
   
 
   if (isLoading) return <p>Loading error data...</p>;
