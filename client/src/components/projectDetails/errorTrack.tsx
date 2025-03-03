@@ -1,116 +1,65 @@
 "use client";
+
 import {
   errorStats,
   errorMethods as fetchErrorMethods,
   commonErros,
   latestErrors,
 } from "@/lib/api";
-import axiosErrorManager from "@/lib/util/axiosErrorManager";
 import { useParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { PieChart, Pie, Cell, Tooltip } from "recharts";
 import { motion, AnimatePresence } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
 
 const COLORS = ["#90BAAD", "#689689", "#B0CA87", "#ADF6B1"];
-
-interface TotalErrors {
-  authenticationCount: number;
-  notFoundCount: number;
-  internalServerErrorCount: number;
-  badRequestCount: number;
-  totalErrors: number;
-}
-
-interface ErrorsInter {
-  statusCode: number;
-  route: string;
-  method: string;
-  message: string;
-}
-
-interface ErrorMethods {
-  GET: string;
-  POST: string;
-  PUT: string;
-  DELETE: string;
-}
 
 function ErrorTrack() {
   const { projectID } = useParams() as { projectID: string };
 
-  const [isLoading, setIsLoading] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
 
-  const [totalErrors, setTotalErrors] = useState<TotalErrors>({
-    authenticationCount: 0,
-    notFoundCount: 0,
-    internalServerErrorCount: 0,
-    badRequestCount: 0,
-    totalErrors: 0,
+  const {
+    data: totalErrors = {
+      authenticationCount: 0,
+      notFoundCount: 0,
+      internalServerErrorCount: 0,
+      badRequestCount: 0,
+      totalErrors: 0,
+    },
+    isLoading,
+  } = useQuery({
+    queryKey: ["errorStats", projectID],
+    queryFn: () => errorStats(projectID),
+    enabled: !!projectID,
   });
 
-  const [commonErrors, setCommonErrors] = useState<ErrorsInter | null>(null);
-  const [latestError, setLatestError] = useState<ErrorsInter | null>(null);
-  const [errorMethods, setErrorMethods] = useState<ErrorMethods>({
-    GET: "0.00%",
-    POST: "0.00%",
-    PUT: "0.00%",
-    DELETE: "0.00%",
+  const { data: commonErrors } = useQuery({
+    queryKey: ["commonErrors", projectID],
+    queryFn: () => commonErros(projectID),
+    enabled: !!projectID,
   });
 
-  console.log("Project ID:", projectID);
+  const { data: latestError } = useQuery({
+    queryKey: ["latestErrors", projectID],
+    queryFn: () => latestErrors(projectID),
+    enabled: !!projectID,
+  });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (projectID) {
-          setIsLoading(true);
+  const { data: errorMethods = { GET: "0.00%", POST: "0.00%", PUT: "0.00%", DELETE: "0.00%" } } = useQuery({
+    queryKey: ["errorMethods", projectID],
+    queryFn: () => fetchErrorMethods(projectID),
+    enabled: !!projectID,
+  });
 
-          const statsRes = await errorStats(projectID);
-          setTotalErrors(
-            statsRes || {
-              authenticationCount: 0,
-              notFoundCount: 0,
-              internalServerErrorCount: 0,
-              badRequestCount: 0,
-              totalErrors: 0,
-            }
-          );
-
-          const commonRes = await commonErros(projectID);
-          setCommonErrors(commonRes || null);
-
-          const latestRes = await latestErrors(projectID);
-          setLatestError(latestRes || null);
-
-          const methodsRes = await fetchErrorMethods(projectID);
-          setErrorMethods(
-            methodsRes || {
-              GET: "0.00%",
-              POST: "0.00%",
-              PUT: "0.00%",
-              DELETE: "0.00%",
-            }
-          );
-        }
-      } catch (error) {
-        axiosErrorManager(error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [projectID]);
-
-  useEffect(() => {
+  useState(() => {
     const interval = setInterval(() => {
       setShowPopup(true);
       setTimeout(() => setShowPopup(false), 3000);
     }, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  });
 
   if (isLoading) return <p>Loading error data...</p>;
   if (!projectID) return <p>No project selected.</p>;
@@ -180,8 +129,6 @@ function ErrorTrack() {
         )}
       </div>
 
-      
-
       <div className="p-4 rounded-2xl shadow-lg flex justify-center">
         <PieChart width={400} height={400}>
           <Pie data={pieData} cx="50%" cy="50%" outerRadius={150} fill="#8884d8" dataKey="value">
@@ -193,13 +140,12 @@ function ErrorTrack() {
         </PieChart>
       </div>
 
-       {/* Error Method Percentages */}
-       <div className="p-4 rounded-2xl shadow-lg">
+      <div className="p-4 rounded-2xl shadow-lg">
         <h2 className="text-xl font-bold mb-2">Error Method Percentages</h2>
         {Object.entries(errorMethods || {}).length > 0 ? (
           Object.entries(errorMethods).map(([method, percentage]) => (
             <p key={method}>
-              <b>{method}:</b> {percentage}
+              <b>{method}:</b> {percentage as string}
             </p>
           ))
         ) : (
