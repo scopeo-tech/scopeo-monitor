@@ -60,6 +60,7 @@ export const getUserInfo = async (): Promise<userDetails> => {
 //get user projects
 export const getUserProjects = async (): Promise<Project[]> => {
     const response = await axiosInstance.get("/user/list");
+    console.log(response.data.data);
     return response.data.data; 
 };
 
@@ -131,8 +132,7 @@ export const updateProfile = async (data: {username: string; currentPassword: st
 };
 
 export const checkUsername = async (username: string) => {
-  const response = await axiosInstance.get(`/user/${username}`);
-  console.log(response.data);
+  const response = await axiosInstance.get(`/user/check/${username}`);
   return response.data;
 };
 
