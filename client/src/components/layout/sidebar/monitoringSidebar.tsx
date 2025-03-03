@@ -56,9 +56,9 @@ const MonitoringSidebar = () => {
           <h1 className="text-xl font-bold">Scopeo</h1>
         </div>
         <p className="mt-2 text-sm">{project?.name}</p>
-        <p className="text-xs text-gray-200"><p className="text-xs text-gray-200">
-  {project?.created ? new Date(project.created).toISOString().split("T")[0] : "N/A"}
-</p></p>
+       <p className="text-xs text-gray-200">
+        {project?.created ? new Date(project.created).toISOString().split("T")[0] : "N/A"}
+      </p>
       </div>
 
       <div className="space-y-4">

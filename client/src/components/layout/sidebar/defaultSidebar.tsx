@@ -50,8 +50,8 @@ const Sidebar: FC = () => {
 
       {user && (
         <div className="mt-6  rounded-lg">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-rose-500 text-white flex items-center justify-center rounded-full text-lg">
+          <div className="flex items-center gap-3 border rounded-3xl bg-slate-300 p-2 ">
+            <div className="w-8 h-8 bg-rose-500 text-white flex items-center justify-center rounded-full text-lg  ">
              {user?.username[0].toUpperCase()} 
             </div>
             <div>
