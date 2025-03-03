@@ -96,27 +96,36 @@ const updateProjectStatus = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { apiKey, PassKey, status } = req.body;
-  const project = await Project.findOne({ apiKey, PassKey });
-  if (!project) {
-    return next(new CustomError(404, "Project not found"));
-  }
-  if (project.status) {
-    project.status.connectionStatus = status;
-    project.status.updatedAt = new Date();
-  }else{
-    return next(new CustomError(404, "Project not found , make sure you provided correct apikey and passkey"));
-  }
-  await project.save();
+   const apiKey = req.headers["x-api-key"] as string;
+    const passKey = req.headers["x-pass-key"] as string;
+    if (!apiKey || !passKey) {
+      return next(new CustomError(401, "Unauthorized"));
+    }
 
-  return res
-    .status(200)
-    .json({ status: "success", message: "Project status updated" });
+    const project = await Project.findOne({ apiKey, passKey });
+
+    if (!project) { 
+      return next(new CustomError(404, "Project not found"));
+    }
+
+
+    if (!project.status) {
+      project.status = { connectionStatus: true, updatedAt: new Date() };
+    } else {
+      project.status.connectionStatus = true;
+      project.status.updatedAt = new Date();
+    }
+    await project.save();
+
+    return res.status(200).json({
+      status: "success",
+      message: "Project status updated",
+    });
+
 };
 
 const flagOldStatuses=async ()=> {
     const twelveSecondsAgo = new Date(Date.now() - 12 * 1000); 
-  
     await Project.updateMany(
       { "status.updatedAt": { $lt: twelveSecondsAgo } }, 
       { $set: { "status.connectionStatus": false } } 
