@@ -7,7 +7,7 @@ import {
   latestErrors,
 } from "@/lib/api";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PieChart, Pie, Cell, Tooltip } from "recharts";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
@@ -18,6 +18,7 @@ function ErrorTrack() {
   const { projectID } = useParams() as { projectID: string };
 
   const [showPopup, setShowPopup] = useState(false);
+  const [filter, setFilter] = useState("all");
 
   const {
     data: totalErrors = {
@@ -29,37 +30,46 @@ function ErrorTrack() {
     },
     isLoading,
   } = useQuery({
-    queryKey: ["errorStats", projectID],
-    queryFn: () => errorStats(projectID),
-    enabled: !!projectID,
-  });
-
-  const { data: commonErrors } = useQuery({
-    queryKey: ["commonErrors", projectID],
-    queryFn: () => commonErros(projectID),
+    queryKey: ["errorStats", projectID, filter],
+    queryFn: () => errorStats(projectID, filter),
     enabled: !!projectID,
   });
 
   const { data: latestError } = useQuery({
-    queryKey: ["latestErrors", projectID],
-    queryFn: () => latestErrors(projectID),
+    queryKey: ["latestErrors", projectID, filter],
+    queryFn: () => latestErrors(projectID, filter),
     enabled: !!projectID,
   });
 
-  const { data: errorMethods = { GET: "0.00%", POST: "0.00%", PUT: "0.00%", DELETE: "0.00%" } } = useQuery({
-    queryKey: ["errorMethods", projectID],
-    queryFn: () => fetchErrorMethods(projectID),
+  const { data: commonErrors } = useQuery({
+    queryKey: ["commonErrors", projectID, filter],
+    queryFn: () => commonErros(projectID, filter),
     enabled: !!projectID,
   });
 
-  useState(() => {
+  const {
+    data: errorMethods = [
+      { method: "GET", percentage: "0.00%" },
+      { method: "POST", percentage: "0.00%" },
+      { method: "PUT", percentage: "0.00%" },
+      { method: "DELETE", percentage: "0.00%" },
+    ],
+  } = useQuery({
+    queryKey: ["errorMethods", projectID, filter],
+    queryFn: () => fetchErrorMethods(projectID, filter),
+    enabled: !!projectID,
+  });
+
+
+  useEffect(() => {
     const interval = setInterval(() => {
       setShowPopup(true);
       setTimeout(() => setShowPopup(false), 3000);
     }, 5000);
-
+  
     return () => clearInterval(interval);
-  });
+  }, []);
+  
 
   if (isLoading) return <p>Loading error data...</p>;
   if (!projectID) return <p>No project selected.</p>;
@@ -83,8 +93,28 @@ function ErrorTrack() {
     totalErrors.internalServerErrorCount === 0 &&
     totalErrors.badRequestCount === 0;
 
+  console.log(errorMethods);
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 h-screen overflow-hidden">
+    <div className="relative grid grid-cols-1 md:grid-cols-2 gap-4 p-4 h-screen overflow-hidden">
+
+      <div className="p-4 absolute right-10">
+        <label htmlFor="filter" className="block text-lg font-bold mb-2">
+          Filter Errors By:
+        </label>
+        <select
+          id="filter"
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          className="p-2 border rounded-lg shadow-sm"
+        >
+          <option value="all">All Time</option>
+          <option value="1h">Last 1 Hour</option>
+          <option value="24h">Last 24 Hours</option>
+          <option value="7d">Last 7 Days</option>
+          <option value="30d">Last 30 Days</option>
+        </select>
+      </div>
+
       <div className="p-4 rounded-2xl shadow-lg">
         <h2 className="text-xl font-bold mb-2">Latest Error</h2>
         {latestError ? (
@@ -131,9 +161,19 @@ function ErrorTrack() {
 
       <div className="p-4 rounded-2xl shadow-lg flex justify-center">
         <PieChart width={400} height={400}>
-          <Pie data={pieData} cx="50%" cy="50%" outerRadius={150} fill="#8884d8" dataKey="value">
+          <Pie
+            data={pieData}
+            cx="50%"
+            cy="50%"
+            outerRadius={150}
+            fill="#8884d8"
+            dataKey="value"
+          >
             {pieData.map((_, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              <Cell
+                key={`cell-${index}`}
+                fill={COLORS[index % COLORS.length]}
+              />
             ))}
           </Pie>
           <Tooltip />
@@ -141,23 +181,32 @@ function ErrorTrack() {
       </div>
 
       <div className="p-4 rounded-2xl shadow-lg">
-        <h2 className="text-xl font-bold mb-2">Error Method Percentages</h2>
-        {Object.entries(errorMethods || {}).length > 0 ? (
-          Object.entries(errorMethods).map(([method, percentage]) => (
-            <p key={method}>
-              <b>{method}:</b> {percentage as string}
-            </p>
-          ))
-        ) : (
-          <p>No error methods found.</p>
+        <h2 className="text-xl font-bold mb-2">Error Methods</h2>
+        {errorMethods.map(
+          ({ method, percentage }: { method: string; percentage: string }) => (
+            <div key={method} className="mb-2">
+              <p>
+                <b>{method}:</b> {percentage || "0.00%"}
+              </p>
+            </div>
+          )
         )}
       </div>
 
       <AnimatePresence>
         {showPopup && isAllZero && (
-          <motion.div initial={{ x: "-100%", opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: "-100%", opacity: 0 }} transition={{ duration: 0.5 }} className="p-4 rounded-2xl shadow-lg bg-yellow-100 border-l-4 border-yellow-500 fixed top-4 left-4 z-50">
+          <motion.div
+            initial={{ x: "-100%", opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: "-100%", opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="p-4 rounded-2xl shadow-lg bg-yellow-100 border-l-4 border-yellow-500 fixed top-4 left-4 z-50"
+          >
             <h3 className="text-yellow-800 font-bold">No Errors Found</h3>
-            <p className="text-yellow-700">This project hasn’t logged any errors yet. A minimal chart is shown for visualization.</p>
+            <p className="text-yellow-700">
+              This project hasn’t logged any errors yet. A minimal chart is
+              shown for visualization.
+            </p>
           </motion.div>
         )}
       </AnimatePresence>

@@ -59,28 +59,44 @@ console.log("..pipi...error incoming from agent..")
 
 //controllers
 
+const getTimeFilter = (filter: string) => {
+  const now = new Date();
+  switch (filter) {
+    case "today":
+      return { createdAt: { $gte: new Date(now.setHours(0, 0, 0, 0)) } };
+    case "week":
+      return { createdAt: { $gte: new Date(now.setDate(now.getDate() - 7)) } };
+    case "month":
+      return { createdAt: { $gte: new Date(now.setMonth(now.getMonth() - 1)) } };
+    default:
+      return {};
+  }
+};
+
+
+
 const getErrorStats = async (
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ): Promise<Response | void> => {
-
   if (!(await checkProjectOwnership(req, next))) return;
 
   const { projectId } = req.params;
+  const { filter } = req.query;
 
   if (!projectId) {
     return next(new CustomError(400, "Project ID is required"));
   }
 
+  const dateFilter = getTimeFilter(filter as string);
+
   const stats = await Error.aggregate([
-    { $match: { projectId: new ObjectId(projectId) } },
+    { $match: { projectId: new ObjectId(projectId), ...dateFilter } },
     {
       $group: {
         _id: "$statusCode",
         count: { $sum: 1 },
-        mostCommonRoute: { $first: "$route" },
-        mostCommonMessage: { $first: "$message" },
       },
     },
     {
@@ -97,9 +113,7 @@ const getErrorStats = async (
           },
         },
         notFoundCount: {
-          $sum: {
-            $cond: { if: { $eq: ["$_id", 404] }, then: "$count", else: 0 },
-          },
+          $sum: { $cond: { if: { $eq: ["$_id", 404] }, then: "$count", else: 0 } },
         },
         internalServerErrorCount: {
           $sum: {
@@ -125,35 +139,23 @@ const getErrorStats = async (
             },
           },
         },
-        mostCommonErrorCount: { $max: "$count" },
       },
     },
   ]);
 
-  if (stats.length === 0) {
-    return res.status(200).json({
-      totalErrors: 0,
-      authenticationCount: 0,
-      notFoundCount: 0,
-      internalServerErrorCount: 0,
-      badRequestCount: 0,
-      mostCommonErrorCount: 0,
-    });
-  }
-
-  const errorSummary = stats[0];
-
-  const response = {
-    totalErrors: errorSummary.totalErrors,
-    authenticationCount: errorSummary.authCount,
-    notFoundCount: errorSummary.notFoundCount,
-    internalServerErrorCount: errorSummary.internalServerErrorCount,
-    badRequestCount: errorSummary.badRequestCount,
-    mostCommonErrorCount: errorSummary.mostCommonErrorCount,
-  };
+  const response = stats.length
+    ? stats[0]
+    : {
+        totalErrors: 0,
+        authenticationCount: 0,
+        notFoundCount: 0,
+        internalServerErrorCount: 0,
+        badRequestCount: 0,
+      };
 
   res.status(200).json(response);
 };
+
 
 
 
@@ -162,148 +164,142 @@ const getCommonError = async (
   res: Response,
   next: NextFunction
 ): Promise<Response | void> => {
-
   if (!(await checkProjectOwnership(req, next))) return;
-  
+
   const { projectId } = req.params;
+  const { filter } = req.query;
 
   if (!projectId) {
     return next(new CustomError(400, "Project ID is required"));
   }
 
-  
-    const commonError = await Error.aggregate([
-      { $match: { projectId: new ObjectId(projectId) } },
-      {
-        $group: {
-          _id: {
-            statusCode: "$statusCode",
-            method: "$method",
-            route: "$route",
-            message: "$message",
-          },
-          count: { $sum: 1 },
-          firstOccurrence: { $min: "$createdAt" },
+  const dateFilter = getTimeFilter(filter as string);
+
+  const commonError = await Error.aggregate([
+    { $match: { projectId: new ObjectId(projectId), ...dateFilter } },
+    {
+      $group: {
+        _id: {
+          statusCode: "$statusCode",
+          method: "$method",
+          route: "$route",
+          message: "$message",
         },
+        count: { $sum: 1 },
+        firstOccurrence: { $min: "$createdAt" },
       },
-      { $sort: { count: -1, firstOccurrence: 1 } },
-      { $limit: 1 },
-    ]);
+    },
+    { $sort: { count: -1, firstOccurrence: 1 } },
+    { $limit: 1 },
+  ]);
 
-    if (commonError.length === 0) {
-      return res.status(200).json({message:"No errors found for this project",data:[]});
-    }
+  if (commonError.length === 0) {
+    return res.status(200).json({ message: "No errors found for this project", data: [] });
+  }
 
-    const mostCommonError = commonError[0];
+  const mostCommonError = commonError[0];
 
-    const response = {
-      statusCode: mostCommonError._id.statusCode,
-      method: mostCommonError._id.method,
-      route: mostCommonError._id.route,
-      message: mostCommonError._id.message,
-      count: mostCommonError.count,
-    };
-
-    res.status(200).json(response);
+  res.status(200).json({
+    statusCode: mostCommonError._id.statusCode,
+    method: mostCommonError._id.method,
+    route: mostCommonError._id.route,
+    message: mostCommonError._id.message,
+    count: mostCommonError.count,
+  });
 };
+
 
 const getLatestError = async (
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ): Promise<Response | void> => {
-
   if (!(await checkProjectOwnership(req, next))) return;
 
   const { projectId } = req.params;
+  const { filter } = req.query;
 
   if (!projectId) {
     return next(new CustomError(400, "Project ID is required"));
   }
 
-  try {
-    const latestError = await Error.findOne({ projectId: new ObjectId(projectId) })
-      .sort({ createdAt: -1 })
-      .select("statusCode method route message createdAt");
+  const dateFilter = getTimeFilter(filter as string);
 
-    if (!latestError) {
-      return res.status(200).json({ message: "No errors found for this project" });
-    }
+  const latestError = await Error.findOne({ projectId: new ObjectId(projectId), ...dateFilter })
+    .sort({ createdAt: -1 })
+    .select("statusCode method route message createdAt");
 
-    const response = {
-      statusCode: latestError.statusCode,
-      method: latestError.method,
-      route: latestError.route,
-      message: latestError.message,
-      createdAt: latestError.createdAt,
-    };
-
-    res.status(200).json(response);
-  } catch (error) {
-    next(new CustomError(500, "Internal Server Error"));
+  if (!latestError) {
+    return res.status(200).json({ message: "No errors found for this project" });
   }
+
+  res.status(200).json({
+    statusCode: latestError.statusCode,
+    method: latestError.method,
+    route: latestError.route,
+    message: latestError.message,
+    createdAt: latestError.createdAt,
+  });
 };
+
 
 const getErrorMethodPercentages = async (
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ): Promise<Response | void> => {
-  
   if (!(await checkProjectOwnership(req, next))) return;
 
   const { projectId } = req.params;
+  const { filter } = req.query;
 
   if (!projectId) {
     return next(new CustomError(400, "Project ID is required"));
   }
 
-  try {
-    const methodStats = await Error.aggregate([
-      { $match: { projectId: new ObjectId(projectId) } },
-      {
-        $group: {
-          _id: "$method",
-          count: { $sum: 1 },
+  const dateFilter = getTimeFilter(filter as string);
+
+  const methodStats = await Error.aggregate([
+    { $match: { projectId: new ObjectId(projectId), ...dateFilter } },
+    {
+      $group: {
+        _id: "$method",
+        count: { $sum: 1 },
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        total: { $sum: "$count" },
+        methods: { $push: { method: "$_id", count: "$count" } },
+      },
+    },
+    { $unwind: "$methods" },
+    {
+      $project: {
+        _id: 0,
+        method: "$methods.method",
+        percentage: {
+          $multiply: [{ $divide: ["$methods.count", "$total"] }, 100],
         },
       },
-      {
-        $group: {
-          _id: null,
-          total: { $sum: "$count" },
-          methods: { $push: { method: "$_id", count: "$count" } },
-        },
-      },
-      {
-        $unwind: { path: "$methods", preserveNullAndEmptyArrays: true }, 
-      },
-      {
-        $project: {
-          _id: 0,
-          method: "$methods.method",
-          percentage: {
-            $cond: {
-              if: { $gt: ["$methods.count", 0] },
-              then: { $multiply: [{ $divide: ["$methods.count", "$total"] }, 100] },
-              else: 0,
-            },
-          },
-        },
-      },
-    ]);
+    },
+  ]);
 
-    const defaultMethods = ["GET", "POST", "PUT", "DELETE"];
-    const response: Record<string, string> = {};
+  const methodOrder = ["GET", "POST", "PUT", "DELETE"];
 
-    defaultMethods.forEach((method) => {
-      const stat = methodStats.find((s) => s.method === method);
-      response[method] = stat ? `${stat.percentage.toFixed(2)}%` : "0.00%";
-    });
+  const response = methodOrder.map((method) => {
+    const foundMethod = methodStats.find((stat) => stat.method === method);
+    return {
+      method,
+      percentage: foundMethod ? `${foundMethod.percentage.toFixed(2)}%` : "0.00%",
+    };
+  });
 
-    res.status(200).json(response);
-  } catch (error) {
-    next(new CustomError(500, "Internal Server Error"));
-  }
+  res.status(200).json(response);
 };
+
+
+
 
 export { getErrorStats, getCommonError, getLatestError, getErrorMethodPercentages };

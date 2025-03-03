@@ -143,23 +143,31 @@ export const deleteProfile = async (userId: string) => {
 };
 
 
-//error stats
-export const errorStats = async (projectId: string) => {
-  const response = await axiosInstance.get(`/project/get-error-stats/${projectId}`);
+// error stats
+export const errorStats = async (projectId: string, filter: string) => {
+  const response = await axiosInstance.get(`/project/get-error-stats/${projectId}`, {
+    params: { filter },
+  });
   return response.data;
 };
 
-export const commonErros = async (projectId: string) => {
-  const response = await axiosInstance.get(`/project/get-error-common/${projectId}`);
+export const commonErros = async (projectId: string, filter: string) => {
+  const response = await axiosInstance.get(`/project/get-error-common/${projectId}`, {
+    params: { filter },
+  });
   return response.data;
 };
 
-export const latestErrors = async (projectId: string) => {
-  const response = await axiosInstance.get(`/project/get-error-latest/${projectId}`);
+export const latestErrors = async (projectId: string, filter: string) => {
+  const response = await axiosInstance.get(`/project/get-error-latest/${projectId}`, {
+    params: { filter },
+  });
   return response.data;
 };
 
-export const errorMethods = async (projectId: string) => {
-  const response = await axiosInstance.get(`/project/get-error-method/${projectId}`);
+export const errorMethods = async (projectId: string, filter: string) => {
+  const response = await axiosInstance.get(`/project/get-error-method/${projectId}`, {
+    params: { filter },
+  });
   return response.data;
 };
