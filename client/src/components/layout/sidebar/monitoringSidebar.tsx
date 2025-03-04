@@ -62,14 +62,13 @@ const MonitoringSidebar = () => {
         </div>
           <Link href="/home" className="text-2xl font-bold">Scopeo</Link>
         </div>
-        <div className=" mt-6 text-center">
-        <p className="mt-2 text-lg">{project?.name}</p>
-        <p className="text-xs text-gray-200">
-        {project?.created ? new Date(project.created).toISOString().split("T")[0] : "N/A"}
-      </p>
+         <div className=" mt-6 text-center">
+          <p className="mt-2 text-lg">{project?.name}</p>
+          <p className="text-xs text-gray-200">
+          {project?.created ? new Date(project.created).toISOString().split("T")[0] : "N/A"}
+        </p>
+       </div>
       </div>
-      </div>
-
       <div className="space-y-5">
         {menuItems.map(({ name, icon: Icon, path }) => (
           <button
