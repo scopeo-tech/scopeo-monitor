@@ -171,3 +171,8 @@ export const errorMethods = async (projectId: string, filter: string) => {
   });
   return response.data;
 };
+
+export const getAllErrors = async (projectId: string, page: number, limit: number) => {
+  const {data} = await axiosInstance.get(`/project/get-all-errors/${projectId}?page=${page}&limit=${limit}`);
+  return data;
+};

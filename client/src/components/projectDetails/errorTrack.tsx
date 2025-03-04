@@ -5,12 +5,24 @@ import {
   errorMethods as fetchErrorMethods,
   commonErros,
   latestErrors,
+  getAllErrors,
 } from "@/lib/api";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { PieChart, Pie, Cell, Tooltip } from "recharts";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Legend,
+} from "recharts";
 import { motion, AnimatePresence } from "framer-motion";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import React from "react";
 
 const COLORS = ["#90BAAD", "#689689", "#B0CA87", "#ADF6B1"];
 
@@ -60,8 +72,6 @@ function ErrorTrack() {
     enabled: !!projectID,
   });
 
-
-
   const pieData = [
     {
       name: "Authentication Errors",
@@ -75,28 +85,62 @@ function ErrorTrack() {
     { name: "Bad Request", value: totalErrors?.badRequestCount || 0.01 },
   ];
 
+  const barData = errorMethods.map(
+    (method: { method: string; percentage: string }) => ({
+      method: method.method,
+      percentage: parseFloat(method.percentage.replace("%", "")),
+    })
+  );
 
   const isAllZero =
-    totalErrors.authCount === 0 &&
-    totalErrors.notFoundCount === 0 &&
-    totalErrors.internalServerErrorCount === 0 &&
-    totalErrors.badRequestCount === 0;
-  
-    useEffect(() => {
-      if (isAllZero && !showPopup) {
-        setShowPopup(true);
-        setTimeout(() => setShowPopup(false), 3000);
-      }
-    }, [isAllZero,showPopup]);
+    (totalErrors?.authCount || 0) === 0 &&
+    (totalErrors?.notFoundCount || 0) === 0 &&
+    (totalErrors?.internalServerErrorCount || 0) === 0 &&
+    (totalErrors?.badRequestCount || 0) === 0;
 
+  useEffect(() => {
+    if (!isLoading && isAllZero && !showPopup) {
+      setShowPopup(true);
+      setTimeout(() => setShowPopup(false), 3000);
+    }
+  }, [isAllZero, showPopup, filter, isLoading]);
 
+  console.log("Total Errors Data:", totalErrors);
 
-    if (isLoading) return <p>Loading error data...</p>;
-    if (!projectID) return <p>No project selected.</p>;
-    
-    return (
-    <div className="relative grid grid-cols-1 md:grid-cols-2 gap-4 p-4 h-screen overflow-hidden">
-      <div className="p-4 absolute right-10">
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteQuery({
+      queryKey: ["errors", projectID],
+      queryFn: ({ pageParam = 1 }: { pageParam?: number }) => {
+        return getAllErrors(projectID, pageParam, 20);
+      },
+      getNextPageParam: (lastPage: {
+        currentPage: number;
+        hasNextPage: boolean;
+        errors: [];
+      }) => {
+        return lastPage.hasNextPage ? lastPage.currentPage + 1 : undefined;
+      },
+      initialPageParam: 1,
+      enabled: !!projectID,
+    });
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+    if (
+      scrollHeight - scrollTop <= clientHeight + 10 &&
+      hasNextPage &&
+      !isFetchingNextPage
+    ) {
+      fetchNextPage();
+    }
+  };
+
+  if (isLoading) return <p>Loading error data...</p>;
+  if (!projectID) return <p>No project selected.</p>;
+
+  return (
+    <div>
+      <div className="p-4 w-full flex justify-end">
         <label htmlFor="filter" className="block text-lg font-bold mb-2">
           Filter Errors By:
         </label>
@@ -114,101 +158,194 @@ function ErrorTrack() {
         </select>
       </div>
 
-      <div className="p-4 rounded-2xl shadow-lg">
-        <h2 className="text-xl font-bold mb-2">Latest Error</h2>
-        {latestError ? (
-          <>
-            <p>
-              <b>Status Code:</b> {latestError.statusCode}
-            </p>
-            <p>
-              <b>Route:</b> {latestError.route}
-            </p>
-            <p>
-              <b>Method:</b> {latestError.method}
-            </p>
-            <p>
-              <b>Message:</b> {latestError.message}
-            </p>
-          </>
-        ) : (
-          <p>No recent errors found.</p>
-        )}
-      </div>
-
-      <div className="p-4 rounded-2xl shadow-lg">
-        <h2 className="text-xl font-bold mb-2">Most Common Error</h2>
-        {commonErrors ? (
-          <>
-            <p>
-              <b>Status Code:</b> {commonErrors.statusCode}
-            </p>
-            <p>
-              <b>Route:</b> {commonErrors.route}
-            </p>
-            <p>
-              <b>Method:</b> {commonErrors.method}
-            </p>
-            <p>
-              <b>Message:</b> {commonErrors.message}
-            </p>
-          </>
-        ) : (
-          <p>No common errors found.</p>
-        )}
-      </div>
-
-      <div className="p-4 rounded-2xl shadow-lg flex justify-center">
-        <PieChart width={400} height={400}>
-          <Pie
-            data={pieData}
-            cx="50%"
-            cy="50%"
-            outerRadius={150}
-            fill="#8884d8"
-            dataKey="value"
-          >
-            {pieData.map((_, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={COLORS[index % COLORS.length]}
-              />
-            ))}
-          </Pie>
-          <Tooltip />
-        </PieChart>
-      </div>
-
-      <div className="p-4 rounded-2xl shadow-lg">
-        <h2 className="text-xl font-bold mb-2">Error Methods</h2>
-        {errorMethods.map(
-          ({ method, percentage }: { method: string; percentage: string }) => (
-            <div key={method} className="mb-2">
-              <p>
-                <b>{method}:</b> {percentage || "0.00%"}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 ">
+        <div
+          className="p-6 rounded-2xl shadow-lg border border-red-400 bg-red-100/10 backdrop-blur-lg 
+      hover:shadow-red-500/50 transition-all duration-300"
+        >
+          <h2 className="text-2xl font-bold mb-4 text-red-500 drop-shadow-lg">
+            Latest Error
+          </h2>
+          {latestError ? (
+            <div className="space-y-3">
+              <p className="text-lg">
+                <b className="text-red-400">Status Code:</b>{" "}
+                {latestError.statusCode}
+              </p>
+              <p className="text-lg">
+                <b className="text-red-400">Route:</b> {latestError.route}
+              </p>
+              <p className="text-lg">
+                <b className="text-red-400">Method:</b> {latestError.method}
+              </p>
+              <p className="text-lg">
+                <b className="text-red-400">Message:</b> {latestError.message}
               </p>
             </div>
-          )
-        )}
+          ) : (
+            <p className="text-gray-300">No recent errors found.</p>
+          )}
+        </div>
+
+        <div className="p-6 rounded-2xl shadow-lg bg-white border border-red-500 shadow-red-500/40 hover:shadow-red-600/60 transition-shadow">
+          <h2 className="text-2xl font-bold mb-4 text-red-600">
+            Most Common Error
+          </h2>
+          {commonErrors ? (
+            <div className="space-y-3">
+              <div className="p-3 rounded-xl bg-red-50 border border-red-200">
+                <p className="text-red-700 font-medium">
+                  <span className="font-bold">Status Code:</span>{" "}
+                  {commonErrors.statusCode}
+                </p>
+              </div>
+              <div className="p-3 rounded-xl bg-red-50 border border-red-200">
+                <p className="text-red-700 font-medium">
+                  <span className="font-bold">Route:</span> {commonErrors.route}
+                </p>
+              </div>
+              <div className="p-3 rounded-xl bg-red-50 border border-red-200">
+                <p className="text-red-700 font-medium">
+                  <span className="font-bold">Method:</span>{" "}
+                  {commonErrors.method}
+                </p>
+              </div>
+              <div className="p-3 rounded-xl bg-red-50 border border-red-200">
+                <p className="text-red-700 font-medium">
+                  <span className="font-bold">Message:</span>{" "}
+                  {commonErrors.message}
+                </p>
+              </div>
+            </div>
+          ) : (
+            <p className="text-gray-500">No common errors found.</p>
+          )}
+        </div>
+
+        <div className="p-4 rounded-2xl shadow-lg">
+          <h2 className="text-xl font-bold text-center mb-4">
+            Total Error Counts
+          </h2>
+          <div className="flex justify-center">
+            <PieChart width={400} height={400}>
+              <Pie
+                data={pieData}
+                cx="50%"
+                cy="50%"
+                outerRadius={150}
+                fill="#8884d8"
+                dataKey="value"
+              >
+                {pieData.map((_, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={COLORS[index % COLORS.length]}
+                  />
+                ))}
+              </Pie>
+              <Tooltip />
+            </PieChart>
+          </div>
+        </div>
+
+        <div>
+          <div className="relative grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+            <div className="p-4 rounded-2xl shadow-lg shadow-red-500/50">
+              <h2 className="text-xl font-bold mb-2">Error Methods</h2>
+              <BarChart width={400} height={300} data={barData}>
+                <XAxis dataKey="method" stroke="#FF4D4D" />
+                <YAxis stroke="#FF4D4D" />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="percentage" fill="#9c100e" barSize={40} />
+              </BarChart>
+            </div>
+          </div>
+        </div>
+
+        <AnimatePresence>
+          {showPopup && isAllZero && (
+            <motion.div
+              initial={{ x: "-100%", opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: "-100%", opacity: 0 }}
+              transition={{ duration: 0.5 }}
+              className="p-4 rounded-2xl shadow-lg bg-yellow-100 border-l-4 border-yellow-500 fixed top-4 left-4 z-50"
+            >
+              <h3 className="text-yellow-800 font-bold">No Errors Found</h3>
+              <p className="text-yellow-700">
+                This project hasn’t logged any errors yet. A minimal chart is
+                shown for visualization.
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
-      <AnimatePresence>
-        {showPopup && isAllZero && (
-          <motion.div
-            initial={{ x: "-100%", opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: "-100%", opacity: 0 }}
-            transition={{ duration: 0.5 }}
-            className="p-4 rounded-2xl shadow-lg bg-yellow-100 border-l-4 border-yellow-500 fixed top-4 left-4 z-50"
+      <div className="p-6 w-full">
+        <h2 className="text-2xl font-bold mb-4 text-center">Error Logs</h2>
+        <div className="bg-white rounded-2xl shadow-lg">
+          <div
+            className="max-h-[600px] overflow-y-auto"
+            onScroll={handleScroll}
           >
-            <h3 className="text-yellow-800 font-bold">No Errors Found</h3>
-            <p className="text-yellow-700">
-              This project hasn’t logged any errors yet. A minimal chart is
-              shown for visualization.
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <table className="w-full table-fixed border-collapse">
+              <thead className="bg-gray-200 sticky top-0">
+                <tr>
+                  <th className="p-3 text-left w-1/6">Status Code</th>
+                  <th className="p-3 text-left w-2/6">Message</th>
+                  <th className="p-3 text-left w-1/6">Method</th>
+                  <th className="p-3 text-left w-1/6">Route</th>
+                  <th className="p-3 text-left w-1/6">Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data?.pages.map((page, index) => (
+                  <React.Fragment key={index}>
+                    {page.errors?.length > 0 ? (
+                      [...page.errors]
+                        .reverse()
+                        .map(
+                          (error: {
+                            _id: string;
+                            statusCode: number;
+                            message: string;
+                            method: string;
+                            route: string;
+                            createdAt: string;
+                          }) => (
+                            <tr key={error._id} className="border-b">
+                              <td className="p-3">{error.statusCode}</td>
+                              <td className="p-3">{error.message}</td>
+                              <td className="p-3">{error.method}</td>
+                              <td className="p-3">{error.route}</td>
+                              <td className="p-3">
+                                {new Date(error.createdAt).toLocaleString()}
+                              </td>
+                            </tr>
+                          )
+                        )
+                    ) : (
+                      <tr>
+                        <td colSpan={5} className="p-3 text-center">
+                          No errors found.
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
+                ))}
+                {isFetchingNextPage && (
+                  <tr>
+                    <td colSpan={5} className="p-3 text-center">
+                      Loading more...
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
