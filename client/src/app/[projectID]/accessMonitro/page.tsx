@@ -3,7 +3,9 @@ import AccessMonitro from '@/components/projectDetails/accessMonitor'
 
 const page = () => {
   return (
-    <AccessMonitro/>
+    <div className='bg-[#f0fff0] p-2 m-0 rounded-sm'>
+      <AccessMonitro/>
+    </div>
   )
 }
 

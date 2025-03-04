@@ -35,13 +35,13 @@ const handleIncomingSecurity = async (
 };
 
 // controllers
-
 const getTotalLogins = async (
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ): Promise<Response | void> => {
   if (!(await checkProjectOwnership(req, next))) return;
+
   const { projectId } = req.params;
   const { timeFilter = "today" } = req.query;
   const timeRange = getTimeRange(timeFilter as string);
@@ -54,7 +54,32 @@ const getTotalLogins = async (
     ...(timeRange && { createdAt: timeRange }),
   }).sort({ createdAt: -1 });
 
-  res.status(200).json({ status: "success", logins, count: logins.length });
+  // Group logins by IP
+  const groupedByIP = logins.reduce(
+    (acc, login) => {
+      acc[login.ip] = (acc[login.ip] || 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>
+  );
+
+  // Find the most active IP
+  const mostActiveIP = Object.keys(groupedByIP).reduce(
+    (a, b) => (groupedByIP[a] > groupedByIP[b] ? a : b),
+    ""
+  );
+
+  res.status(200).json({
+    status: "success",
+    count: logins.length,
+    logins,
+    summary: {
+      totalAttempts: logins.length,
+      mostActiveIP,
+      groupedByIP,
+      frequentUserAgents: [...new Set(logins.map((login) => login.userAgent))],
+    },
+  });
 };
 
 const getFailedLogins = async (
@@ -63,6 +88,7 @@ const getFailedLogins = async (
   next: NextFunction
 ): Promise<Response | void> => {
   if (!(await checkProjectOwnership(req, next))) return;
+
   const { projectId } = req.params;
   const { timeFilter = "today" } = req.query;
   const timeRange = getTimeRange(timeFilter as string);
@@ -75,8 +101,34 @@ const getFailedLogins = async (
     ...(timeRange && { createdAt: timeRange }),
   }).sort({ createdAt: -1 });
 
-  res.status(200).json({ status: "success", logins, count: logins.length });
+  // Group failed logins by IP
+  const groupedByIP = logins.reduce(
+    (acc, login) => {
+      acc[login.ip] = (acc[login.ip] || 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>
+  );
+
+  // Find the most attacked IP
+  const mostAttackedIP = Object.keys(groupedByIP).reduce(
+    (a, b) => (groupedByIP[a] > groupedByIP[b] ? a : b),
+    ""
+  );
+
+  res.status(200).json({
+    status: "success",
+    count: logins.length,
+    logins,
+    summary: {
+      totalAttempts: logins.length,
+      mostAttackedIP,
+      groupedByIP,
+      frequentUserAgents: [...new Set(logins.map((login) => login.userAgent))],
+    },
+  });
 };
+
 
 const getSecurityStats = async (
   req: AuthenticatedRequest,
