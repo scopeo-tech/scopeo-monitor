@@ -87,9 +87,14 @@ const RegisterForm: FC = () => {
       setUserEmail(email);
       console.log("email", email);
       setIsOtpModalOpen(true);
-    } catch (err) {
-      setError((err as Error).message);
-      console.log("error", error);
+    }  catch (error) {
+      console.log("Full error:", error); 
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("Response data:", error.response.data);
+        setError(error.response.data?.message || "Registration failed"); 
+      } else {
+        setError("Network error, please check your connection.");
+      }
     } finally {
       setLoading(false);
     }
@@ -120,9 +125,10 @@ const RegisterForm: FC = () => {
     try {
       await registerUser(data);
       router.push("/auth/login");
-    } catch (err) {
+    }  catch (err) {
       setError((err as Error).message);
       console.log("error", error);
+    
     } finally {
       setLoading(false);
     }
@@ -176,6 +182,7 @@ const RegisterForm: FC = () => {
                   <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-green-500" />
                   <Field name="username" type="text" placeholder="Username" className="w-full pl-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-green-500" />
                   <ErrorMessage name="username" component="div" className="text-red-500 text-sm mt-1" />
+                  {error && <div className="text-red-500 text-sm text-start">{error}</div>}
                 </div>
                 <div className="relative">
                   <FaEnvelope className="absolute left-3 top-1/2 transform -translate-y-1/2 text-green-500" />
@@ -196,6 +203,7 @@ const RegisterForm: FC = () => {
                   <Field name="terms" type="checkbox" className="mr-2 form-checkbox text-green-500 focus:ring-green-500" />
                   <label className="text-sm text-gray-500">I Agree To The Terms & Conditions</label>
                   <ErrorMessage name="terms" component="div" className="text-red-500 text-sm ml-2" />
+                  
                 </div>
                 <button type="submit" className="w-full bg-green-500 text-white py-3 rounded-full hover:bg-green-600 transition" disabled={isSubmitting || loading}>
                   {isOtpVerified ? "Register" : "Get OTP"}
