@@ -23,11 +23,11 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ isOpen, onClose }) => {
       {isOpen && (
   <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
     <div className="w-80 rounded-lg shadow-lg text-center overflow-hidden">
-      <div className="bg-green-500 text-white h-28 flex items-center justify-center font-semibold relative">
+      <div className="bg-emerald-500 text-white h-28 flex items-center justify-center font-semibold relative">
   Confirm Logout
   <button 
     onClick={onClose}
-    className="absolute top-2 right-2 text-white text-xl"
+    className="absolute top-2 pr-3 right-2 text-white text-xl"
   >
     &times;
   </button>
@@ -37,7 +37,7 @@ const LogoutModal: React.FC<LogoutModalProps> = ({ isOpen, onClose }) => {
         <div className="flex justify-center mt-4">
           <button 
             onClick={handleLogout}
-            className="px-4 py-2 bg-green-500 text-white  rounded-md hover:bg-green-600 transition"
+            className="px-4 py-2 bg-emerald-500 text-white  rounded-md hover:bg-emerald-500 transition"
           >
             Yes
           </button>
