@@ -7,13 +7,13 @@ import authRouter from "./routes/authRoutes";
 import projectRouter from "./routes/projectRoute";
 import userRoutes from "./routes/userRoutes";
 import packageRouter from "./routes/packageRoute";
-// import startFlaggingOldStatusesCronJob from "./jobs/cronJob";
+import flagOldStatusesJob from "./jobs/cronJob";
 
 dotenv.config();
 
 const app = e();
 dbConnect();
-// startFlaggingOldStatusesCronJob();
+flagOldStatusesJob();
 
 
 app.use(

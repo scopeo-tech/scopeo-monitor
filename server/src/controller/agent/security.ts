@@ -1,8 +1,12 @@
 import { Request, Response, NextFunction } from "express";
+import { AuthenticatedRequest } from "../../lib/types/type";
 import Project from "../../model/projectModel";
 import Security from "../../model/securityModel";
 import CustomError from "../../lib/util/CustomError";
 import { SecurityLogPayload } from "../../lib/types/type";
+import getTimeRange from "../../lib/util/getTimeRange";
+import checkProjectOwnership from "../../lib/util/checkProjectOwnership";
+
 
 const handleIncomingSecurity = async (
   req: Request,
@@ -26,7 +30,131 @@ const handleIncomingSecurity = async (
   }
 
   await Security.create({ project: project._id, ...security });
+
+  return res.status(200).json({ status: "success" });
+};
+
+// controllers
+
+const getTotalLogins = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise<Response | void> => {
+  if (!(await checkProjectOwnership(req, next))) return;
+  const { projectId } = req.params;
+  const {timeFilter = "today"} = req.query;
+  const timeRange = getTimeRange(timeFilter as string);
+
+  if(!projectId) return next(new CustomError(400, "Project ID is required"));
+
+  const logins = await Security.find({
+    project: projectId,
+    isSuccess: true,
+    ...(timeRange && { createdAt: timeRange }),
+  }).sort({ createdAt: -1 });
+  
+  res.status(200).json({ status: "success", logins , count: logins.length });
+};
+
+const getFailedLogins = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise<Response | void> => {
+  if (!(await checkProjectOwnership(req, next))) return;
+  const { projectId } = req.params;
+  const {timeFilter = "today"} = req.query;
+  const timeRange = getTimeRange(timeFilter as string);
+
+  if(!projectId) return next(new CustomError(400, "Project ID is required"));
+
+  const logins = await Security.find({
+    project: projectId,
+    isSuccess: false,
+    ...(timeRange && { createdAt: timeRange }),
+  }).sort({ createdAt: -1 });
+
+  res.status(200).json({ status: "success", logins , count: logins.length });
+};
+
+const getBruteForceAttempts = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise<Response | void> => {
+  if (!(await checkProjectOwnership(req, next))) return;
+
+  const { projectId } = req.params;
+  const { timeFilter = "today" } = req.query;
+  const timeRange = getTimeRange(timeFilter as string);
+
+  const logins = await Security.find({
+    project: projectId,
+    isBruteForce: true,
+    ...(timeRange && { createdAt: timeRange }),
+  }).sort({ createdAt: -1 });
+
+  // Group by IP
+  const groupedByIP = logins.reduce((acc, login) => {
+    acc[login.ip] = (acc[login.ip] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
+  // Most attacked IP
+  const mostAttackedIP = Object.keys(groupedByIP).reduce((a, b) =>
+    groupedByIP[a] > groupedByIP[b] ? a : b
+  , "");
+
+  res.status(200).json({
+    status: "success",
+    count: logins.length,
+    logins,
+    summary: {
+      totalAttempts: logins.length,
+      mostAttackedIP,
+      groupedByIP,
+      frequentUserAgents: [...new Set(logins.map((login) => login.userAgent))],
+    },
+  });
+};
+
+const getUnusualLogins = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise<Response | void> => {
+  if (!(await checkProjectOwnership(req, next))) return;
+
+  const { projectId } = req.params;
+  const { timeFilter = "today" } = req.query;
+  const timeRange = getTimeRange(timeFilter as string);
+
+  const logins = await Security.find({
+    project: projectId,
+    isUnusual: true,
+    ...(timeRange && { createdAt: timeRange }),
+  }).sort({ createdAt: -1 });
+
+  // Group by reason
+  const reasonsCount = logins.reduce((acc, login) => {
+    const reason = login.unusualReason || "Unknown";
+    acc[reason] = (acc[reason] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
+  res.status(200).json({
+    status: "success",
+    count: logins.length,
+    logins,
+    summary: {
+      totalUnusualLogins: logins.length,
+      reasonsCount,
+      frequentUserAgents: [...new Set(logins.map((login) => login.userAgent))],
+    },
+  });
 };
 
 
-export {handleIncomingSecurity}
+
+export { handleIncomingSecurity , getTotalLogins, getFailedLogins, getBruteForceAttempts, getUnusualLogins };

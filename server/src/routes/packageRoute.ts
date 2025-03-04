@@ -9,7 +9,7 @@ import { handleIncomingSecurity } from "../controller/agent/security";
 const packageRouter = express.Router();
 
 packageRouter
-.post("/status",tryCatch(updateProjectStatus))
+.post("/ping",tryCatch(updateProjectStatus))
 .post("/errors",tryCatch(handleIncomingError))
 .post("/security",tryCatch(handleIncomingSecurity))
 
