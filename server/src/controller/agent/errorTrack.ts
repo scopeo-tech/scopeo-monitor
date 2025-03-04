@@ -302,7 +302,24 @@ const getErrorMethodPercentages = async (
   res.status(200).json(response);
 };
 
+const getAllErrors = async (req: Request, res: Response): Promise<void> => {
+  const { projectId } = req.params;
+  const { page = 1, limit = 20 } = req.query;
+
+      const errors = await Error.find({ projectId })
+          .sort({ createdAt: 1 })
+          .skip((+page - 1) * +limit)
+          .limit(+limit);
+
+      const totalErrors = await Error.countDocuments({ projectId });
+
+      res.status(200).json({
+          errors,
+          currentPage: +page,
+          totalPages: Math.ceil(totalErrors / +limit),
+          hasNextPage: +page * +limit < totalErrors,
+      });
+};
 
 
-
-export { getErrorStats, getCommonError, getLatestError, getErrorMethodPercentages };
+export { getErrorStats, getCommonError, getLatestError, getErrorMethodPercentages, getAllErrors };
