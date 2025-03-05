@@ -29,6 +29,18 @@ const handleIncomingSecurity = async (
     return next(new CustomError(400, "Missing required fields"));
   }
 
+  const securityCount = await Security.countDocuments({
+    project: project._id,
+    ...security,
+  });
+  if (securityCount >= 120) {
+    const oldSecurity = await Security.find({ project: project._id })
+      .sort({ createdAt: 1 })
+      .limit(20);
+    const oldIds = oldSecurity.map((sec) => sec._id);
+    await Security.deleteMany({ _id: { $in: oldIds } });
+  }
+
   await Security.create({ project: project._id, ...security });
 
   return res.status(200).json({ status: "success" });
@@ -54,7 +66,7 @@ const getTotalLogins = async (
     ...(timeRange && { createdAt: timeRange }),
   }).sort({ createdAt: -1 });
 
-  // Group logins by IP
+
   const groupedByIP = logins.reduce(
     (acc, login) => {
       acc[login.ip] = (acc[login.ip] || 0) + 1;
@@ -63,7 +75,7 @@ const getTotalLogins = async (
     {} as Record<string, number>
   );
 
-  // Find the most active IP
+
   const mostActiveIP = Object.keys(groupedByIP).reduce(
     (a, b) => (groupedByIP[a] > groupedByIP[b] ? a : b),
     ""
@@ -101,7 +113,6 @@ const getFailedLogins = async (
     ...(timeRange && { createdAt: timeRange }),
   }).sort({ createdAt: -1 });
 
-  // Group failed logins by IP
   const groupedByIP = logins.reduce(
     (acc, login) => {
       acc[login.ip] = (acc[login.ip] || 0) + 1;
@@ -110,7 +121,6 @@ const getFailedLogins = async (
     {} as Record<string, number>
   );
 
-  // Find the most attacked IP
   const mostAttackedIP = Object.keys(groupedByIP).reduce(
     (a, b) => (groupedByIP[a] > groupedByIP[b] ? a : b),
     ""
