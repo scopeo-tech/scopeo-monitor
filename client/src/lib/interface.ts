@@ -21,4 +21,16 @@ export interface Project {
     created: Date;
     status: { connectionStatus: boolean; updatedAt: Date };
   }
+
+
+export interface ErrorLog {
+  statusCode: number;
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE';
+  route: string;
+  message: string;
+  createdAt: string;
+  _id?: string;
+  projectId?: string;
+  __v?: number;
+}
   
