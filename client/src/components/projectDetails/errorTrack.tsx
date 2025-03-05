@@ -8,9 +8,16 @@ import {
   latestErrors,
   getAllErrors,
 } from "@/lib/api";
+import { CiFilter } from "react-icons/ci";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { IoIosCloseCircleOutline } from "react-icons/io"
+import { IoIosCloseCircleOutline } from "react-icons/io";
+import {
+  FiAlertTriangle,
+  FiAlertOctagon,
+  FiCode,
+  FiServer,
+} from "react-icons/fi";
 import {
   PieChart,
   Pie,
@@ -25,6 +32,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import React from "react";
+import ErrorLogCard from "../ui/ErrorLogs";
 
 const COLORS = ["#90BAAD", "#689689", "#B0CA87", "#ADF6B1"];
 
@@ -32,6 +40,7 @@ function ErrorTrack() {
   const { projectID } = useParams() as { projectID: string };
 
   const [showPopup, setShowPopup] = useState(false);
+  const [_, setIsRefetching] = useState(false);
   const [filter, setFilter] = useState("all");
 
   const {
@@ -43,19 +52,20 @@ function ErrorTrack() {
       totalErrors: 0,
     },
     isLoading,
+    refetch: errorStatsRefetch,
   } = useQuery({
     queryKey: ["errorStats", projectID, filter],
     queryFn: () => errorStats(projectID, filter),
     enabled: !!projectID,
   });
 
-  const { data: latestError } = useQuery({
+  const { data: latestError, refetch: latestErrorRefetch } = useQuery({
     queryKey: ["latestErrors", projectID, filter],
     queryFn: () => latestErrors(projectID, filter),
     enabled: !!projectID,
   });
 
-  const { data: commonErrors } = useQuery({
+  const { data: commonErrors, refetch: commonErrorsRefetch } = useQuery({
     queryKey: ["commonErrors", projectID, filter],
     queryFn: () => commonErros(projectID, filter),
     enabled: !!projectID,
@@ -68,6 +78,7 @@ function ErrorTrack() {
       { method: "PUT", percentage: "0.00%" },
       { method: "DELETE", percentage: "0.00%" },
     ],
+    refetch: errorMethodsRefetch,
   } = useQuery({
     queryKey: ["errorMethods", projectID, filter],
     queryFn: () => fetchErrorMethods(projectID, filter),
@@ -76,7 +87,7 @@ function ErrorTrack() {
 
   const pieData = [
     {
-      name: "Authentication Errors",
+      name: "Authentication",
       value: totalErrors?.authCount || 0.01,
     },
     { name: "Not Found", value: totalErrors?.notFoundCount || 0.01 },
@@ -107,7 +118,6 @@ function ErrorTrack() {
     }
   }, [isAllZero, filter, isLoading]);
 
-
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: ["errors", projectID],
@@ -136,98 +146,117 @@ function ErrorTrack() {
     }
   };
 
+ 
+
+  const handleFilterChange = async (newFilter: string) => {
+    setFilter(newFilter);
+    setIsRefetching(true);
+
+    await Promise.all([
+      errorStatsRefetch(),
+      latestErrorRefetch(),
+      commonErrorsRefetch(),
+      errorMethodsRefetch(),
+    ]);
+    setIsRefetching(false);
+  };
+
   if (isLoading) return <p>Loading error data...</p>;
   if (!projectID) return <p>No project selected.</p>;
 
   return (
     <div>
-      <div className="p-4 w-full flex justify-end">
-        <label htmlFor="filter" className="block text-lg font-bold mb-2">
-          Filter Errors By:
-        </label>
-        <select
-          id="filter"
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          className="p-2 border rounded-lg shadow-sm"
-        >
-          <option value="all">All Time</option>
-          <option value="1h">Last 1 Hour</option>
-          <option value="24h">Last 24 Hours</option>
-          <option value="7d">Last 7 Days</option>
-          <option value="30d">Last 30 Days</option>
-        </select>
+      <div className="container mx-auto">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-4xl font-bold text-gray-800">
+            Error Tracking Dashboard
+          </h1>
+          <div className="flex items-center space-x-4">
+            <CiFilter size={25} className="text-gray-600 ms-3" />
+            <select
+              value={filter}
+              onChange={(e) => handleFilterChange(e.target.value)}
+              className="px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="all">All Time</option>
+              <option value="1h">Last 1 Hour</option>
+              <option value="24h">Last 24 Hours</option>
+              <option value="7d">Last 7 Days</option>
+              <option value="30d">Last 30 Days</option>
+            </select>
+          </div>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 ">
-        <div
-          className="p-6 rounded-2xl shadow-lg border border-red-400 bg-red-100/10 backdrop-blur-lg 
-      hover:shadow-red-500/50 transition-all duration-300"
-        >
-          <h2 className="text-2xl font-bold mb-4 text-red-500 drop-shadow-lg">
-            Latest Error
-          </h2>
+        <div className="bg-white shadow-lg h-52 rounded-2xl p-6 border-l-4 border-red-500">
+          <div className="flex items-center mb-4">
+            <FiAlertTriangle className="text-red-500 mr-3" />
+            <h2 className="text-xl font-semibold text-gray-800">
+              Latest Error
+            </h2>
+          </div>
           {latestError ? (
-            <div className="space-y-3">
-              <p className="text-lg">
-                <b className="text-red-400">Status Code:</b>{" "}
-                {latestError.statusCode}
-              </p>
-              <p className="text-lg">
-                <b className="text-red-400">Route:</b> {latestError.route}
-              </p>
-              <p className="text-lg">
-                <b className="text-red-400">Method:</b> {latestError.method}
-              </p>
-              <p className="text-lg">
-                <b className="text-red-400">Message:</b> {latestError.message}
-              </p>
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span>Status Code</span>
+                <span className="font-bold text-red-600">
+                  {latestError.statusCode}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span>Route</span>
+                <code className="bg-gray-100 px-2 py-1 rounded">
+                  {latestError.route}
+                </code>
+              </div>
+              <div className="flex justify-between">
+                <span>Method</span>
+                <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                  {latestError.method}
+                </span>
+              </div>
             </div>
           ) : (
-            <p className="text-gray-300">No recent errors found.</p>
+            <p className="text-gray-500 text-center">No recent errors</p>
           )}
         </div>
 
-        <div className="p-6 rounded-2xl shadow-lg bg-white border border-red-500 shadow-red-500/40 hover:shadow-red-600/60 transition-shadow">
-          <h2 className="text-2xl font-bold mb-4 text-red-600">
-            Most Common Error
-          </h2>
+        <div className="bg-white shadow-lg rounded-2xl p-6 border-l-4 border-orange-500">
+          <div className="flex items-center mb-4">
+            <FiAlertOctagon className="text-orange-500 mr-3" />
+            <h2 className="text-xl font-semibold text-gray-800">
+              Most Common Error
+            </h2>
+          </div>
           {commonErrors ? (
-            <div className="space-y-3">
-              <div className="p-3 rounded-xl bg-red-50 border border-red-200">
-                <p className=" font-medium">
-                  <span className="text-red-700 font-bold">Status Code:</span>{" "}
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span>Status Code</span>
+                <span className="font-bold text-orange-600">
                   {commonErrors.statusCode}
-                </p>
+                </span>
               </div>
-              <div className="p-3 rounded-xl bg-red-50 border border-red-200">
-                <p className=" font-medium">
-                  <span className="text-red-700 font-bold">Route:</span> {commonErrors.route}
-                </p>
+              <div className="flex justify-between">
+                <span>Route</span>
+                <code className="bg-gray-100 px-2 py-1 rounded">
+                  {commonErrors.route}
+                </code>
               </div>
-              <div className="p-3 rounded-xl bg-red-50 border border-red-200">
-                <p className=" font-medium">
-                  <span className="text-red-700 font-bold">Method:</span>{" "}
+              <div className="flex justify-between">
+                <span>Method</span>
+                <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded">
                   {commonErrors.method}
-                </p>
-              </div>
-              <div className="p-3 rounded-xl bg-red-50 border border-red-200">
-                <p className=" font-medium">
-                  <span className="text-red-700 font-bold">Message:</span>{" "}
-                  {commonErrors.message}
-                </p>
+                </span>
               </div>
             </div>
           ) : (
-            <p className="text-gray-500">No common errors found.</p>
+            <p className="text-gray-500 text-center">No common errors</p>
           )}
         </div>
-
-        <div className="p-4 rounded-2xl shadow-lg">
-          <h2 className="text-xl font-bold text-center mb-4">
-            Total Error Counts
-          </h2>
-          <div className="flex justify-center">
+        {/* ${(percent * 100).toFixed(0)}% if get time */}
+        <div className="bg-white shadow-md rounded-2xl p-6 flex flex-col items-center">
+          <div className="w-full max-w-sm text-xs">
             <PieChart width={400} height={400}>
               <Pie
                 data={pieData}
@@ -236,6 +265,7 @@ function ErrorTrack() {
                 outerRadius={150}
                 fill="#8884d8"
                 dataKey="value"
+                label={({ name }) => `${name}`}
               >
                 {pieData.map((_, index) => (
                   <Cell
@@ -249,111 +279,116 @@ function ErrorTrack() {
           </div>
         </div>
 
-        <div>
-          <div className="p-6 rounded-2xl shadow-lg bg-white border border-[#ff0d0d54] shadow-red-500/40 hover:shadow-red-600/60 transition-shadow">
-            <div className="p-4 rounded-2xl">
-              <h2 className="text-xl font-bold mb-2">Error Methods</h2>
-              <BarChart width={400} height={300} data={barData}>
-                <XAxis dataKey="method" stroke="#FF4D4D" />
-                <YAxis stroke="#FF4D4D" />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="percentage" fill="#9c100e" barSize={40} />
-              </BarChart>
-            </div>
+        <div className="bg-white shadow-md rounded-2xl p-6 flex flex-col justify-center  items-center">
+          <div className="w-full max-w-sm">
+            <BarChart width={400} height={300} data={barData}>
+              <XAxis dataKey="method" stroke="#6B7280" className="text-sm" />
+              <YAxis
+                stroke="#6B7280"
+                label={{
+                  value: "Percentage",
+                  angle: -90,
+                  position: "insideLeft",
+                  className: "text-sm",
+                }}
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "#F3F4F6",
+                  borderRadius: "8px",
+                }}
+              />
+              <Legend />
+              <Bar
+                dataKey="percentage"
+                fill="#3B82F6"
+                barSize={40}
+                className="hover:opacity-80 transition-opacity"
+              />
+            </BarChart>
           </div>
         </div>
       </div>
 
       <AnimatePresence>
-      {showPopup && isAllZero && (
-        <motion.div
-          initial={{ x: "100%", opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          exit={{ x: "100%", opacity: 0 }}
-          transition={{ duration: 0.5 }}
-          className="p-4 rounded-2xl shadow-lg bg-yellow-100 border-l-4 border-yellow-500 fixed top-96 right-8 z-50 flex items-center"
-        >
-          <div className="flex-grow">
-            <h3 className="text-yellow-800 font-bold">No Errors Found</h3>
-            <p className="text-yellow-700">
-              This project hasn&apos;t logged any errors yet. A minimal chart is
-              shown for visualization.
-            </p>
-          </div>
-          <button 
-            onClick={() => setShowPopup(false)} 
-            className="ml-4 text-yellow-800 hover:text-yellow-600 focus:outline-none"
+        {showPopup && isAllZero && (
+          <motion.div
+            initial={{ x: "100%", opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: "100%", opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="fixed top-1/2 right-8 transform -translate-y-1/2 z-50 max-w-sm w-full"
           >
-            <IoIosCloseCircleOutline size={24} />
-          </button>
-        </motion.div>
-      )}
-    </AnimatePresence>
+            <div className="bg-yellow-50 border-l-4 border-yellow-500 p-6 rounded-lg shadow-lg flex items-center space-x-4">
+              <div className="flex-grow">
+                <h3 className="text-xl font-bold text-yellow-800 mb-2">
+                  No Errors Found
+                </h3>
+                <p className="text-yellow-700 text-sm">
+                  This project hasn&apos;t logged any errors yet. A minimal
+                  chart is shown for visualization.
+                </p>
+              </div>
+              <button
+                onClick={() => setShowPopup(false)}
+                className="text-yellow-600 hover:text-yellow-800 transition-colors focus:outline-none"
+              >
+                <IoIosCloseCircleOutline size={28} />
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <div className="p-6 w-full">
-        <h2 className="text-2xl font-bold mb-4 text-center">Error Logs</h2>
-        <div className="bg-white rounded-2xl shadow-lg">
-          <div
-            className="max-h-[600px] overflow-y-auto"
-            onScroll={handleScroll}
-          >
-            <table className="w-full table-fixed border-collapse">
-              <thead className="bg-gray-200 sticky top-0">
-                <tr>
-                  <th className="p-3 text-left w-1/6">Status Code</th>
-                  <th className="p-3 text-left w-2/6">Message</th>
-                  <th className="p-3 text-left w-1/6">Method</th>
-                  <th className="p-3 text-left w-1/6">Route</th>
-                  <th className="p-3 text-left w-1/6">Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data?.pages.map((page, index) => (
-                  <React.Fragment key={index}>
-                    {page.errors?.length > 0 ? (
-                      [...page.errors]
-                        .reverse()
-                        .map(
-                          (error: {
-                            _id: string;
-                            statusCode: number;
-                            message: string;
-                            method: string;
-                            route: string;
-                            createdAt: string;
-                          }) => (
-                            <tr key={error._id} className="border-b">
-                              <td className="p-3">{error.statusCode}</td>
-                              <td className="p-3">{error.message}</td>
-                              <td className="p-3">{error.method}</td>
-                              <td className="p-3">{error.route}</td>
-                              <td className="p-3">
-                                {new Date(error.createdAt).toLocaleString()}
-                              </td>
-                            </tr>
-                          )
-                        )
-                    ) : (
-                      <tr>
-                        <td colSpan={5} className="p-3 text-center">
-                          No errors found.
-                        </td>
-                      </tr>
-                    )}
-                  </React.Fragment>
-                ))}
-                {isFetchingNextPage && (
-                  <tr>
-                    <td colSpan={5} className="p-3 text-center">
-                      Loading more...
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+      <div className="max-w-4xl mx-auto">
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center space-x-4">
+            <FiAlertTriangle className="text-red-500" size={30} />
+            <h2 className="text-3xl font-bold text-gray-800">Error Logs</h2>
+          </div>
+          <div className="flex items-center space-x-2 text-gray-600">
+            <FiCode className="text-gray-400" />
+            <span>{data?.pages.reduce((total, page) => total + page.errors.length, 0)} Total Errors</span>
           </div>
         </div>
+
+        {data?.pages.map((page, pageIndex) => (
+          <React.Fragment key={pageIndex}>
+            {page.errors?.length > 0 ? (
+              [...page.errors].reverse().map((error, index) => (
+                <ErrorLogCard 
+                  key={`${pageIndex}-${index}`}
+                  error={error} 
+                  index={index} 
+                />
+              ))
+            ) : (
+              <div className="text-center py-12 bg-white rounded-xl shadow-lg">
+                <FiAlertTriangle className="mx-auto text-yellow-500 mb-4" size={50} />
+                <p className="text-gray-600 text-xl">No errors found</p>
+              </div>
+            )}
+          </React.Fragment>
+        ))}
+
+        {hasNextPage && (
+          <div className="text-center mt-6">
+            <button
+              onClick={() => fetchNextPage()}
+              disabled={isFetchingNextPage}
+              className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition flex items-center mx-auto"
+            >
+              {isFetchingNextPage ? (
+                <>
+                  <span className="animate-spin mr-2">↻</span>
+                  Loading...
+                </>
+              ) : (
+                'Load More Errors'
+              )}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
