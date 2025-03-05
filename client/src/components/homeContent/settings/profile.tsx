@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { getUserInfo, updateProfile, checkUsername, deleteProfile } from '@/lib/api';
+import { getUserInfo, updateProfile, checkUsername, deleteProfile ,logoutUser} from '@/lib/api';
 
 export default function ProfilePage() {
   const { data: user, isLoading, isError } = useQuery({
@@ -16,6 +17,7 @@ export default function ProfilePage() {
   const [notificationStatus, setNotificationStatus] = useState(false);
   const [isNameTaken, setIsNameTaken] = useState<boolean | null>(null);
   const [resMessage, setResMessage] = useState("");
+  const router = useRouter();
   const [hasChangedUsername, setHasChangedUsername] = useState(false);
   const [errors, setErrors] = useState<{ username?: string; currentPassword?: string; newPassword?: string }>({});
 
@@ -78,7 +80,7 @@ export default function ProfilePage() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: deleteProfile,
+    mutationFn : (userId: string) => deleteProfile(userId),
     onSuccess: () => {
       alert('Profile deleted successfully');
     },
@@ -88,7 +90,7 @@ export default function ProfilePage() {
     const validationErrors: { username?: string; currentPassword?: string; newPassword?: string } = {};
     if (!currentPassword) validationErrors.currentPassword = "Current password is required";
     if (hasChangedUsername && !username.trim()) validationErrors.username = "Username cannot be empty";
-    if (newPassword && newPassword.length < 6) validationErrors.newPassword = "New password must be at least 8 characters";
+    if (newPassword && newPassword.length < 6) validationErrors.newPassword = "Password must be at least 8 characters";
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -99,8 +101,14 @@ export default function ProfilePage() {
   };
 
   const handleDeleteProfile = () => {
-    if (user) {
-      deleteMutation.mutate(user._id);
+    if (window.confirm("Are you sure you want to delete this project?")) {
+      console.log(user)
+      if(user){
+        deleteMutation.mutate(user?._id);
+        logoutUser()
+        router.push('/');
+      } 
+           
     }
   };
 
@@ -120,7 +128,6 @@ export default function ProfilePage() {
           value={username} 
           onChange={handleUsernameChange}
         />
-        {errors.username && <p className="text-sm text-red-600">{errors.username}</p>}
         {hasChangedUsername && isNameTaken !== null && (
           <p className={`text-sm ${isNameTaken ? "text-red-600" : "text-green-600"}`}>
             {isNameTaken ? `❌ ${resMessage}` : `✅ ${resMessage}`}
@@ -171,7 +178,11 @@ export default function ProfilePage() {
         <p className="text-gray-600 text-sm mb-3">
           Once you delete your profile, it will be deactivated immediately and all associated data will be permanently removed within approximately 30 days. This action is irreversible.
         </p>
-        <button onClick={handleDeleteProfile} className="px-4 py-2 bg-red-600 text-white rounded">Cancel Profile</button>
+        <button onClick={handleDeleteProfile}
+          disabled={deleteMutation.isPending} 
+          className="px-4 py-2 bg-red-600 text-white rounded">
+          {deleteMutation.isPending ? "Deleting..." : "Delete Profile"}
+        </button>
       </div>
     </div>
   );
