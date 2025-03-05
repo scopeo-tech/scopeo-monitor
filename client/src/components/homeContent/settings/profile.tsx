@@ -120,7 +120,7 @@ export default function ProfilePage() {
   return (
     <div className='w-1/2'>
       <div className="mb-6">
-        <h3 className="text-xl font-medium mb-2">Personal Information</h3>
+        <h3 className="text-xl font-medium mb-2">Personal Informations</h3>
         <label className="block font-normal text-gray-600">Username</label>
         <input 
           type="text" 
@@ -160,8 +160,13 @@ export default function ProfilePage() {
 
       <div className="mb-6 flex items-center justify-between">
         <span className="text-gray-600 font-normal">Allow Notifications</span>
-        <button onClick={handleToggle} className="relative w-12 h-6 rounded-full bg-gray-500">
-          <div className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform ${notificationStatus ? 'translate-x-6' : 'translate-x-0'}`} />
+        <button
+            onClick={handleToggle}
+            className={`relative w-12 h-6 rounded-full border border-gray-300 ${
+              notificationStatus ? "bg-white" : "bg-gray-500"
+            }`}
+>
+          <div className={`absolute top-1 left-1 w-4 h-4 rounded-full transition-transform ${notificationStatus ? 'translate-x-6 bg-gray-500' : 'translate-x-0  bg-white'}`} />
         </button>
       </div>
       
@@ -174,7 +179,7 @@ export default function ProfilePage() {
       </button>
       
       <div className="mt-8 p-2 border-t">
-        <h3 className="text-lg font-medium text-red-600 mt-2">Delete Profile</h3>
+        <h3 className="text-lg font-medium mt-2">Delete Profile</h3>
         <p className="text-gray-600 text-sm mb-3">
           Once you delete your profile, it will be deactivated immediately and all associated data will be permanently removed within approximately 30 days. This action is irreversible.
         </p>
