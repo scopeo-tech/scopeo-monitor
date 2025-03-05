@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import {
@@ -9,6 +10,7 @@ import {
 } from "@/lib/api";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { IoIosCloseCircleOutline } from "react-icons/io"
 import {
   PieChart,
   Pie,
@@ -103,9 +105,8 @@ function ErrorTrack() {
       setShowPopup(true);
       setTimeout(() => setShowPopup(false), 3000);
     }
-  }, [isAllZero, showPopup, filter, isLoading]);
+  }, [isAllZero, filter, isLoading]);
 
-  console.log("Total Errors Data:", totalErrors);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
@@ -134,6 +135,8 @@ function ErrorTrack() {
       fetchNextPage();
     }
   };
+
+  console.log(showPopup,"sjow")
 
   if (isLoading) return <p>Loading error data...</p>;
   if (!projectID) return <p>No project selected.</p>;
@@ -194,25 +197,25 @@ function ErrorTrack() {
           {commonErrors ? (
             <div className="space-y-3">
               <div className="p-3 rounded-xl bg-red-50 border border-red-200">
-                <p className="text-red-700 font-medium">
-                  <span className="font-bold">Status Code:</span>{" "}
+                <p className=" font-medium">
+                  <span className="text-red-700 font-bold">Status Code:</span>{" "}
                   {commonErrors.statusCode}
                 </p>
               </div>
               <div className="p-3 rounded-xl bg-red-50 border border-red-200">
-                <p className="text-red-700 font-medium">
-                  <span className="font-bold">Route:</span> {commonErrors.route}
+                <p className=" font-medium">
+                  <span className="text-red-700 font-bold">Route:</span> {commonErrors.route}
                 </p>
               </div>
               <div className="p-3 rounded-xl bg-red-50 border border-red-200">
-                <p className="text-red-700 font-medium">
-                  <span className="font-bold">Method:</span>{" "}
+                <p className=" font-medium">
+                  <span className="text-red-700 font-bold">Method:</span>{" "}
                   {commonErrors.method}
                 </p>
               </div>
               <div className="p-3 rounded-xl bg-red-50 border border-red-200">
-                <p className="text-red-700 font-medium">
-                  <span className="font-bold">Message:</span>{" "}
+                <p className=" font-medium">
+                  <span className="text-red-700 font-bold">Message:</span>{" "}
                   {commonErrors.message}
                 </p>
               </div>
@@ -249,8 +252,8 @@ function ErrorTrack() {
         </div>
 
         <div>
-          <div className="relative grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-            <div className="p-4 rounded-2xl shadow-lg shadow-red-500/50">
+          <div className="p-6 rounded-2xl shadow-lg bg-white border border-[#ff0d0d54] shadow-red-500/40 hover:shadow-red-600/60 transition-shadow">
+            <div className="p-4 rounded-2xl">
               <h2 className="text-xl font-bold mb-2">Error Methods</h2>
               <BarChart width={400} height={300} data={barData}>
                 <XAxis dataKey="method" stroke="#FF4D4D" />
@@ -262,25 +265,33 @@ function ErrorTrack() {
             </div>
           </div>
         </div>
-
-        <AnimatePresence>
-          {showPopup && isAllZero && (
-            <motion.div
-              initial={{ x: "-100%", opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: "-100%", opacity: 0 }}
-              transition={{ duration: 0.5 }}
-              className="p-4 rounded-2xl shadow-lg bg-yellow-100 border-l-4 border-yellow-500 fixed top-4 left-4 z-50"
-            >
-              <h3 className="text-yellow-800 font-bold">No Errors Found</h3>
-              <p className="text-yellow-700">
-                This project hasn’t logged any errors yet. A minimal chart is
-                shown for visualization.
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
+
+      <AnimatePresence>
+      {showPopup && isAllZero && (
+        <motion.div
+          initial={{ x: "100%", opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          exit={{ x: "100%", opacity: 0 }}
+          transition={{ duration: 0.5 }}
+          className="p-4 rounded-2xl shadow-lg bg-yellow-100 border-l-4 border-yellow-500 fixed top-96 right-8 z-50 flex items-center"
+        >
+          <div className="flex-grow">
+            <h3 className="text-yellow-800 font-bold">No Errors Found</h3>
+            <p className="text-yellow-700">
+              This project hasn&apos;t logged any errors yet. A minimal chart is
+              shown for visualization.
+            </p>
+          </div>
+          <button 
+            onClick={() => setShowPopup(false)} 
+            className="ml-4 text-yellow-800 hover:text-yellow-600 focus:outline-none"
+          >
+            <IoIosCloseCircleOutline size={24} />
+          </button>
+        </motion.div>
+      )}
+    </AnimatePresence>
 
       <div className="p-6 w-full">
         <h2 className="text-2xl font-bold mb-4 text-center">Error Logs</h2>
