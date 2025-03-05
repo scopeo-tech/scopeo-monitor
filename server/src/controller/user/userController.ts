@@ -11,7 +11,7 @@ const getUserById = async (req:AuthenticatedRequest, res:Response, next:NextFunc
         return next (new CustomError(404,"user not found"))
     }
     const Data = {
-        user : user._id,
+        _id : user._id,
         username:user.username,
         email:user.email,
         joinedDate : user.createdAt ,

@@ -11,7 +11,7 @@ userRoutes
 .get('/list',verifyToken,tryCatch(getProjectList))
 .get("/project/:projectId",verifyToken,tryCatch(getProjectById))
 .put('/update-profile',verifyToken,tryCatch(updateProfile))
-.delete('/:userId',verifyToken,tryCatch(deleteProfile))
+.delete('/delete-profile/:userId',verifyToken,tryCatch(deleteProfile))
 .get('/check/:username',verifyToken,tryCatch(checkUsername))
 
 export default userRoutes;
