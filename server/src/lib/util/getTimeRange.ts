@@ -6,11 +6,11 @@ const getTimeRange = (timeFilter: string) => {
       case "today":
         startTime = new Date(now.setHours(0, 0, 0, 0)); 
         break;
-      case "this_week":
+      case "week":
         startTime = new Date(now.setDate(now.getDate() - 6)); 
         startTime.setHours(0, 0, 0, 0);
         break;
-      case "this_month":
+      case "month":
         startTime = new Date(now.setDate(now.getDate() - 29)); 
         startTime.setHours(0, 0, 0, 0);
         break;
