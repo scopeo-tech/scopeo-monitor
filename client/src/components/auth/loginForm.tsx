@@ -12,6 +12,7 @@ import { FaUser, FaLock } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { getSession, signIn, useSession } from "next-auth/react";
 import axios from "axios";
+import Link from "next/link";
 
 const LoginForm: FC = () => {
   const [loading, setLoading] = useState(false);
@@ -91,15 +92,20 @@ const LoginForm: FC = () => {
       localStorage.setItem("token", token);
       setUser(user);
       router.push("/home")
-    } catch (err) {
-        setError((err as Error).message);
-        console.log("error",error);
-        
+    }catch (err: unknown) {
+      if (axios.isAxiosError(err) && err.response) {
+        if (err.response.status === 401) {
+          setError("Incorrect password"); 
+        } else {
+          setError(err.response.data.message || "Login failed");
+        }
+      } else {
+        setError("Something went wrong");
+      }
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-
-}
+  };
 
   return (
     <div className="flex h-screen items-center justify-center bg-white">
@@ -113,12 +119,11 @@ const LoginForm: FC = () => {
           </p>
 
           <p className="mt-8 mb-4">Don&apos;t have an account?</p>
-          <button
-            className="px-8 py-2 border border-white rounded-full text-white hover:bg-white hover:text-green-500 transition w-64"
-            onClick={() => router.push("/auth/register")}
+          <Link href="/auth/register"
+            className="px-8 py-2 border border-white rounded-full text-white hover:bg-white hover:text-green-500 transition w-64"  
           >
             Register now
-          </button>
+          </Link>
         </div>
 
         {/* Right Side - Login Form */}
@@ -165,14 +170,17 @@ const LoginForm: FC = () => {
                   <Field
                     name="password"
                     type="password"
-                    placeholder="password"
+                    placeholder="Password"
                     className="w-full pl-6 pb-2 border-b border-gray-300 focus:outline-none focus:border-green-500 bg-white"
                   />
+
                   <ErrorMessage
                     name="password"
                     component="div"
                     className="text-red-500 text-sm"
                   />
+                  {error && <div className="text-red-500 text-sm text-start">{error}</div>}
+
                 </div>
                 <div className="text-right text-sm text-gray-400 cursor-pointer hover:text-green-500 mt-2">
                   Forgot Password?
