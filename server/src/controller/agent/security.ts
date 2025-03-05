@@ -30,8 +30,7 @@ const handleIncomingSecurity = async (
   }
 
   const securityCount = await Security.countDocuments({
-    project: project._id,
-    ...security,
+    project: project._id
   });
   if (securityCount >= 120) {
     const oldSecurity = await Security.find({ project: project._id })
