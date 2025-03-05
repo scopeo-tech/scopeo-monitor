@@ -189,7 +189,7 @@ function ErrorTrack() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 ">
-        <div className="bg-white shadow-lg h-52 rounded-2xl p-6 border-l-4 border-red-500">
+        <div className="bg-white shadow-lg  rounded-2xl p-6 border-l-4 border-red-500">
           <div className="flex items-center mb-4">
             <FiAlertTriangle className="text-red-500 mr-3" />
             <h2 className="text-xl font-semibold text-gray-800">
@@ -214,6 +214,12 @@ function ErrorTrack() {
                 <span>Method</span>
                 <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded">
                   {latestError.method}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span>Message</span>
+                <span className="bg-yellow-200 text-yellow-800 px-2 py-1 rounded">
+                  {latestError.message}
                 </span>
               </div>
             </div>
@@ -247,6 +253,12 @@ function ErrorTrack() {
                 <span>Method</span>
                 <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded">
                   {commonErrors.method}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span>Message</span>
+                <span className="bg-yellow-200 text-yellow-800 px-2 py-1 rounded">
+                  {commonErrors.message}
                 </span>
               </div>
             </div>
