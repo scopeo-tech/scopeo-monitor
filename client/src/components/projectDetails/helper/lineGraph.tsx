@@ -220,17 +220,38 @@ function LineGraph({
             }}
             content={({ active, payload }) => {
               if (active && payload && payload.length) {
+                const data = payload[0].payload;
                 return (
                   <div className="bg-white p-4 shadow-lg rounded-lg">
-                    <p className="font-bold">{payload[0].payload.name}</p>
-                    <p>Logins: {payload[0].payload.loginCount}</p>
-                    <p>Avg Duration: {payload[0].payload.avgDuration}ms</p>
-                    <div className="mt-2">
-                      <p>Status Codes:</p>
-                      <p>200: {payload[0].payload.errorCode200}</p>
-                      <p>400: {payload[0].payload.errorCode400}</p>
-                      <p>401: {payload[0].payload.errorCode401}</p>
-                      <p>403: {payload[0].payload.errorCode403}</p>
+                    <p className="font-bold">{data.name}</p>
+                    <div className="space-y-1">
+                      <div className="flex items-center">
+                        <div className="w-2 h-2 mr-2 rounded-full" style={{backgroundColor: "#16C47F"}}></div>
+                        <p>Logins: {data.loginCount}</p>
+                      </div>
+                      <div className="flex items-center">
+                        <div className="w-2 h-2 mr-2 rounded-full" style={{backgroundColor: "#FF6384"}}></div>
+                        <p>Avg Duration: {data.avgDuration}ms</p>
+                      </div>
+                      <div className="mt-2">
+                        <p>Status Codes:</p>
+                        <div className="flex items-center">
+                          <div className="w-2 h-2 mr-2 rounded-full" style={{backgroundColor: "#2ECC40"}}></div>
+                          <p>200: {data.errorCode200}</p>
+                        </div>
+                        <div className="flex items-center">
+                          <div className="w-2 h-2 mr-2 rounded-full" style={{backgroundColor: "#FF4136"}}></div>
+                          <p>400: {data.errorCode400}</p>
+                        </div>
+                        <div className="flex items-center">
+                          <div className="w-2 h-2 mr-2 rounded-full" style={{backgroundColor: "#FF851B"}}></div>
+                          <p>401: {data.errorCode401}</p>
+                        </div>
+                        <div className="flex items-center">
+                          <div className="w-2 h-2 mr-2 rounded-full" style={{backgroundColor: "#0074D9"}}></div>
+                          <p>403: {data.errorCode403}</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 );
