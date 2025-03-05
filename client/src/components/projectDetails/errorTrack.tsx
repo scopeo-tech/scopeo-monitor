@@ -136,8 +136,6 @@ function ErrorTrack() {
     }
   };
 
-  console.log(showPopup,"sjow")
-
   if (isLoading) return <p>Loading error data...</p>;
   if (!projectID) return <p>No project selected.</p>;
 
