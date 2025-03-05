@@ -159,36 +159,6 @@ export const deleteProfile = async (userId: string) => {
   console.log(response.data);
   return response.data;
 };
-
-//error stats
-export const errorStats = async (projectId: string) => {
-  const response = await axiosInstance.get(
-    `/project/get-error-stats/${projectId}`
-  );
-  return response.data;
-};
-
-export const commonErros = async (projectId: string) => {
-  const response = await axiosInstance.get(
-    `/project/get-error-common/${projectId}`
-  );
-  return response.data;
-};
-
-export const latestErrors = async (projectId: string) => {
-  const response = await axiosInstance.get(
-    `/project/get-error-latest/${projectId}`
-  );
-  return response.data;
-};
-
-export const errorMethods = async (projectId: string) => {
-  const response = await axiosInstance.get(
-    `/project/get-error-method/${projectId}`
-  );
-  return response.data;
-};
-
 // security stats
 
 export const allLogins = async (projectId: string, timeFilter: string) => {
@@ -230,4 +200,38 @@ export const securityStats = async (
     `/project/get-security-stats/${projectId}?timeFilter=${timeFilter}`
   );
   return response.data.stats;
+}
+
+// error stats
+export const errorStats = async (projectId: string, filter: string) => {
+  const response = await axiosInstance.get(`/project/get-error-stats/${projectId}`, {
+    params: { filter },
+  });
+  return response.data;
+};
+
+export const commonErros = async (projectId: string, filter: string) => {
+  const response = await axiosInstance.get(`/project/get-error-common/${projectId}`, {
+    params: { filter },
+  });
+  return response.data;
+};
+
+export const latestErrors = async (projectId: string, filter: string) => {
+  const response = await axiosInstance.get(`/project/get-error-latest/${projectId}`, {
+    params: { filter },
+  });
+  return response.data;
+};
+
+export const errorMethods = async (projectId: string, filter: string) => {
+  const response = await axiosInstance.get(`/project/get-error-method/${projectId}`, {
+    params: { filter },
+  });
+  return response.data;
+};
+
+export const getAllErrors = async (projectId: string, page: number, limit: number) => {
+  const {data} = await axiosInstance.get(`/project/get-all-errors/${projectId}?page=${page}&limit=${limit}`);
+  return data;
 };

@@ -55,7 +55,7 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchhh = async () => {
       const response = await checkUsername(username);
-    console.log(response,"waa")
+      console.log(response,"waa")
     }
     fetchhh()
   },[])
@@ -167,7 +167,7 @@ export default function ProfilePage() {
       </button>
       
       <div className="mt-8 p-2 border-t">
-        <h3 className="text-lg font-medium text-red-600">Cancel Profile</h3>
+        <h3 className="text-lg font-medium text-red-600 mt-2">Cancel Profile</h3>
         <p className="text-gray-600 text-sm mb-3">
           Once you delete your profile, it will be deactivated immediately and all associated data will be permanently removed within approximately 30 days. This action is irreversible.
         </p>
