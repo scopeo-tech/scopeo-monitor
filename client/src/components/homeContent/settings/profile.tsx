@@ -88,7 +88,7 @@ export default function ProfilePage() {
     const validationErrors: { username?: string; currentPassword?: string; newPassword?: string } = {};
     if (!currentPassword) validationErrors.currentPassword = "Current password is required";
     if (hasChangedUsername && !username.trim()) validationErrors.username = "Username cannot be empty";
-    if (newPassword && newPassword.length < 6) validationErrors.newPassword = "New password must be at least 8 characters";
+    if (newPassword && newPassword.length < 6) validationErrors.newPassword = "Password must be at least 8 characters";
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -120,7 +120,6 @@ export default function ProfilePage() {
           value={username} 
           onChange={handleUsernameChange}
         />
-        {errors.username && <p className="text-sm text-red-600">{errors.username}</p>}
         {hasChangedUsername && isNameTaken !== null && (
           <p className={`text-sm ${isNameTaken ? "text-red-600" : "text-green-600"}`}>
             {isNameTaken ? `❌ ${resMessage}` : `✅ ${resMessage}`}
