@@ -14,7 +14,6 @@ export const handleIncomingError = async (
   res: Response,
   next: NextFunction
 ) => {
-console.log("..pipi...error incoming from agent..")
   const apiKey = req.headers["x-api-key"] as string;
   const passKey = req.headers["x-pass-key"] as string;
   if (!apiKey || !passKey) {
@@ -34,10 +33,10 @@ console.log("..pipi...error incoming from agent..")
   }
   const errorCount = await Error.countDocuments({ projectId: new ObjectId(project._id) });
 
-  if (errorCount >= 60) {
+  if (errorCount >= 120) {
     const oldErrors = await Error.find({ projectId: new ObjectId(project._id) })
       .sort({ createdAt: 1 })
-      .limit(10); 
+      .limit(20); 
     
     const oldIds = oldErrors.map((err) => err._id);
     await Error.deleteMany({ _id: { $in: oldIds } });
