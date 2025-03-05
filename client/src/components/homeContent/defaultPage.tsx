@@ -93,7 +93,7 @@ const DefaultPage: FC = () => {
       .catch((err) => console.error("Failed to copy key:", err));
   };
 
-  const getHiddenPassKey = () => "•••••••••••••";
+  const getHiddenPassKey = () => "•••••••••••••••••••";
 
   return (
     <div className="p-8 min-h-screen">
@@ -132,9 +132,9 @@ const DefaultPage: FC = () => {
             <tbody>
               {Array.isArray(projects) &&
                 projects.map((project: Project) => (
-                  <tr key={project._id} className="border-b text-sm hover:bg-gray-50"
-                  onClick={() => router.push(`/${project._id}/error`)}>
-                    <td className="py-4 px-4 text-gray-700">{project.name}</td>
+                  <tr key={project._id} className="border-b text-sm hover:bg-gray-50">
+                    <td className="py-4 px-4 text-gray-700 cursor-pointer" 
+                      onClick={() => router.push(`/${project._id}/error`)}>{project.name}</td>
                     <td className="py-4 px-4 ml-8">
                       <span
                         className={`inline-block w-2 h-2 rounded-full hover: ${project.status.connectionStatus
