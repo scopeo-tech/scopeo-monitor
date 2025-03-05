@@ -134,7 +134,7 @@ const DefaultPage: FC = () => {
                 projects.map((project: Project) => (
                   <tr key={project._id} className="border-b text-sm hover:bg-gray-50">
                     <td className="py-4 px-4 text-gray-700 cursor-pointer" 
-                      onClick={() => router.push(`/${project._id}/error`)}>{project.name}</td>
+                      onClick={() => router.push(`/${project._id}/health`)}>{project.name}</td>
                     <td className="py-4 px-4 ml-8">
                       <span
                         className={`inline-block w-2 h-2 rounded-full hover: ${project.status.connectionStatus

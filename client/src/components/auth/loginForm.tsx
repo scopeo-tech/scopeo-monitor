@@ -12,6 +12,7 @@ import { FaUser, FaLock } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { getSession, signIn, useSession } from "next-auth/react";
 import axios from "axios";
+import Link from "next/link";
 
 const LoginForm: FC = () => {
   const [loading, setLoading] = useState(false);
@@ -118,12 +119,11 @@ const LoginForm: FC = () => {
           </p>
 
           <p className="mt-8 mb-4">Don&apos;t have an account?</p>
-          <button
-            className="px-8 py-2 border border-white rounded-full text-white hover:bg-white hover:text-green-500 transition w-64"
-            onClick={() => router.push("/auth/register")}
+          <Link href="/auth/register"
+            className="px-8 py-2 border border-white rounded-full text-white hover:bg-white hover:text-green-500 transition w-64"  
           >
             Register now
-          </button>
+          </Link>
         </div>
 
         {/* Right Side - Login Form */}
