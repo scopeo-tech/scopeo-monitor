@@ -74,7 +74,7 @@ const Sidebar: FC = () => {
       )}
 
       <div className="mt-64 space-y-4 p-3">
-        <Link href={"home/settings/profile"}
+        <Link href={"/home/settings/profile"}
           className="flex items-center space-x-2 text-white hover:text-white/80"
         >
           <FaCog />
