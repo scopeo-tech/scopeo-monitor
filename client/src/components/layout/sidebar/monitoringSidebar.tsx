@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useRouter, useParams, usePathname } from "next/navigation";
+import {useParams, usePathname } from "next/navigation";
 import { getProjectById, getUserInfo } from "@/lib/api";
 import { Project } from "@/lib/interface";
 import {
@@ -17,7 +17,6 @@ import Link from "next/link";
 
 const MonitoringSidebar = () => {
   const { projectID } = useParams<{ projectID: string }>();
-  const router = useRouter();
   const pathname = usePathname(); 
 
   const { data: project } = useQuery<Project>({
@@ -71,16 +70,16 @@ const MonitoringSidebar = () => {
       </div>
       <div className="space-y-5">
         {menuItems.map(({ name, icon: Icon, path }) => (
-          <button
-            key={path}
-            onClick={() => router.push(path)}
-            className={`flex items-center px-3 py-2 rounded-lg ${
-              pathname === path ? "bg-white text-green-600" : "text-gray-300"
-            }`}
-          >
-            <Icon className="text-lg" />
-            <p className="ml-2">{name}</p>
-          </button>
+         <Link
+         key={path}
+         href={path}
+         className={`flex items-center px-3 py-2 rounded-lg ${
+           pathname === path ? "bg-white text-green-600" : "text-gray-300"
+         }`}
+       >
+         <Icon className="text-lg" />
+         <p className="ml-2">{name}</p>
+       </Link>
         ))}
       </div>
 

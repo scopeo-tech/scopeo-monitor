@@ -3,16 +3,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { getUserInfo, getUserProjectCount } from "@/lib/api";
 import { FC, useState } from "react";
-import { useRouter } from "next/navigation";
 import { FaCog, FaQuestionCircle, FaSignOutAlt } from "react-icons/fa";
 import { FiEdit } from "react-icons/fi";
 import CreateProjectModal from "@/components/modal/createProjectModal";
 import LogoutModal from "@/components/modal/logoutModal";
+import Link from "next/link";
 
 const Sidebar: FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
-  const router = useRouter();
 
   const { data: user, isLoading, isError } = useQuery({
     queryKey: ["userInfo"],
@@ -75,20 +74,17 @@ const Sidebar: FC = () => {
       )}
 
       <div className="mt-64 space-y-4 p-3">
-        <button
-          onClick={() => router.push("home/settings/profile")}
+        <Link href={"home/settings/profile"}
           className="flex items-center space-x-2 text-white hover:text-white/80"
         >
           <FaCog />
           <span>Settings</span>
-        </button>
-        <button
-          onClick={() => router.push("/home/help")}
-          className="flex items-center space-x-2 text-white hover:text-white/80"
-        >
+        </Link>
+        <Link href="/home/help"
+          className="flex items-center space-x-2 text-white hover:text-white/80">
           <FaQuestionCircle />
           <span>Get Help</span>
-        </button>
+        </Link>
         <button
           onClick={() => setIsLogoutOpen(true)}
           className="flex items-center space-x-2 text-white hover:text-white/80"
