@@ -8,7 +8,7 @@ import { Project } from "@/lib/interface";
 import CreateProjectModal from "../modal/createProjectModal";
 import { FiEdit, FiEye, FiEyeOff } from "react-icons/fi";
 import { FaCopy } from "react-icons/fa";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const DefaultPage: FC = () => {
   const [formattedDate, setFormattedDate] = useState<string>("");
@@ -18,6 +18,7 @@ const DefaultPage: FC = () => {
   const [copiedApiKey, setCopiedApiKey] = useState<string | null>(null);
   const [copiedPassKey, setCopiedPassKey] = useState<string | null>(null);
   const { user } = useAuthStore();
+  const router = useRouter();
 
   const { data: projects, isLoading, isError } = useQuery<Project[]>({
     queryKey: ["userProjects"],
@@ -132,8 +133,8 @@ const DefaultPage: FC = () => {
               {Array.isArray(projects) &&
                 projects.map((project: Project) => (
                   <tr key={project._id} className="border-b text-sm hover:bg-gray-50">
-                    <Link  href={`/${project._id}/error`} className="py-4 px-4 text-gray-700 cursor-pointer">
-                          {project.name}</Link>
+                    <td className="py-4 px-4 text-gray-700 cursor-pointer" 
+                      onClick={() => router.push(`/${project._id}/health`)}>{project.name}</td>
                     <td className="py-4 px-4 ml-8">
                       <span
                         className={`inline-block w-2 h-2 rounded-full hover: ${project.status.connectionStatus
