@@ -33,4 +33,3 @@ export interface ErrorLog {
   projectId?: string;
   __v?: number;
 }
-  

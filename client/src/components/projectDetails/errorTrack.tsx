@@ -12,12 +12,7 @@ import { CiFilter } from "react-icons/ci";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IoIosCloseCircleOutline } from "react-icons/io";
-import {
-  FiAlertTriangle,
-  FiAlertOctagon,
-  FiCode,
-  FiServer,
-} from "react-icons/fi";
+import { FiAlertTriangle, FiAlertOctagon, FiCode } from "react-icons/fi";
 import {
   PieChart,
   Pie,
@@ -33,6 +28,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import React from "react";
 import ErrorLogCard from "../ui/ErrorLogs";
+import { ErrorLog } from "@/lib/interface";
 
 const COLORS = ["#90BAAD", "#689689", "#B0CA87", "#ADF6B1"];
 
@@ -40,7 +36,6 @@ function ErrorTrack() {
   const { projectID } = useParams() as { projectID: string };
 
   const [showPopup, setShowPopup] = useState(false);
-  const [_, setIsRefetching] = useState(false);
   const [filter, setFilter] = useState("all");
 
   const {
@@ -146,11 +141,8 @@ function ErrorTrack() {
     }
   };
 
- 
-
   const handleFilterChange = async (newFilter: string) => {
     setFilter(newFilter);
-    setIsRefetching(true);
 
     await Promise.all([
       errorStatsRefetch(),
@@ -158,7 +150,6 @@ function ErrorTrack() {
       commonErrorsRefetch(),
       errorMethodsRefetch(),
     ]);
-    setIsRefetching(false);
   };
 
   if (isLoading) return <p>Loading error data...</p>;
@@ -360,28 +351,29 @@ function ErrorTrack() {
           </div>
           <div className="flex items-center space-x-2 text-gray-600">
             <FiCode className="text-gray-400" />
-            <span>{data?.pages.reduce((total, page) => total + page.errors.length, 0)} Total Errors</span>
+            <span>
+              {data?.pages.reduce(
+                (total, page) => total + page.errors.length,
+                0
+              )}{" "}
+              Total Errors
+            </span>
           </div>
         </div>
 
-        {data?.pages.map((page, pageIndex) => (
-          <React.Fragment key={pageIndex}>
-            {page.errors?.length > 0 ? (
-              [...page.errors].reverse().map((error, index) => (
-                <ErrorLogCard 
-                  key={`${pageIndex}-${index}`}
-                  error={error} 
-                  index={index} 
-                />
-              ))
-            ) : (
-              <div className="text-center py-12 bg-white rounded-xl shadow-lg">
-                <FiAlertTriangle className="mx-auto text-yellow-500 mb-4" size={50} />
-                <p className="text-gray-600 text-xl">No errors found</p>
-              </div>
-            )}
-          </React.Fragment>
-        ))}
+        <div
+          className="overflow-y-auto max-h-[70vh] p-4"
+          onScroll={handleScroll}
+        >
+          {data?.pages.map((page, index) => (
+            <React.Fragment key={index}>
+              {page.errors.map((error: ErrorLog, index) => (
+                <ErrorLogCard key={error._id} error={error} index={index} />
+              ))}
+            </React.Fragment>
+          ))}
+          {isFetchingNextPage && <p>Loading more errors...</p>}
+        </div>
 
         {hasNextPage && (
           <div className="text-center mt-6">
@@ -396,7 +388,7 @@ function ErrorTrack() {
                   Loading...
                 </>
               ) : (
-                'Load More Errors'
+                "Load More Errors"
               )}
             </button>
           </div>
