@@ -195,7 +195,7 @@ const googleLogin = async (req: Request, res: Response , next: NextFunction) => 
 
   const token = jwt.sign(
     {
-      _id: savedUser._id,
+      userId: savedUser._id,
       email: savedUser.email,
       username: savedUser.username,
     },
