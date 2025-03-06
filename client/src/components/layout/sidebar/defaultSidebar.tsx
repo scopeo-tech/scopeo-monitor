@@ -37,7 +37,7 @@ const Sidebar: FC = () => {
   if (isError || countError) return <div>Error</div>;
 
   return (
-    <div className="w-64 bg-emerald-400 text-white h-[100vh] p-6  fixed left-0 top-14 ">
+    <div className="w-64 bg-emerald-400 text-white h-screen p-6  fixed left-0 top-14 ">
       <span className="flex items-center justify-center pt-7">
         <button
           className="text-sm text-white hover:underline flex items-center gap-1"
