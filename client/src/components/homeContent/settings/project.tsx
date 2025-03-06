@@ -163,11 +163,13 @@ export default function ProjectPage() {
       <div className="flex justify-end">
         <button
           onClick={() => setNotificationStatus(!notificationStatus)}
-          className="relative w-12 h-6 rounded-full bg-gray-500 transition-colors duration-200 ease-in-out"
+          className={`relative w-12 h-6 rounded-full border border-gray-300 ${
+            notificationStatus ? "bg-white" : "bg-gray-500"
+          }`}
         >
           <div
-            className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform duration-200 ease-in-out ${
-              notificationStatus ? 'translate-x-6' : 'translate-x-0'
+            className={`absolute top-1 left-1 w-4 h-4 rounded-full transition-transform duration-200 ease-in-out ${
+              notificationStatus ? 'translate-x-6  bg-gray-500' : 'translate-x-0 bg-white'
             }`}
           />
         </button>

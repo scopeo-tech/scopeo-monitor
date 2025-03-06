@@ -120,7 +120,7 @@ const LoginForm: FC = () => {
 
           <p className="mt-8 mb-4">Don&apos;t have an account?</p>
           <Link href="/auth/register"
-            className="px-8 py-2 border border-white rounded-full text-white hover:bg-white hover:text-green-500 transition w-64"  
+            className="px-8 py-2 border text-center border-white rounded-full text-white hover:bg-white hover:text-green-500 transition w-64"  
           >
             Register now
           </Link>
