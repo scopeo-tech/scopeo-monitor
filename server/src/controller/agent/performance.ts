@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import Performance from "../../model/performanceModel";
 import Project from "../../model/projectModel";
+import checkProjectOwnership from "../../lib/util/checkProjectOwnership";
+import { NextFunction } from "express-serve-static-core";
 
 export const handleIncomingPerformance = async (
   req: Request,
@@ -38,8 +40,16 @@ export const handleIncomingPerformance = async (
 
 //controllers
 
-export const getLatestPerformance = async (req: Request, res: Response) => {
+export const getLatestPerformance = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  
+  if (!(await checkProjectOwnership(req, next))) return;
+
   const { projectId } = req.params;
+
   const latestPerformance = await Performance.findOne({ projectId })
     .sort({ createdAt: -1 })
     .exec();
