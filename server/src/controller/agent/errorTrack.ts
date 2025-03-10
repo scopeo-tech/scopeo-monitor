@@ -301,7 +301,8 @@ const getErrorMethodPercentages = async (
   res.status(200).json(response);
 };
 
-const getAllErrors = async (req: Request, res: Response): Promise<void> => {
+const getAllErrors = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  if (!(await checkProjectOwnership(req, next))) return;
   const { projectId } = req.params;
   const { page = 1, limit = 20 } = req.query;
 
