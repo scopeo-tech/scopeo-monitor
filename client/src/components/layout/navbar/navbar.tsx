@@ -5,11 +5,11 @@ import { FC } from "react";
 import { useUserStore } from "@/lib/stores/userStore";
 const Navbar: FC = () => {
   const {user}= useUserStore();
- 
+ const path : string = user?"/home":"/"
   return (
-    <nav className="flex items-center justify-between px-10 py-3 bg-white border-b shadow-sm ">
+    <nav className="flex fixed z-50 items-center justify-between w-screen px-10 py-3">
       {/* Logo */}
-      <Link href="/home" className="flex items-center " >
+      <Link href={path} className="flex items-center " >
         <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
           <svg 
             xmlns="https://www.figma.com/674429f3-5dd1-45ff-9d37-9d54a2a101b8" 
