@@ -1,4 +1,3 @@
-import { log } from "console";
 import mongoose, { Schema, InferSchemaType, Model } from "mongoose";
 
 const logSchema = new Schema({
@@ -7,8 +6,8 @@ const logSchema = new Schema({
     required: true,
   },
   type: {
-    type: [String], // Array of strings
-    enum: ["serverlog", "userlog"], // Only these values are allowed
+    type: [String], 
+    enum: ["serverlog", "userlog"],
     required: true,
   },
   project:{

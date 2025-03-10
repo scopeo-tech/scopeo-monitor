@@ -59,7 +59,6 @@ const Sidebar: FC = () => {
               <p className="text-xs text-gray-700">{user.email}</p>
             </div>
           </div>
-
           <div className="mt-4 space-y-1 text-sm text-center">
             <p className="flex gap-2">
               <span className="opacity-80">Joined on</span>

@@ -2,7 +2,7 @@ import { Response, NextFunction } from "express";
 import { AuthenticatedRequest } from "../../lib/types/type";
 import Project from "../../model/projectModel";
 import Security from "../../model/securityModel";
-import Health from "../../model/healthModel";
+import Performance from "../../model/performanceModel";
 import Error from "../../model/errorModel";
 import Log from "../../model/logModel";
 import CustomError from "../../lib/util/CustomError";
@@ -181,7 +181,7 @@ const deleteProject = async (req: AuthenticatedRequest, res: Response,next:NextF
     return next(new CustomError(404, "Project not found"));
   }
   await Promise.all([
-    Health.deleteMany({ project: projectId }),
+    Performance.deleteMany({ project: projectId }),
     Log.deleteMany({ project: projectId }),
     Security.deleteMany({ project: projectId }),
     Error.deleteMany({ project: projectId }),

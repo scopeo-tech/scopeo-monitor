@@ -4,6 +4,7 @@ import verifyToken from "../middleware/verifyToken";
 import tryCatch from "../lib/util/tryCatch";
 import {getBruteForceAttempts,getFailedLogins,getTotalLogins,getUnusualLogins,getSecurityStats} from "../controller/agent/security"
 import { getErrorStats, getCommonError, getErrorMethodPercentages, getLatestError, getAllErrors } from "../controller/agent/errorTrack";
+import { getLatestPerformance } from "../controller/agent/performance";
 
 
 
@@ -34,5 +35,8 @@ router
 .get("/get-total-logins/:projectId",tryCatch(getTotalLogins))
 .get("/get-unusual-logins/:projectId",tryCatch(getUnusualLogins))
 .get("/get-security-stats/:projectId",tryCatch(getSecurityStats))
+//Performance Stats
+.get("/get-performance-latest/:projectId",tryCatch(getLatestPerformance))
+
 
 export default router
