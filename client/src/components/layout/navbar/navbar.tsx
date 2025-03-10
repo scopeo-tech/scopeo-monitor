@@ -24,7 +24,7 @@ const Navbar: FC = () => {
       </Link>
 
       
-      <div className="hidden md:flex items-center space-x-12">
+      <div className="hidden md:flex font-semibold items-center space-x-12">
         <Link href="#" className="text-gray-600 hover:text-gray-900">Developers</Link>
         <Link href="#" className="text-gray-600 hover:text-gray-900">Documentation</Link>
         <Link href="#" className="text-gray-600 hover:text-gray-900">About Us</Link>
