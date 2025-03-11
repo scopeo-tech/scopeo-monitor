@@ -235,3 +235,12 @@ export const getAllErrors = async (projectId: string, page: number, limit: numbe
   const {data} = await axiosInstance.get(`/project/get-all-errors/${projectId}?page=${page}&limit=${limit}`);
   return data;
 };
+
+
+export const getLogs = async (projectId: string, filter: string) => {
+  const response = await axiosInstance.get(`/project/get-logs/${projectId}`, {
+    params: { filter },
+  });
+  console.log(response.data);
+  return response.data;
+}
