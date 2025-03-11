@@ -1,5 +1,5 @@
-import Activity from '@/components/projectDetails/activity'
 import React from 'react'
+import Activity from '@/components/projectDetails/activity'
 
 function page() {
   return (

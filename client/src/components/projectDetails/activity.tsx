@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getLogs } from '@/lib/api';
@@ -12,7 +14,7 @@ const timeFilters = [
     { label: 'Last 30 Days', value: '30d' }
 ];
 
-const Logs = () => {
+const Activity = () => {
    const { projectID } = useParams() as { projectID: string };
     const [filter, setFilter] = useState('');
 
@@ -66,4 +68,4 @@ const Logs = () => {
     );
 };
 
-export default Logs;
+export default Activity;

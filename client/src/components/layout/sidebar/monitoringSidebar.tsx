@@ -40,7 +40,7 @@ const MonitoringSidebar = () => {
     { name: "Performance & Health Metrics", icon: FiBarChart2, path: `/${projectID}/health` },
     { name: "Security & Access Monitoring", icon: FiLock, path: `/${projectID}/accessMonitro` },
     { name: "Error & Issue Tracking", icon: FiAlertTriangle, path: `/${projectID}/error` },
-    { name: "Logs & Activity Tracking", icon: FiFileText, path: `/${projectID}/logs` },
+    { name: "Logs & Activity Tracking", icon: FiFileText, path: `/${projectID}/activity` },
     { name: "Settings", icon: FiSettings, path: "/home/settings" },
     { name: "Help", icon: FiHelpCircle, path: "/home/help" },
   ];
