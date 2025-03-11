@@ -6,7 +6,7 @@ import { FaGithub } from "react-icons/fa";
 const Footer: React.FC = () => {
   return (
     <footer className="w-full">
-      <div className="bg-[#ADF6B1] h-auto flex flex-row items-center justify-between py-10 px-20 ">
+      <div className="bg-emerald-100 h-auto flex flex-row items-center justify-between py-10 px-20 ">
   {/* Left Side - Heading Section */}
   <div className="flex flex-col items-start space-y-5">
     <h1 className="text-8xl font-bold text-emerald-500">
