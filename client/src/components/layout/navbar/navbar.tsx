@@ -1,37 +1,64 @@
-"use client"
+"use client";
 
 import Link from "next/link";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { useUserStore } from "@/lib/stores/userStore";
+
 const Navbar: FC = () => {
-  const {user}= useUserStore();
- const path : string = user?"/home":"/"
+  const { user } = useUserStore();
+  const path: string = user ? "/home" : "/";
+
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20); 
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <nav className="flex fixed z-50 items-center justify-between w-screen px-10 py-3">
+    <nav
+      className={`fixed z-50 w-full px-10 py-3 flex items-center justify-between transition-all duration-300 ${
+        isScrolled ? "bg-white shadow-md" : "bg-transparent"
+      }`}
+    >
       {/* Logo */}
-      <Link href={path} className="flex items-center " >
+      <Link href={path} className="flex items-center">
         <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
-          <svg 
-            xmlns="https://www.figma.com/674429f3-5dd1-45ff-9d37-9d54a2a101b8" 
-            viewBox="0 0 24 24" 
-            fill="white" 
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="white"
             className="w-5 h-5"
           >
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
           </svg>
         </div>
-        <span className="ml-2 text-2xl font-semibold font-sans text-emerald-500">Scopeo</span>
+        <span className="ml-2 text-2xl font-semibold font-sans text-emerald-500">
+          Scopeo
+        </span>
       </Link>
 
-      
       <div className="hidden md:flex font-semibold items-center space-x-12">
-        <Link href="#" className="text-gray-600 hover:text-gray-900">Developers</Link>
-        <Link href="#" className="text-gray-600 hover:text-gray-900">Documentation</Link>
-        <Link href="#" className="text-gray-600 hover:text-gray-900">About Us</Link>
-        <Link href="#" className="text-gray-600 hover:text-gray-900">Contact</Link>
+        <Link href="#" className="text-gray-600 hover:text-gray-900">
+          Developers
+        </Link>
+        <Link href="#" className="text-gray-600 hover:text-gray-900">
+          Documentation
+        </Link>
+        <Link href="#" className="text-gray-600 hover:text-gray-900">
+          About Us
+        </Link>
+        <Link href="#" className="text-gray-600 hover:text-gray-900">
+          Contact
+        </Link>
       </div>
+
       {user ? (
-        <div className="w-8 h-8 bg-rose-500 text-white flex items-center justify-center rounded-full text-lg ">
+        <div className="w-8 h-8 bg-rose-500 text-white flex items-center justify-center rounded-full text-lg">
           {user.username[0].toUpperCase()}
         </div>
       ) : (
