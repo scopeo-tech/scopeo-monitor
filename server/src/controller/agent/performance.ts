@@ -222,8 +222,11 @@ const getServerPerformanceMetrics = async (req: Request, res: Response, next: Ne
   const [metrics] = await Performance.aggregate(aggregationPipeline);
 
   if (!metrics) {
-    return res.status(404).json({ message: "No performance data found for this project" });
-  }
+    return res.status(200).json({
+      message: "No performance data found for this project",
+      data: {}
+    });
+  }  
 
   res.status(200).json({
     projectId,
