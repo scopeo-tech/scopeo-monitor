@@ -66,3 +66,27 @@
     @apply bg-background text-foreground;
   }
 }
+@keyframes floating {
+  0% {
+    transform: translate(0px, 0px) rotate(0deg) scale(1);
+  }
+  20% {
+    transform: translate(-8px, -5px) rotate(-2deg) scale(1.02);
+  }
+  40% {
+    transform: translate(6px, -10px) rotate(1deg) scale(0.99);
+  }
+  60% {
+    transform: translate(-6px, 8px) rotate(-2deg) scale(1.01);
+  }
+  80% {
+    transform: translate(8px, 5px) rotate(1deg) scale(1.02);
+  }
+  100% {
+    transform: translate(0px, 0px) rotate(0deg) scale(1);
+  }
+}
+
+.floating-circle {
+  animation: floating 15s ease-in-out infinite;
+}
