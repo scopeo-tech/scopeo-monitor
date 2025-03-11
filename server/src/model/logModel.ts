@@ -5,9 +5,24 @@ const logSchema = new Schema({
     type: String,
     required: true,
   },
-  type: {
-    type: [String], 
-    enum: ["serverlog", "userlog"],
+  level: {
+    type: String,
+    required: true,
+  },
+  statusCode: {
+    type: Number,
+    required: true,
+  },
+  method: {
+    type: String,
+    required: true,
+  },
+  route: {
+    type: String,
+    required: true,
+  },
+  duration: {
+    type: Number,
     required: true,
   },
   project:{
