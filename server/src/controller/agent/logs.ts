@@ -54,6 +54,7 @@ export const handleIncomingLogs = async (
           statusCode,
           level,
           method,
+          duration: log.duration,
           project: project._id
         });
       }
@@ -102,6 +103,7 @@ export const handleIncomingLogs = async (
       return res.status(200).json({ 
         status: "success", 
         data: logs,
+        count: logs.length
       });
     } catch (error) {
       console.error('Error fetching logs:', error);
