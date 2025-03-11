@@ -31,7 +31,7 @@ function Features() {
   ];
 
   return (
-    <div className="w-full flex px-10 justify-between">
+    <div className="w-full flex px-10 gap-14">
       {/* Left Section */}
       <div className="flex flex-col w-1/2 justify-between gap-5">
         <div>

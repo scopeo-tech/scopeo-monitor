@@ -17,7 +17,7 @@ import FloatingCircle from './floatingCircle';
 function Hero() {
     return (
         <div className='w-full justify-between h-auto flex relative'>
-                <FloatingCircle className='w-24 bottom-20 hover:w-28 hover:h-28 transition-all left-1/4 h-24'/>
+                <FloatingCircle className='w-24 border-emerald-600 border-2 bottom-20 hover:w-28 hover:h-28 transition-all left-1/4 h-24'/>
             <div className='flex w-[35%] h-screen px-10 flex-col gap-7 justify-center relative'>
                 <h1 className='text-6xl font-bold'>Website Monitoring & Analytics</h1>
                 <p className='text-[#515151] text-xl font-semibold'>Monitor, analyze, and optimize your deployed projects witha fully integrated platform.
