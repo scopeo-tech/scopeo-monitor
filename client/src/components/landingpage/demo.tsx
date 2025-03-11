@@ -8,6 +8,7 @@ import errordash from "@/assets/errordash.png";
 import accessdash from "@/assets/accessdash.jpg";
 import logs from "@/assets/logs.jpg";
 import health from "@/assets/health.jpeg";
+import Link from "next/link";
 
 
 function DashboardDemo() {
@@ -147,9 +148,9 @@ function DashboardDemo() {
 
            
             <div className="text-center my-20">
-                <button className="py-2 w-36 hover:w-52 hover:bg-emerald-600 transition-all duration-300 ease-out rounded-3xl bg-emerald-500 text-white">
+                <Link href="/auth/login" className="py-2 w-36 hover:w-52 hover:bg-emerald-600 transition-all duration-300 ease-out rounded-3xl bg-emerald-500 text-white">
                     See All Features
-                </button>
+                </Link>
             </div>
         </div>
     );
