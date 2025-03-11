@@ -17,12 +17,10 @@ const logSchema = new Schema({
     type: String,
     required: true,
   },
+  duration: {
+    type: Number},
   route: {
     type: String,
-    required: true,
-  },
-  duration: {
-    type: Number,
     required: true,
   },
   project:{
