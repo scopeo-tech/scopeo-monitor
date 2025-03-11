@@ -24,6 +24,18 @@ const handleIncomingPerformance = async (req: Request, res: Response) => {
 
     const performanceData = req.body;
 
+    const performanceCount = await Performance.countDocuments({ projectId: project._id });
+
+    if (performanceCount >= 1500) {
+      const oldPerformances = await Performance.find({ projectId: project._id })
+        .sort({ createdAt: 1 })
+        .limit(60);
+      
+      const oldIds = oldPerformances.map((perf) => perf._id);
+      await Performance.deleteMany({ _id: { $in: oldIds } });
+    }
+
+
     const latestPerformance = await Performance.findOne({ projectId: project._id }).sort({ createdAt: -1 });
 
     let updatedUptimePercentage = 100;
@@ -97,14 +109,15 @@ const checkUptimeStatus = async () => {
 const getTimeFilter = (filter: string) => {
   const now = new Date();
   switch (filter) {
+    case "1h":
+      return { createdAt: { $gte: new Date(now.getTime() - 1 * 60 * 60 * 1000) } };
     case "24h":
       return { createdAt: { $gte: new Date(now.getTime() - 24 * 60 * 60 * 1000) } };
-    case "7d":
-      return { createdAt: { $gte: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000) } };
     default:
-      return {};
+      return { createdAt: { $gte: new Date(now.getTime() - 24 * 60 * 60 * 1000) } };
   }
 };
+
 
 
 
@@ -149,7 +162,10 @@ const getPerformanceData = async (req: Request, res: Response, next: NextFunctio
   ]);
   
   if (allData.length === 0) {
-    return res.status(404).json({ message: "No data found for this project within the given filter" });
+    return res.status(200).json({
+      message: "No performance data found for this project within the given filter",
+      data: [],
+    });
   }
   res.status(200).json(allData);
 };
@@ -206,8 +222,11 @@ const getServerPerformanceMetrics = async (req: Request, res: Response, next: Ne
   const [metrics] = await Performance.aggregate(aggregationPipeline);
 
   if (!metrics) {
-    return res.status(404).json({ message: "No performance data found for this project" });
-  }
+    return res.status(200).json({
+      message: "No performance data found for this project",
+      data: {}
+    });
+  }  
 
   res.status(200).json({
     projectId,
@@ -354,8 +373,24 @@ const getSystemHealthMetrics = async (req: Request, res: Response, next: NextFun
 
   const [metrics] = await Performance.aggregate(aggregationPipeline);
 
-  if (!metrics) {
-    return res.status(404).json({ message: "No system health data found for this project" });
+    if (!metrics) {
+      return res.status(200).json({
+        projectId,
+        avgCpuUsage: 0,
+        maxCpuUsage: 0,
+        avgMemoryUsage: 0,
+        maxMemoryUsage: 0,
+        avgDiskUsage: 0,
+        maxDiskUsage: 0,
+        latestCpuUsage: 0,
+        latestMemoryUsage: 0,
+        latestDiskUsage: 0,
+        diskDetails: [],
+        timestamp: null,
+        healthStatus: { cpu: "healthy", memory: "healthy", disk: "healthy" },
+        recommendations: [],
+        overallHealth: "healthy"
+      });
   }
 
   //disk drive warnings
@@ -492,8 +527,32 @@ const getTrafficLoadMetrics = async (req: Request, res: Response, next: NextFunc
   const [metrics] = await Performance.aggregate(aggregationPipeline);
 
   if (!metrics) {
-    return res.status(404).json({ message: "No traffic data found for this project" });
+    return res.status(200).json({
+      projectId,
+      metrics: {
+        totalRequests: 0,
+        totalSuccess: 0,
+        totalFailed: 0,
+        requestsPerSecond: {
+          average: 0,
+          peak: 0
+        },
+        requestsPerMinute: 0,
+        successRate: 0,
+        errorRate: 0,
+        trafficHealth: "unknown"
+      },
+      statusCodes: {
+        informational: {},
+        success: {},
+        redirection: {},
+        clientError: {},
+        serverError: {}
+      },
+      insights: ["No traffic data available for the selected period."]
+    });
   }
+  
 
   const statusCodeGroups: { [key: string]: { [key: string]: number } } = {
     informational: {},
@@ -592,8 +651,15 @@ const getErrorStabilityMetrics = async (req: Request, res: Response, next: NextF
   const [metrics] = await Performance.aggregate(aggregationPipeline);
 
   if (!metrics) {
-    return res.status(404).json({ message: "No error stability data found for this project" });
-  }
+    return res.status(200).json({
+      projectId,
+      failedRequests: 0,
+      successRequests: 0,
+      totalRequests: 0,
+      errorRate: 0,
+      message: "No error stability data found for this project",
+    });
+  }  
 
   res.status(200).json({
     projectId,
