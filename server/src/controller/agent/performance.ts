@@ -367,8 +367,24 @@ const getSystemHealthMetrics = async (req: Request, res: Response, next: NextFun
 
   const [metrics] = await Performance.aggregate(aggregationPipeline);
 
-  if (!metrics) {
-    return res.status(404).json({ message: "No system health data found for this project" });
+    if (!metrics) {
+      return res.status(200).json({
+        projectId,
+        avgCpuUsage: 0,
+        maxCpuUsage: 0,
+        avgMemoryUsage: 0,
+        maxMemoryUsage: 0,
+        avgDiskUsage: 0,
+        maxDiskUsage: 0,
+        latestCpuUsage: 0,
+        latestMemoryUsage: 0,
+        latestDiskUsage: 0,
+        diskDetails: [],
+        timestamp: null,
+        healthStatus: { cpu: "healthy", memory: "healthy", disk: "healthy" },
+        recommendations: [],
+        overallHealth: "healthy"
+      });
   }
 
   //disk drive warnings
