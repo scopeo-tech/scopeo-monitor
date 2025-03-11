@@ -18,6 +18,7 @@ const LoginForm: FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const setUser = useAuthStore((state) => state.setUser);
+  const user = useAuthStore((state) => state.user);
   const router = useRouter();
 
   const { data: session, status } = useSession();
@@ -28,6 +29,10 @@ const LoginForm: FC = () => {
       handleGoogleLogin(session?.idToken);
     }
   }, [session, status]);
+
+  if(user) {
+    router.push("/home");
+  }
 
   const handleSignIn = async () => {
     try {
