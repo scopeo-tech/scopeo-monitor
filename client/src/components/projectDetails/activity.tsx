@@ -48,18 +48,15 @@ const Activity = () => {
                 </select>
             </div>
 
-            <div className="bg-white rounded-lg shadow-md p-4">
+            <div className="bg-slate-200 rounded-lg shadow-md p-4 ">
                 {logs.length > 0 ? (
-                    <ul className="space-y-2">
-                        {logs.map((log: { _id: string; message: string }) => (
-                            <li
-                                key={log._id}
-                                className="border-b py-2 text-sm text-gray-700"
-                            >
-                                {log.message}
-                            </li>
-                        ))}
-                    </ul>
+                    <pre className="whitespace-pre-wrap text-sm ">
+                    {logs.map((log: { _id: string; message: string }) => (
+                        <code key={log._id} className="block border-b  border-gray-400 py-2">
+                            {log.message}
+                        </code>
+                    ))}
+                </pre>
                 ) : (
                     <p className="text-center text-gray-500">No logs available.</p>
                 )}
