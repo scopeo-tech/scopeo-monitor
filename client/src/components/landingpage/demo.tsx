@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import Image from "next/image";
 import { IoSettingsSharp } from "react-icons/io5";
@@ -8,11 +8,13 @@ import errordash from "@/assets/errordash.png";
 import accessdash from "@/assets/accessdash.jpg";
 import logs from "@/assets/logs.jpg";
 import health from "@/assets/health.jpeg";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 
 
 function DashboardDemo() {
     const [activeIndex, setActiveIndex] = useState(0);
+    const router = useRouter();
 
     const dashboards = [
         {
@@ -99,7 +101,7 @@ function DashboardDemo() {
                         "top-[35%] right-[-40px] w-1/4 h-[160px] rotate-[8deg]"
                     ];
 
-                   
+
                     const positionIndex = (index - activeIndex - 1 + dashboards.length) % positions.length;
 
                     return (
@@ -146,11 +148,15 @@ function DashboardDemo() {
                 </div>
             </div>
 
-           
+
             <div className="text-center my-20">
-                <Link href="/auth/login" className="py-2 w-36 hover:w-52 hover:bg-emerald-600 transition-all duration-300 ease-out rounded-3xl bg-emerald-500 text-white">
+                <button
+                    onClick={() => router.push("/auth/login")}
+                    className="py-2 min-w-36 w-52 hover:w-96 hover:bg-emerald-600 transition-all duration-300 ease-out rounded-3xl bg-emerald-500 text-white"
+                >
                     See All Features
-                </Link>
+                </button>
+
             </div>
         </div>
     );
