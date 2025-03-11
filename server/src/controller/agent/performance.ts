@@ -26,10 +26,10 @@ const handleIncomingPerformance = async (req: Request, res: Response) => {
 
     const performanceCount = await Performance.countDocuments({ projectId: project._id });
 
-    if (performanceCount >= 330) {
+    if (performanceCount >= 1500) {
       const oldPerformances = await Performance.find({ projectId: project._id })
         .sort({ createdAt: 1 })
-        .limit(30);
+        .limit(60);
       
       const oldIds = oldPerformances.map((perf) => perf._id);
       await Performance.deleteMany({ _id: { $in: oldIds } });
@@ -109,14 +109,15 @@ const checkUptimeStatus = async () => {
 const getTimeFilter = (filter: string) => {
   const now = new Date();
   switch (filter) {
+    case "1h":
+      return { createdAt: { $gte: new Date(now.getTime() - 1 * 60 * 60 * 1000) } };
     case "24h":
       return { createdAt: { $gte: new Date(now.getTime() - 24 * 60 * 60 * 1000) } };
-    case "7d":
-      return { createdAt: { $gte: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000) } };
     default:
-      return {};
+      return { createdAt: { $gte: new Date(now.getTime() - 24 * 60 * 60 * 1000) } };
   }
 };
+
 
 
 
