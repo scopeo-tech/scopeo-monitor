@@ -24,6 +24,18 @@ const handleIncomingPerformance = async (req: Request, res: Response) => {
 
     const performanceData = req.body;
 
+    const performanceCount = await Performance.countDocuments({ projectId: project._id });
+
+    if (performanceCount >= 330) {
+      const oldPerformances = await Performance.find({ projectId: project._id })
+        .sort({ createdAt: 1 })
+        .limit(30);
+      
+      const oldIds = oldPerformances.map((perf) => perf._id);
+      await Performance.deleteMany({ _id: { $in: oldIds } });
+    }
+
+
     const latestPerformance = await Performance.findOne({ projectId: project._id }).sort({ createdAt: -1 });
 
     let updatedUptimePercentage = 100;
