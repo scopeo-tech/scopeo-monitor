@@ -4,6 +4,7 @@ import verifyToken from "../middleware/verifyToken";
 import tryCatch from "../lib/util/tryCatch";
 import {getBruteForceAttempts,getFailedLogins,getTotalLogins,getUnusualLogins,getSecurityStats} from "../controller/agent/security"
 import { getErrorStats, getCommonError, getErrorMethodPercentages, getLatestError, getAllErrors } from "../controller/agent/errorTrack";
+import { getLogs } from "../controller/agent/logs";
 
 
 
@@ -34,5 +35,8 @@ router
 .get("/get-total-logins/:projectId",tryCatch(getTotalLogins))
 .get("/get-unusual-logins/:projectId",tryCatch(getUnusualLogins))
 .get("/get-security-stats/:projectId",tryCatch(getSecurityStats))
+
+//get serverLogs
+.get("/get-logs/:projectId",tryCatch(getLogs))
 
 export default router
