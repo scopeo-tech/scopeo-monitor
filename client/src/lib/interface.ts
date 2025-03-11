@@ -33,3 +33,15 @@ export interface ErrorLog {
   projectId?: string;
   __v?: number;
 }
+
+export interface Log {
+  _id: string;
+  message: string;
+  level: string;
+  statusCode: number;
+  method: string;
+  duration: number;
+  route: string;
+  project: string;
+  __v: number;
+}
