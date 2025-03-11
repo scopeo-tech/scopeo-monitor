@@ -4,6 +4,8 @@ import tryCatch from "../lib/util/tryCatch";
 import { handleIncomingError } from "../controller/agent/errorTrack";
 import { handleIncomingSecurity } from "../controller/agent/security";
 import { handleIncomingLogs } from "../controller/agent/logs";
+import { handleIncomingPerformance } from "../controller/agent/performance";
+
 
 
 
@@ -14,5 +16,6 @@ packageRouter
 .post("/errors",tryCatch(handleIncomingError))
 .post("/security",tryCatch(handleIncomingSecurity))
 .post("/logs",tryCatch(handleIncomingLogs))
+.post("/performance",tryCatch(handleIncomingPerformance))
 
 export default packageRouter
