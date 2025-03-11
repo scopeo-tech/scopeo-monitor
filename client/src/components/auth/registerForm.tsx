@@ -26,6 +26,7 @@ const RegisterForm: FC = () => {
   const [userEmail, setUserEmail] = useState("");
   const [isOtpVerified, setIsOtpVerified] = useState(false);
   const [otp, setOtp] = useState("");
+  const user = useAuthStore((state) => state.user);
 
   const { data: session, status } = useSession();
   useEffect(() => {
@@ -35,6 +36,10 @@ const RegisterForm: FC = () => {
     }
   }, [session, status]);
 
+  if(user) {
+    router.push("/home");
+  }
+  
   const handleSignIn = async () => {
     try {
       await signIn("google", { redirect: false }).then(async (response) => {
