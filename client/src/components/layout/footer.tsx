@@ -6,7 +6,7 @@ import { FaGithub } from "react-icons/fa";
 const Footer: React.FC = () => {
   return (
     <footer className="w-full">
-      <div className="bg-white h-auto flex flex-row items-center justify-around py-10 ">
+      <div className="bg-[#ADF6B1] h-auto flex flex-row items-center justify-between py-10 px-20 ">
   {/* Left Side - Heading Section */}
   <div className="flex flex-col items-start space-y-5">
     <h1 className="text-8xl font-bold text-emerald-500">
@@ -16,7 +16,7 @@ const Footer: React.FC = () => {
   </div>
 
   {/* Right Side - Form */}
-  <div className="flex flex-col space-y-5 w-80">
+  <div className="flex flex-col space-y-5 w-1/3">
     <input
       type="text"
       placeholder="Your Name"
@@ -43,7 +43,7 @@ const Footer: React.FC = () => {
 
 
 
-      <div className="bg-emerald-500 text-white py-6 px-6 flex flex-col">
+      <div className="bg-emerald-500 text-white py-6 px-10 flex flex-col">
   <div className="flex items-center space-x-3 mb-4">
     <div className="w-12 h-12 bg-emerald-500 rounded-lg flex items-center justify-center">
       <svg
