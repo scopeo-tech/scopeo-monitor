@@ -14,6 +14,7 @@ const performanceSchema = new Schema(
     projectId: { type: Schema.Types.ObjectId, ref: "Project", required: true },
     uptimePercentage: { type: Number, required: true },
     latency: { type: Number, required: true },
+    status: { type: String, enum: ['up', 'down'], required: true },
     responseTime: { type: Number, required: true },
     requests: {
       totalRequests: { type: Number, required: true },
@@ -49,6 +50,7 @@ const performanceSchema = new Schema(
       },
       loadAverage: { type: [Number], required: true },
     },
+    gapDuration: { type: Number, default: 0 },
   },
   {
     timestamps: true,

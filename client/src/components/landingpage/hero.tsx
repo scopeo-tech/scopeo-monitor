@@ -13,9 +13,11 @@ import FloatingCircle from './floatingCircle';
 
 
 
+
 function Hero() {
     return (
         <div className='w-full justify-between h-auto flex'>
+
             <div className='flex w-[35%] h-screen px-10 flex-col gap-7 justify-center relative'>
                 <FloatingCircle className='w-28 top-20 -left-5 h-28'/>
                 <h1 className='text-6xl font-bold'>Website Monitoring & Analytics</h1>

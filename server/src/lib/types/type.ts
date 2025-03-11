@@ -30,3 +30,16 @@ export interface ErrorStats {
     route: string;
     message: string;
 }
+
+export interface LogsPayload {
+  message: string;
+  level: 'info' | 'warning' | 'error';
+  duration: number;
+  method: string;
+  route: string;
+  statusCode: number;
+  statusMessage: string;
+  timestamp: string;
+}
+
+

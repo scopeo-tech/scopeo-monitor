@@ -4,7 +4,8 @@ import verifyToken from "../middleware/verifyToken";
 import tryCatch from "../lib/util/tryCatch";
 import {getBruteForceAttempts,getFailedLogins,getTotalLogins,getUnusualLogins,getSecurityStats} from "../controller/agent/security"
 import { getErrorStats, getCommonError, getErrorMethodPercentages, getLatestError, getAllErrors } from "../controller/agent/errorTrack";
-import { getLatestPerformance } from "../controller/agent/performance";
+import { getLogs } from "../controller/agent/logs";
+import { getErrorStabilityMetrics, getPerformanceData, getServerPerformanceMetrics, getSystemHealthMetrics, getTrafficLoadMetrics } from "../controller/agent/performance";
 
 
 
@@ -36,7 +37,14 @@ router
 .get("/get-unusual-logins/:projectId",tryCatch(getUnusualLogins))
 .get("/get-security-stats/:projectId",tryCatch(getSecurityStats))
 //Performance Stats
-.get("/get-performance-latest/:projectId",tryCatch(getLatestPerformance))
+.get("/get-performance-data/:projectId",tryCatch(getPerformanceData))
+.get("/get-server-metrics/:projectId",tryCatch(getServerPerformanceMetrics))
+.get("/get-system-metrics/:projectId",tryCatch(getSystemHealthMetrics))
+.get("/get-traffic-metrics/:projectId",tryCatch(getTrafficLoadMetrics))
+.get("/get-stability-metrics/:projectId",tryCatch(getErrorStabilityMetrics))
 
+
+//get serverLogs
+.get("/get-logs/:projectId",tryCatch(getLogs))
 
 export default router
