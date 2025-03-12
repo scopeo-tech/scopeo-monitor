@@ -189,7 +189,6 @@ const getPerformanceData = async (req: Request, res: Response, next: NextFunctio
   res.status(200).json(data);
 };
 
-
 const getServerPerformanceMetrics = async (req: Request, res: Response, next: NextFunction) => {
   if (!(await checkProjectOwnership(req, next))) return;
 

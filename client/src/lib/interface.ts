@@ -143,6 +143,8 @@ export interface TrafficMetrics {
   statusCodes: StatusCodes;
   insights: string[];
 }
+
+
 export interface StabilityMetrics {
   projectId: string;
   failedRequests: number;

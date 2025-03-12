@@ -43,7 +43,6 @@ router
 .get("/get-traffic-metrics/:projectId",tryCatch(getTrafficLoadMetrics))
 .get("/get-stability-metrics/:projectId",tryCatch(getErrorStabilityMetrics))
 
-
 //get serverLogs
 .get("/get-logs/:projectId",tryCatch(getLogs))
 

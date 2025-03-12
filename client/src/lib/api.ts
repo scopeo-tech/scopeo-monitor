@@ -271,7 +271,6 @@ export const getTrafficMetrics = async (projectId: string) => {
   const response = await axiosInstance.get(`/project/get-traffic-metrics/${projectId}`);
   return response.data;
 };
-
 // Error & Stability Metrics
 export const getStabilityMetrics = async (projectId: string) => {
   const response = await axiosInstance.get(`/project/get-stability-metrics/${projectId}`);
