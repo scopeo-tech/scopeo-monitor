@@ -45,3 +45,96 @@ export interface Log {
   project: string;
   __v: number;
 }
+
+
+export interface PerformanceMetrics {
+  _id: string;
+  projectId: string;
+  uptimePercentage: number;
+  latency: number;
+  responseTime: number;
+  createdAt: string;
+  requests: number;
+  averagePerSecond: number;
+  failedReq: number;
+  success: number;
+  errorrate: number;
+  cpuUsage: number | null;
+  memoryUsage: number | null;
+  diskUsage: number | null;
+};
+
+interface DiskDetail {
+  drive: string;
+  total: number;
+  used: number;
+  free: number;
+  usagePercent: number;
+}
+
+interface HealthStatus {
+  cpu: "healthy" | "warning" | "critical";
+  memory: "healthy" | "warning" | "critical";
+  disk: "healthy" | "warning" | "critical";
+}
+
+interface Recommendation {
+  resource: string;
+  message: string;
+}
+
+export interface HealthMetrics {
+  projectId: string;
+  avgCpuUsage: number;
+  maxCpuUsage: number;
+  avgMemoryUsage: number;
+  maxMemoryUsage: number;
+  avgDiskUsage: number;
+  maxDiskUsage: number;
+  latestCpuUsage: number;
+  latestMemoryUsage: number;
+  latestDiskUsage: number;
+  diskDetails: DiskDetail[];
+  timestamp: string;
+  healthStatus: HealthStatus;
+  recommendations: Recommendation[];
+  overallHealth: "healthy" | "warning" | "critical";
+}
+
+
+interface RequestsPerSecond {
+  average: number;
+  peak: number;
+}
+
+interface Metrics {
+  totalRequests: number;
+  totalSuccess: number;
+  totalFailed: number;
+  requestsPerSecond: RequestsPerSecond;
+  requestsPerMinute: number;
+  successRate: number;
+  errorRate: number;
+  trafficHealth: "healthy" | "degraded" | "critical";
+}
+
+interface StatusCodes {
+  informational: Record<string, number>;
+  success: Record<string, number>;
+  redirection: Record<string, number>;
+  clientError: Record<string, number>;
+  serverError: Record<string, number>;
+}
+
+export interface TrafficMetrics {
+  projectId: string;
+  metrics: Metrics;
+  statusCodes: StatusCodes;
+  insights: string[];
+}
+export interface RequestStats {
+  projectId: string;
+  failedRequests: number;
+  successRequests: number;
+  errorRate: number;
+}

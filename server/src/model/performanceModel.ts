@@ -12,12 +12,12 @@ const diskSchema = new Schema({
 const performanceSchema = new Schema(
   {
     projectId: { type: Schema.Types.ObjectId, ref: "Project", required: true },
-    uptimePercentage: { type: Number, required: true },
-    latency: { type: Number, required: true },
+    uptimePercentage: { type: Number, required: true ,default :0 },
+    latency: { type: Number, required: true ,default : 0},
     status: { type: String, enum: ['up', 'down'], required: true },
-    responseTime: { type: Number, required: true },
+    responseTime: { type: Number, required: true , default :0 },
     requests: {
-      totalRequests: { type: Number, required: true },
+      totalRequests: { type: Number, required: true , default :0},
       httpStatusCounts: {
         type: Map,
         of: Number,
@@ -27,11 +27,11 @@ const performanceSchema = new Schema(
           500: 0
         }
       },
-      averagePerSecond: { type: Number, required: true },
-      peakPerSecond: { type: Number, required: true },
-      failed: { type: Number, required: true },
-      success: { type: Number, required: true },
-      errorRate: { type: Number, required: true },
+      averagePerSecond: { type: Number, required: true ,default :0 },
+      peakPerSecond: { type: Number, required: true , default:0 },
+      failed: { type: Number, required: true , default: 0},
+      success: { type: Number, required: true , default : 0 },
+      errorRate: { type: Number, required: true , default :0 },
     },
     systemUsage: {
       cpuUsage: { type: [Number], required: true },

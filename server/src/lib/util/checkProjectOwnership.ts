@@ -13,8 +13,8 @@ import Project from "../../model/projectModel";
     if (!projectId || !userId) {
       return next(new CustomError(400, 'Project ID and user are required'));
     }
-  
-    const project = await Project.findOne({ _id: projectId, user: userId });
+
+    const project = await Project.findOne({ _id: projectId });
   
     if (!project) {
       return next(new CustomError(403, 'Unauthorized: You do not own this project'));

@@ -167,7 +167,26 @@ const getPerformanceData = async (req: Request, res: Response, next: NextFunctio
       data: [],
     });
   }
-  res.status(200).json(allData);
+  const data = allData.map((item) => {
+    return {
+      _id: item._id,
+      projectId: item.projectId,
+      uptimePercentage: item.uptimePercentage,
+      latency: item.latency,
+      responseTime: item.responseTime,
+      createdAt: item.createdAt,
+      requests: item.requests.totalRequests,
+      averagePerSecond:item.requests.averagePerSecond,
+      peakedPerSecond:item.requests.peakedPerSecond,
+      failedReq:item.requests.failed,
+      success:item.requests.success,
+      errorrate:item.requests.errorRate,
+      cpuUsage:item.systemUsage.cpuUsage.reduce((a: number, b:number) => a + b, 0) / item.systemUsage.cpuUsage.length,
+      memoryUsage:item.systemUsage.memoryUsage.usagePercent,
+      diskUsage:item.systemUsage.diskUsage.usagePercent
+    };
+  })
+  res.status(200).json(data);
 };
 
 

@@ -244,3 +244,36 @@ export const getLogs = async (projectId: string, filter: string) => {
   console.log(response.data);
   return response.data;
 }
+
+
+// perfomance
+
+// Performance Metrics
+export const getPerformanceData = async (projectId: string) => {
+  const response = await axiosInstance.get(`/project/get-performance-data/${projectId}`);
+  return response.data;
+};
+
+// Server Performance Metrics
+export const getServerMetrics = async (projectId: string) => {
+  const response = await axiosInstance.get(`/project/get-server-metrics/${projectId}`);
+  return response.data;
+};
+
+// System Health Metrics
+export const getSystemMetrics = async (projectId: string) => {
+  const response = await axiosInstance.get(`/project/get-system-metrics/${projectId}`);
+  return response.data;
+};
+
+// Traffic & Load Metrics
+export const getTrafficMetrics = async (projectId: string) => {
+  const response = await axiosInstance.get(`/project/get-traffic-metrics/${projectId}`);
+  return response.data;
+};
+
+// Error & Stability Metrics
+export const getStabilityMetrics = async (projectId: string) => {
+  const response = await axiosInstance.get(`/project/get-stability-metrics/${projectId}`);
+  return response.data;
+};
