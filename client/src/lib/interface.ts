@@ -94,6 +94,7 @@ interface Recommendation {
   message: string;
 }
 
+
 export interface SystemMetrics {
   projectId: string;
   avgCpuUsage: number;
@@ -143,7 +144,6 @@ export interface TrafficMetrics {
   statusCodes: StatusCodes;
   insights: string[];
 }
-
 
 export interface StabilityMetrics {
   projectId: string;
