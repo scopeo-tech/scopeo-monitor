@@ -64,6 +64,17 @@ export interface PerformanceMetrics {
   diskUsage: number | null;
 };
 
+export interface ServerMetrics {
+  projectId: string;
+  totalRequests: number;
+  httpStatusCounts: Record<string, number>;
+  latestStatus: "up" | "down";
+  avgResponseTime: number;
+  avgLatency: number;
+  avgUptimePercentage: number;
+  currentUptime: number;
+}
+
 interface DiskDetail {
   drive: string;
   total: number;
@@ -83,7 +94,8 @@ interface Recommendation {
   message: string;
 }
 
-export interface HealthMetrics {
+
+export interface SystemMetrics {
   projectId: string;
   avgCpuUsage: number;
   maxCpuUsage: number;
@@ -132,7 +144,8 @@ export interface TrafficMetrics {
   statusCodes: StatusCodes;
   insights: string[];
 }
-export interface RequestStats {
+
+export interface StabilityMetrics {
   projectId: string;
   failedRequests: number;
   successRequests: number;
