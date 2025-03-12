@@ -142,7 +142,7 @@ const getPerformanceData = async (req: Request, res: Response, next: NextFunctio
       }
     },
     {
-      $sort: { createdAt: -1 }
+      $sort: { createdAt: 1 }
     },
     {
       $project: {
@@ -162,10 +162,26 @@ const getPerformanceData = async (req: Request, res: Response, next: NextFunctio
   ]);
   
   if (allData.length === 0) {
-    return res.status(200).json({
-      message: "No performance data found for this project within the given filter",
-      data: [],
-    });
+    const emptyData = [
+      {
+        _id: "",
+        projectId: projectId,
+        uptimePercentage: 0,
+        latency: 0,
+        responseTime: 0,
+        createdAt: new Date(),
+        requests: 0,
+        averagePerSecond: 0,
+        peakedPerSecond: 0,
+        failedReq: 0,
+        success: 0,
+        errorrate: 0,
+        cpuUsage: 0,
+        memoryUsage: 0,
+        diskUsage: 0
+      }
+    ];
+    return res.status(200).json(emptyData);
   }
   const data = allData.map((item) => {
     return {
