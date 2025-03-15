@@ -1,17 +1,29 @@
 import mongoose, { Schema, InferSchemaType, Model } from "mongoose";
 
-const faqSchema = new Schema({
-  question: {
-    type: String,
-    required: true,
+const faqSchema = new Schema(
+  {
+    question: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    answer: {
+      type: String,
+      required: true,
+    },
+    keywords: {
+      type: [String],
+      required: true,
+    },
+    searchCount: {
+      type: Number,
+      default: 0,
+    },
   },
-  answer: {
-    type: String,
-    required: true,
-  },
-}, { timestamps: true });
+  { timestamps: true }
+);
 
-type IFAQ = InferSchemaType<typeof faqSchema>;
+type IFaq = InferSchemaType<typeof faqSchema>;
 
- const FAQ:Model<IFAQ>=mongoose.model("FAQ", faqSchema);
- export default FAQ
+const Faq: Model<IFaq> = mongoose.model("Faq", faqSchema);
+export default Faq;
