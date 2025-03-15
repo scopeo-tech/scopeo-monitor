@@ -8,6 +8,7 @@ import projectRouter from "./routes/projectRoute";
 import userRoutes from "./routes/userRoutes";
 import packageRouter from "./routes/packageRoute";
 import {flagOldStatusesJob, startUptimeCron} from "./jobs/cronJob";
+import faqRouter from "./routes/faqRoutes";
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ app.use("/api/auth",authRouter)
 app.use("/api/project",projectRouter)
 app.use("/api/user",userRoutes)
 app.use("/api/package",packageRouter)
+app.use("/api/faq",faqRouter)
 
 
 
