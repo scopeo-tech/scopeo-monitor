@@ -18,6 +18,24 @@ const FAQ = () => {
 
   const faqs: Faq[] = data?.data || [];
 
+  const Ques = () => {
+    return (
+      <motion.span
+        className="inline-block"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: [0, 1, 1, 0] }}
+        transition={{
+          repeat: Infinity,
+          repeatDelay: 0.2,
+          duration: 1,
+          ease: "easeInOut",
+        }}
+      >
+        ?
+      </motion.span>
+    );
+  };
+
   return (
     <div className="px-5 md:px-20 overflow-hidden">
       <div className="flex flex-col-reverse md:flex-row gap-10">
@@ -27,7 +45,7 @@ const FAQ = () => {
               Frequently Asked
             </h1>
             <h1 className="text-[#16C47F] text-3xl md:text-4xl font-bold">
-              Questions
+              Questions <Ques />
             </h1>
           </div>
 
