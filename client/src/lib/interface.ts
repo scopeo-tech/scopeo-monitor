@@ -151,3 +151,9 @@ export interface StabilityMetrics {
   successRequests: number;
   errorRate: number;
 }
+
+export interface Faq {
+  _id: string;
+  question: string;
+  answer: string;
+}
