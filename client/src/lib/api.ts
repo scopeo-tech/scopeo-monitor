@@ -287,3 +287,11 @@ export const getStabilityMetrics = async (projectId: string , filter: string) =>
   });
   return response.data;
 };
+
+
+//faqs routes
+
+export const getTopFaqs = async () => {
+  const response = await api.get("/faq/get-top-faqs");
+  return response.data;
+};  
