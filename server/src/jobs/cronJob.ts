@@ -14,7 +14,6 @@ const flagOldStatusesJob = () => {
 const startUptimeCron = () => {
   try {
     cron.schedule("*/3 * * * *", checkUptimeStatus);
-    console.log("Uptime cron job started, checking every minute...");
   } catch (error) {
     console.log("Error scheduling uptime cron job:", error);
     throw new Error("Error scheduling uptime cron job");
