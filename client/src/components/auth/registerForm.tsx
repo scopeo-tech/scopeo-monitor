@@ -90,12 +90,9 @@ const RegisterForm: FC = () => {
     try {
       await sendOtpForRegister(email);
       setUserEmail(email);
-      console.log("email", email);
       setIsOtpModalOpen(true);
     }  catch (error) {
-      console.log("Full error:", error); 
       if (axios.isAxiosError(error) && error.response) {
-        console.log("Response data:", error.response.data);
         setError(error.response.data?.message || "Registration failed"); 
       } else {
         setError("Network error, please check your connection.");
