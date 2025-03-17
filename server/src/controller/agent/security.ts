@@ -81,6 +81,7 @@ const handleIncomingSecurity = async (
     if (notifications.length > 0) {
       const savedNotifications = await Notification.insertMany(notifications);
 
+
       const io = req.app.get("io") as Server;
       // Emit notifications to the user via Socket.IO
       savedNotifications.forEach((notification)=>{
