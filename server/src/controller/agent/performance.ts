@@ -55,8 +55,6 @@ const handleIncomingPerformance = async (req: Request, res: Response) => {
       gapDuration = latestPerformance.gapDuration || 0;
     }
 
-    console.log("hiii perfooo", req.body);
-
     const newPerformance = new Performance({
       ...performanceData,
       projectId: project._id,

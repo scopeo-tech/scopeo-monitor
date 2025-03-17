@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo, useEffect } from "react";
+import React, { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useParams, usePathname } from "next/navigation";
 import { getProjectById, getUserInfo } from "@/lib/api";
@@ -27,10 +27,6 @@ const MonitoringSidebar = () => {
     enabled: !!projectID,
     staleTime: 1000 * 60 * 5,
   });
-
-  useEffect(() => {
-    console.log("Fetched project:", project);
-  }, [project]);
 
   const { data: user } = useQuery({
     queryKey: ["userInfo"],

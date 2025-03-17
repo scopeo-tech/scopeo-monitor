@@ -32,6 +32,7 @@ app.use(globalErrorHandler);
 
 const server = createServer(app);
 const io = initializeSocket(server);
+app.set("io", io); 
 
 const port = process.env.PORT || 3001;
 server.listen(port, () => {
