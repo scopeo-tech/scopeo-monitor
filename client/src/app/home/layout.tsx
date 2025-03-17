@@ -7,6 +7,11 @@ import Sidebar from "@/components/layout/sidebar/defaultSidebar";
 
 export default function HomeLayout({ children }: { children: React.ReactNode }) {
   const { connectSocket } = useNotificationStore();
+  const { notifications } = useNotificationStore();
+  
+  useEffect(() => {
+    console.log("notification from home",notifications);
+  }, [notifications]);
 
   useEffect(() => {
     connectSocket();

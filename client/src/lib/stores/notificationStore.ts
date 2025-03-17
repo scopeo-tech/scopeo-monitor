@@ -7,6 +7,7 @@ interface NotificationState {
   socket: Socket | null;
   setNotifications: (notifications: Notification[]) => void;
   connectSocket: () => void;
+  registerUser: (userId: string) => void;
 }
 
 export const useNotificationStore = create<NotificationState>((set) => {
@@ -27,9 +28,16 @@ export const useNotificationStore = create<NotificationState>((set) => {
         socket.on("connect", () => {
           console.log("Connected to Socket.IO");
           set({ socket });
+          
+          // Re-register user ID if available
+          const userId = localStorage.getItem("userId");
+          if (userId) {
+            socket?.emit("registerUser", userId);
+          }
         });
 
-        socket.on("new_notification", (notification: Notification) => {
+        socket.on("newNotification", (notification: Notification) => {
+          console.log("Received notification:", notification);
           set((state) => ({
             notifications: [notification, ...state.notifications],
           }));
@@ -37,8 +45,21 @@ export const useNotificationStore = create<NotificationState>((set) => {
 
         socket.on("disconnect", () => {
           console.log("Disconnected from Socket.IO");
-          set({ socket: null });
         });
+
+        socket.on("connect_error", (error) => {
+          console.error("Socket connection error:", error);
+        });
+      }
+    },
+
+    registerUser: (userId: string) => {
+      if (socket) {
+        socket.emit("registerUser", userId);
+        console.log("Registered user with socket:", userId);
+        localStorage.setItem("userId", userId);
+      } else {
+        console.error("Socket not connected. Cannot register user.");
       }
     },
   };

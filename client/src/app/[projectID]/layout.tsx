@@ -7,6 +7,11 @@ import MonitoringSidebar from "../../components/layout/sidebar/monitoringSidebar
 
 export default function ProjectLayout({ children }: { children: React.ReactNode }) {
   const { connectSocket } = useNotificationStore();
+  const { notifications } = useNotificationStore();
+
+  useEffect(() => {
+    console.log("notification",notifications);
+  }, [notifications]);
 
   useEffect(() => {
     connectSocket();

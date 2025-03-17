@@ -14,7 +14,7 @@ import { Server } from "socket.io";
 const handleIncomingSecurity = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction  
 ) => {
   const apiKey = req.headers["x-api-key"] as string;
   const passKey = req.headers["x-pass-key"] as string;
@@ -81,10 +81,12 @@ const handleIncomingSecurity = async (
     if (notifications.length > 0) {
       const savedNotifications = await Notification.insertMany(notifications);
 
+
+      const io = req.app.get("io") as Server;
       // Emit notifications to the user via Socket.IO
-      savedNotifications.forEach((notification) => {
-        sendNotification(req.app.get("io") as Server, notification.user.toString(), notification);
-      });
+      savedNotifications.forEach((notification)=>{
+        sendNotification(io, project.user.toString(), notification);
+      })
     }
   }
 
