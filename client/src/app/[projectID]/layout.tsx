@@ -1,13 +1,22 @@
 "use client";
-import React from "react";
+
+import { useEffect } from "react";
+import { useNotificationStore } from "@/lib/stores/notificationStore";
 import MonitoringNavbar from "../../components/layout/navbar/monitoringNavbar";
 import MonitoringSidebar from "../../components/layout/sidebar/monitoringSidebar";
 
-export default function ProjectLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function ProjectLayout({ children }: { children: React.ReactNode }) {
+  const { connectSocket } = useNotificationStore();
+  const { notifications } = useNotificationStore();
+
+  useEffect(() => {
+    console.log("notification",notifications);
+  }, [notifications]);
+
+  useEffect(() => {
+    connectSocket();
+  }, [connectSocket]);
+
   return (
     <div className="flex h-screen w-full">
       <MonitoringSidebar />
