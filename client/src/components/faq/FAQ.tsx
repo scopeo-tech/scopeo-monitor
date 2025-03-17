@@ -3,7 +3,12 @@ import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import faqIcon from "../../assets/faqIcon.png";
 import { Faq } from "@/lib/interface";
-import { getTopFaqs, searchFaqs, getAISuggestion, getAIGeneratedFaq } from "@/lib/api";
+import {
+  getTopFaqs,
+  searchFaqs,
+  getAISuggestion,
+  getAIGeneratedFaq,
+} from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useDebounce } from "@/lib/hooks/useDebounce";
@@ -13,7 +18,10 @@ const FAQ = () => {
   const [clickedId, setClickedId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [aiSuggestion, setAiSuggestion] = useState("");
-  const [aiFaq, setAiFaq] = useState<{ question: string; answer: string } | null>(null);
+  const [aiFaq, setAiFaq] = useState<{
+    question: string;
+    answer: string;
+  } | null>(null);
   const [loadingAi, setLoadingAi] = useState(false);
 
   const debouncedQuery = useDebounce(searchQuery, 300);
@@ -29,7 +37,7 @@ const FAQ = () => {
     queryFn: () => searchFaqs(debouncedQuery),
     enabled: !!debouncedQuery,
   });
-  
+
   const handleGenerateAIAnswer = async () => {
     if (!debouncedQuery || searchResults?.results.length > 0) return;
     setLoadingAi(true);
@@ -83,8 +91,6 @@ const FAQ = () => {
       </motion.span>
     );
   };
-
-  console.log("aii sugg ", aiSuggestion);
   return (
     <div className="px-5 md:px-20 overflow-hidden">
       <div className="flex flex-col-reverse md:flex-row gap-10">
