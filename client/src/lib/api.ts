@@ -316,6 +316,5 @@ export const getAISuggestion = async (query: string) => {
 
 export const getAIGeneratedFaq = async (query: string) => {
   const response = await api.get(`/faq/get-ai-generated-faqs?query=${query}`);
-  console.log("fronedn faq ai",response.data.data);
   return response.data.data;
 };

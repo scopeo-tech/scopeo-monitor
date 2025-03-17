@@ -26,6 +26,7 @@ export const useUserStore = create<UserState>((set) => ({
       set({ user: null });
       if (typeof window !== "undefined") {
         localStorage.removeItem("user");
+        localStorage.removeItem("token");
       }
       console.log("User logged out successfully.");
     } catch (error) {
