@@ -1,9 +1,17 @@
 "use client";
 
+import { useEffect } from "react";
+import { useNotificationStore } from "@/lib/stores/notificationStore"; 
 import Navbar from "@/components/layout/navbar/navbar";
 import Sidebar from "@/components/layout/sidebar/defaultSidebar";
 
 export default function HomeLayout({ children }: { children: React.ReactNode }) {
+  const { connectSocket } = useNotificationStore();
+
+  useEffect(() => {
+    connectSocket();
+  }, [connectSocket]);
+
   return (
     <div className="h-screen flex flex-col">
       <div className="fixed top-0 left-0 w-full z-50">
