@@ -294,4 +294,20 @@ export const getStabilityMetrics = async (projectId: string , filter: string) =>
 export const getTopFaqs = async () => {
   const response = await api.get("/faq/get-top-faqs");
   return response.data;
-};  
+};
+
+export const searchFaqs = async (query: string) => {
+  const response = await api.get(`/faq/get-search-faqs?query=${query}`);
+  return response.data;
+};
+
+export const getAISuggestion = async (query: string) => {
+  const response = await api.get(`/faq/get-ai-suggestion?query=${query}`);
+  return response.data.suggestion;
+};
+
+export const getAIGeneratedFaq = async (query: string) => {
+  const response = await api.get(`/faq/get-ai-generated-faqs?query=${query}`);
+  console.log("fronedn faq ai",response.data.data);
+  return response.data.data;
+};
