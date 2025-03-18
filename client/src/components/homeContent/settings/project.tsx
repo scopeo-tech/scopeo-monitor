@@ -42,7 +42,6 @@ export default function ProjectPage() {
       try {
         const response = await checkProjectName(projectName);
         setIsNameTaken(response.data);
-        console.log(response.data);
         setResMessage(response.message);
       } catch (error) {
         console.error("Error checking project name:", error);
@@ -58,7 +57,6 @@ export default function ProjectPage() {
     mutationFn: ({ projectId, data }: { projectId: string; data: { name: string; passKey: string } }) =>
       updateProject(projectId, data),
     onSuccess: (data) => {
-      console.log("Updated Data:", data);
       setProjectName("");
       setPasskey("");
 

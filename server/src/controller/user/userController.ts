@@ -3,7 +3,9 @@ import { AuthenticatedRequest } from "../../lib/types/type";
 import User from "../../model/userModel";
 import bcrypt from "bcryptjs";
 import Project from "../../model/projectModel";
+import Contact from "../../model/contactModel";
 import CustomError from "../../lib/util/CustomError";
+import { sendContactEmail } from "../../services/emailService";
 
 const getUserById = async (req:AuthenticatedRequest, res:Response, next:NextFunction) =>{
     const user = await User.findById(req.user,{password:0})
@@ -70,7 +72,6 @@ const getUserProjectCount = async (req:AuthenticatedRequest, res:Response, next:
 };
 
 const updateProfile = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    console.log("hi");
     
     const user = await User.findById(req.user);
 
@@ -158,6 +159,28 @@ const checkUsername = async (req: AuthenticatedRequest, res: Response, next: Nex
 };
 
 
+const contactUs = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    const { firstname,lastname, email, message } = req.body;
+    if (!firstname||!lastname || !email || !message) {
+        return next(new CustomError(400, "All fields are required"));
+    }
+    const contactEntry = new Contact({
+        firstname,
+        lastname,
+        email,
+        message,
+    });
+    await contactEntry.save();
+    try {
+        await sendContactEmail(firstname,lastname, email, message);
+        return res.status(200).json({ status: "success", message: "Email sent successfully" });
+    } catch (error) {
+        return next(new CustomError(500, "Email sending failed"));
+    }
+}
+
+
+
 export {
     getUserById,
     getProjectList,
@@ -165,5 +188,6 @@ export {
     getUserProjectCount,
     updateProfile,
     deleteProfile,
-    checkUsername
+    checkUsername,
+    contactUs
 }

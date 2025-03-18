@@ -32,6 +32,7 @@ export interface ErrorLog {
   _id?: string;
   projectId?: string;
   __v?: number;
+  isHighlighted?: boolean; 
 }
 
 export interface Log {
@@ -156,4 +157,21 @@ export interface Faq {
   _id: string;
   question: string;
   answer: string;
+}
+
+export interface Notification {
+  _id: string;
+  message: string;
+  user: string;
+  project: string;
+  type: "brute_force" | "unusual_login" | "high_cpu" | "high_memory" | "high_disk";
+  severity: "info" | "warning" | "critical";
+  metadata: {
+    ip?: string;
+    userAgent?: string;
+    usage?: number;
+  }
+  status: "unread" | "read";
+  createdAt: string;
+  updatedAt: string;
 }

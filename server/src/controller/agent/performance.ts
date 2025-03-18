@@ -8,7 +8,6 @@ import mongoose from "mongoose";
 const { ObjectId } = mongoose.Types;
 
 const handleIncomingPerformance = async (req: Request, res: Response) => {
-  try {
     const apiKey = req.headers["x-api-key"];
     const passKey = req.headers["x-pass-key"];
 
@@ -55,8 +54,6 @@ const handleIncomingPerformance = async (req: Request, res: Response) => {
       gapDuration = latestPerformance.gapDuration || 0;
     }
 
-    console.log("hiii perfooo", req.body);
-
     const newPerformance = new Performance({
       ...performanceData,
       projectId: project._id,
@@ -68,10 +65,6 @@ const handleIncomingPerformance = async (req: Request, res: Response) => {
     await newPerformance.save();
 
     res.status(201).json({ message: "Performance data saved successfully" });
-  } catch (error) {
-    console.log("Error saving performance data", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
 };
 
 

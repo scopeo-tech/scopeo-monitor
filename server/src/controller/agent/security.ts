@@ -7,31 +7,35 @@ import CustomError from "../../lib/util/CustomError";
 import { SecurityLogPayload } from "../../lib/types/type";
 import getTimeRange from "../../lib/util/getTimeRange";
 import checkProjectOwnership from "../../lib/util/checkProjectOwnership";
+import Notification from "../../model/notiModel"; 
+import { sendNotification } from "../../jobs/socket";
+import { Server } from "socket.io";
 
 const handleIncomingSecurity = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction  
 ) => {
   const apiKey = req.headers["x-api-key"] as string;
   const passKey = req.headers["x-pass-key"] as string;
+
   if (!apiKey || !passKey) {
     return next(new CustomError(401, "Unauthorized"));
   }
+
   const project = await Project.findOne({ apiKey, passKey });
   if (!project) {
     return next(new CustomError(404, "Project not found"));
   }
 
-  const security = req.body as SecurityLogPayload;
-
-  if (!security) {
+  if (!req.body) {
     return next(new CustomError(400, "Missing required fields"));
   }
 
-  const securityCount = await Security.countDocuments({
-    project: project._id
-  });
+  const security = req.body as SecurityLogPayload;
+
+  // Manage security log storage
+  const securityCount = await Security.countDocuments({ project: project._id });
   if (securityCount >= 120) {
     const oldSecurity = await Security.find({ project: project._id })
       .sort({ createdAt: 1 })
@@ -42,8 +46,48 @@ const handleIncomingSecurity = async (
 
   await Security.create({ project: project._id, ...security });
 
+  // Check if notifications are enabled for this project
+  if (project.notificationStatus) {
+
+    let notification = {}
+    if (security.isBruteForce) {
+      notification = {
+        message: "Brute force attack detected"+security.ip + " " + security.userAgent,
+        user: project.user,
+        project: project._id,
+        type: "brute_force",
+        severity: "critical",
+        metadata: {
+          ip: security.ip,
+          userAgent: security.userAgent,
+        }
+    }
+    Notification.create(notification)
+    const io = req.app.get("io") as Server;
+    sendNotification(io, project.user.toString(), notification);
+  }
+
+    if (security.isUnusual) {
+      notification = {
+        message: "Unusual login detected",
+        user: project.user,
+        project: project._id,
+        type: "unusual_login",
+        severity: "warning",
+        metadata: {
+          ip: security.ip,
+          userAgent: security.userAgent,
+        },
+      };
+      Notification.create(notification)
+      const io = req.app.get("io") as Server;
+      sendNotification(io, project.user.toString(), notification);
+    }
+  }
+
   return res.status(200).json({ status: "success" });
 };
+
 
 // controllers
 const getTotalLogins = async (

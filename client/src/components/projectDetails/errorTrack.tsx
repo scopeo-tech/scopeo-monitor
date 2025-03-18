@@ -12,7 +12,15 @@ import { CiFilter } from "react-icons/ci";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IoIosCloseCircleOutline } from "react-icons/io";
-import { FiAlertTriangle, FiAlertOctagon, FiCode } from "react-icons/fi";
+import {
+  FiAlertTriangle,
+  FiAlertOctagon,
+  FiCode,
+  FiMessageSquare,
+  FiActivity,
+  FiX,
+  FiBarChart2,
+} from "react-icons/fi";
 import {
   PieChart,
   Pie,
@@ -35,9 +43,21 @@ const COLORS = ["#90BAAD", "#689689", "#B0CA87", "#ADF6B1"];
 
 function ErrorTrack() {
   const { projectID } = useParams() as { projectID: string };
-
+  const [isExpanded, setIsExpanded] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [filter, setFilter] = useState("all");
+  const [showLatestError, setShowLatestError] = useState(true);
+  const [showCommonError, setShowCommonError] = useState(true);
+  const [isCommonExpanded, setIsCommonExpanded] = useState(false);
+
+  const getErrorGradient = (statusCode: number) => {
+    const gradients = [
+      "from-red-500 to-orange-500",
+      "from-purple-500 to-pink-500",
+      "from-blue-500 to-indigo-500",
+    ];
+    return gradients[statusCode % gradients.length] || gradients[0];
+  };
 
   const {
     data: totalErrors = {
@@ -152,6 +172,32 @@ function ErrorTrack() {
       errorMethodsRefetch(),
     ]);
   };
+  const handleDismissLatestError = () => {
+    setShowLatestError(false);
+    setTimeout(() => {
+      latestErrorRefetch();
+      setShowLatestError(true);
+    }, 500);
+  };
+
+  const handleViewLogs = () => {
+    if (latestError) {
+      setIsExpanded(!isExpanded);
+    }
+  };
+
+  const handleViewErrorDetails = () => {
+    setIsCommonExpanded(!isCommonExpanded);
+  };
+
+  const handleIgnoreCommonError = () => {
+    setShowCommonError(false);
+    setTimeout(() => {
+      commonErrorsRefetch();
+      setShowCommonError(true);
+    }, 500);
+  };
+  if (isLoading) return <p>Loading error data...</p>;
 
   if (isLoading) return <ErrorDashboardSkeleton/>;
   if (!projectID) return <p>No project selected.</p>;
@@ -181,84 +227,414 @@ function ErrorTrack() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 ">
-        <div className="bg-white shadow-lg  rounded-2xl p-6 border-l-4 border-red-500">
-          <div className="flex items-center mb-4">
-            <FiAlertTriangle className="text-red-500 mr-3" />
-            <h2 className="text-xl font-semibold text-gray-800">
-              Latest Error
-            </h2>
-          </div>
-          {latestError ? (
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <span>Status Code</span>
-                <span className="font-bold text-red-600">
-                  {latestError.statusCode}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span>Route</span>
-                <code className="bg-gray-100 px-2 py-1 rounded">
-                  {latestError.route}
-                </code>
-              </div>
-              <div className="flex justify-between">
-                <span>Method</span>
-                <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                  {latestError.method}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span>Message</span>
-                <span className="bg-yellow-200 text-yellow-800 px-2 py-1 rounded">
-                  {latestError.message}
-                </span>
-              </div>
-            </div>
-          ) : (
-            <p className="text-gray-500 text-center">No recent errors</p>
-          )}
-        </div>
+        <AnimatePresence>
+          {showLatestError && (
+            <motion.div
+              key={"latestError"}
+              className="relative bg-white rounded-2xl overflow-hidden shadow-lg border border-gray-100"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+            >
+              <motion.div
+                className={`bg-gradient-to-r ${
+                  latestError
+                    ? getErrorGradient(latestError.statusCode)
+                    : "from-gray-400 to-gray-500"
+                } p-4 relative overflow-hidden`}
+                whileHover={{ scale: 1.01 }}
+              >
+                <div className="flex items-center justify-between relative z-10">
+                  <div className="flex items-center space-x-3">
+                    <motion.div
+                      className="bg-white bg-opacity-20 p-2 rounded-lg"
+                      animate={{ rotate: [0, 10, 0, -10, 0] }}
+                      transition={{
+                        repeat: Infinity,
+                        duration: 5,
+                        ease: "easeInOut",
+                      }}
+                    >
+                      <FiAlertTriangle className="text-white text-xl" />
+                    </motion.div>
+                    <h2 className="text-xl font-bold text-white">
+                      Latest Error
+                    </h2>
+                  </div>
 
-        <div className="bg-white shadow-lg rounded-2xl p-6 border-l-4 border-orange-500">
-          <div className="flex items-center mb-4">
-            <FiAlertOctagon className="text-orange-500 mr-3" />
-            <h2 className="text-xl font-semibold text-gray-800">
-              Most Common Error
-            </h2>
-          </div>
-          {commonErrors ? (
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <span>Status Code</span>
-                <span className="font-bold text-orange-600">
-                  {commonErrors.statusCode}
-                </span>
+                  {latestError && (
+                    <motion.div
+                      className="font-mono font-bold text-white text-lg bg-black bg-opacity-20 px-3 py-1 rounded-full"
+                      whileHover={{ scale: 1.05 }}
+                    >
+                      {latestError.statusCode}
+                    </motion.div>
+                  )}
+                </div>
+              </motion.div>
+
+              <div className="p-4">
+                {latestError ? (
+                  <div className="space-y-4">
+                    <AnimatePresence>
+                      <motion.div
+                        key={"latestError route"}
+                        className="group flex items-center space-x-3 bg-gray-50 p-3 rounded-xl cursor-pointer"
+                        whileHover={{
+                          y: -2,
+                          boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+                        }}
+                        onClick={() => setIsExpanded(!isExpanded)}
+                      >
+                        <FiCode className="text-blue-500 text-lg" />
+                        <div className="flex-1">
+                          <div className="text-sm text-gray-500">Route</div>
+                          <div className="font-mono text-sm">
+                            {latestError.route}
+                          </div>
+                        </div>
+                        <div
+                          className={`bg-blue-100 text-blue-800 px-2 py-1 rounded-md text-sm transition-all ${
+                            isExpanded ? "rotate-90" : ""
+                          }`}
+                        >
+                          {latestError.method}
+                        </div>
+                      </motion.div>
+
+                      {isExpanded && (
+                        <motion.div
+                          className="space-y-4 pt-2"
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <motion.div
+                            className="p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl"
+                            initial={{ x: -20, opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
+                            transition={{ delay: 0.1 }}
+                          >
+                            <div className="flex items-start">
+                              <FiMessageSquare className="text-yellow-500 mt-1 mr-3" />
+                              <div>
+                                <div className="text-sm text-gray-500 mb-1">
+                                  Error Message
+                                </div>
+                                <div className="text-yellow-800 font-medium">
+                                  {latestError.message}
+                                </div>
+                              </div>
+                            </div>
+                          </motion.div>
+
+                          <motion.div
+                            className="flex space-x-3"
+                            initial={{ y: 20, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            transition={{ delay: 0.2 }}
+                          >
+                            <div className="flex-1 p-3 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl">
+                              <div className="text-xs text-gray-500 mb-1">
+                                Timestamp
+                              </div>
+                              <div className="text-sm text-gray-800">
+                                {new Date(
+                                  latestError.createdAt
+                                ).toLocaleString()}
+                              </div>
+                            </div>
+                            <div className="flex-1 p-3 bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl">
+                              <div className="text-xs text-gray-500 mb-1">
+                                Error ID
+                              </div>
+                              <div className="text-sm text-gray-800 font-mono">
+                                {latestError.id}
+                              </div>
+                            </div>
+                          </motion.div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
+                    <motion.div
+                      className="mt-4 flex justify-between"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.3 }}
+                    >
+                      <motion.button
+                        className="text-sm text-gray-500 hover:text-gray-700 flex items-center space-x-1 px-3 py-2 rounded-lg hover:bg-gray-100 transition-all"
+                        whileHover={{ scale: 1.05 }}
+                        onClick={handleViewLogs}
+                      >
+                        <FiActivity size={14} />
+                        <span>View logs</span>
+                      </motion.button>
+
+                      <motion.button
+                        className="text-sm text-red-500 hover:text-red-700 flex items-center space-x-1 px-3 py-2 rounded-lg hover:bg-red-50 transition-all"
+                        whileHover={{ scale: 1.05 }}
+                        onClick={handleDismissLatestError}
+                      >
+                        <FiX size={14} />
+                        <span>Dismiss</span>
+                      </motion.button>
+                    </motion.div>
+                  </div>
+                ) : (
+                  <motion.div
+                    className="flex flex-col items-center justify-center py-8 px-4"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                  >
+                    <motion.div
+                      className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4"
+                      animate={{
+                        scale: [1, 1.05, 1],
+                        backgroundColor: [
+                          "rgb(220, 252, 231)",
+                          "rgb(226, 246, 231)",
+                          "rgb(220, 252, 231)",
+                        ],
+                      }}
+                      transition={{ repeat: Infinity, duration: 3 }}
+                    >
+                      <svg
+                        xmlns="http:www.w3.org/2000/svg"
+                        className="h-8 w-8 text-green-500"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    </motion.div>
+                    <p className="text-gray-600 font-medium text-center">
+                      All systems operational
+                    </p>
+                    <p className="text-gray-400 text-sm text-center mt-2">
+                      No errors detected in the system
+                    </p>
+                  </motion.div>
+                )}
               </div>
-              <div className="flex justify-between">
-                <span>Route</span>
-                <code className="bg-gray-100 px-2 py-1 rounded">
-                  {commonErrors.route}
-                </code>
-              </div>
-              <div className="flex justify-between">
-                <span>Method</span>
-                <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                  {commonErrors.method}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span>Message</span>
-                <span className="bg-yellow-200 text-yellow-800 px-2 py-1 rounded">
-                  {commonErrors.message}
-                </span>
-              </div>
-            </div>
-          ) : (
-            <p className="text-gray-500 text-center">No common errors</p>
+            </motion.div>
           )}
-        </div>
-        {/* ${(percent * 100).toFixed(0)}% if get time */}
+        </AnimatePresence>
+
+        {/* Common Errors */}
+        <AnimatePresence>
+          {showCommonError && (
+            <motion.div
+              key={"commonError"}
+              className="relative bg-white rounded-2xl overflow-hidden shadow-lg border border-gray-100"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+            >
+              <motion.div
+                className={`bg-gradient-to-r ${
+                  commonErrors
+                    ? getErrorGradient(commonErrors.statusCode)
+                    : "from-orange-400 to-amber-500"
+                } p-4 relative overflow-hidden`}
+                whileHover={{ scale: 1.01 }}
+              >
+                <div className="flex items-center justify-between relative z-10">
+                  <div className="flex items-center space-x-3">
+                    <motion.div
+                      className="bg-white bg-opacity-20 p-2 rounded-lg"
+                      animate={{ rotate: [0, 10, 0, -10, 0] }}
+                      transition={{
+                        repeat: Infinity,
+                        duration: 5,
+                        ease: "easeInOut",
+                      }}
+                    >
+                      <FiAlertOctagon className="text-white text-xl" />
+                    </motion.div>
+                    <h2 className="text-xl font-bold text-white">
+                      Most Common Error
+                    </h2>
+                  </div>
+
+                  {commonErrors && (
+                    <motion.div
+                      className="font-mono font-bold text-white text-lg bg-black bg-opacity-20 px-3 py-1 rounded-full"
+                      whileHover={{ scale: 1.05 }}
+                    >
+                      {commonErrors.statusCode}
+                    </motion.div>
+                  )}
+                </div>
+              </motion.div>
+
+              <div className="p-4">
+                {commonErrors ? (
+                  <div className="space-y-4">
+                    <AnimatePresence>
+                      <motion.div
+                        key={"commonErrors route"}
+                        className="group flex items-center space-x-3 bg-gray-50 p-3 rounded-xl cursor-pointer"
+                        whileHover={{
+                          y: -2,
+                          boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+                        }}
+                        onClick={() => setIsCommonExpanded(!isCommonExpanded)}
+                      >
+                        <FiCode className="text-orange-500 text-lg" />
+                        <div className="flex-1">
+                          <div className="text-sm text-gray-500">Route</div>
+                          <div className="font-mono text-sm">
+                            {commonErrors.route}
+                          </div>
+                        </div>
+                        <div
+                          className={`bg-blue-100 text-blue-800 px-2 py-1 rounded-md text-sm transition-all ${
+                            isCommonExpanded ? "rotate-90" : ""
+                          }`}
+                        >
+                          {commonErrors.method}
+                        </div>
+                      </motion.div>
+
+                      {isCommonExpanded && (
+                        <motion.div
+                          className="space-y-4 pt-2"
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <motion.div
+                            className="p-4 bg-gradient-to-r from-orange-50 to-amber-50 rounded-xl"
+                            initial={{ x: -20, opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
+                            transition={{ delay: 0.1 }}
+                          >
+                            <div className="flex items-start">
+                              <FiMessageSquare className="text-orange-500 mt-1 mr-3" />
+                              <div>
+                                <div className="text-sm text-gray-500 mb-1">
+                                  Error Message
+                                </div>
+                                <div className="text-amber-800 font-medium">
+                                  {commonErrors.message}
+                                </div>
+                              </div>
+                            </div>
+                          </motion.div>
+
+                          <motion.div
+                            className="flex space-x-3"
+                            initial={{ y: 20, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            transition={{ delay: 0.2 }}
+                          >
+                            <div className="flex-1 p-3 bg-gradient-to-br from-orange-50 to-red-50 rounded-xl">
+                              <div className="text-xs text-gray-500 mb-1">
+                                Occurrences
+                              </div>
+                              <div className="text-sm text-gray-800 font-semibold">
+                                {commonErrors.count}
+                              </div>
+                            </div>
+                            <div className="flex-1 p-3 bg-gradient-to-br from-amber-50 to-yellow-50 rounded-xl">
+                              <div className="text-xs text-gray-500 mb-1">
+                                First Seen
+                              </div>
+                              <div className="text-sm text-gray-800">
+                                {new Date(
+                                  commonErrors.firstSeen
+                                ).toLocaleString()}
+                              </div>
+                            </div>
+                          </motion.div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
+                    <motion.div
+                      className="mt-4 flex justify-between"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.3 }}
+                    >
+                      <motion.button
+                        className="text-sm text-gray-500 hover:text-gray-700 flex items-center space-x-1 px-3 py-2 rounded-lg hover:bg-gray-100 transition-all"
+                        whileHover={{ scale: 1.05 }}
+                        onClick={handleViewErrorDetails}
+                      >
+                        <FiBarChart2 size={14} />
+                        <span>View analytics</span>
+                      </motion.button>
+
+                      <motion.button
+                        className="text-sm bg-orange-100 text-orange-700 hover:bg-orange-200 flex items-center space-x-1 px-3 py-2 rounded-lg transition-all"
+                        whileHover={{ scale: 1.05 }}
+                        onClick={handleIgnoreCommonError}
+                      >
+                        <FiX size={14} />
+                        <span>Dismiss</span>
+                      </motion.button>
+                    </motion.div>
+                  </div>
+                ) : (
+                  <motion.div
+                    className="flex flex-col items-center justify-center py-8 px-4"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                  >
+                    <motion.div
+                      className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4"
+                      animate={{
+                        scale: [1, 1.05, 1],
+                        backgroundColor: [
+                          "rgb(220, 252, 231)",
+                          "rgb(226, 246, 231)",
+                          "rgb(220, 252, 231)",
+                        ],
+                      }}
+                      transition={{ repeat: Infinity, duration: 3 }}
+                    >
+                      <svg
+                        xmlns="http:www.w3.org/2000/svg"
+                        className="h-8 w-8 text-green-500"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    </motion.div>
+                    <p className="text-gray-600 font-medium text-center">
+                      No common errors detected
+                    </p>
+                    <p className="text-gray-400 text-sm text-center mt-2">
+                      Your application is running smoothly
+                    </p>
+                  </motion.div>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Pie chart of Error Stats */}
         <div className="bg-white shadow-md rounded-2xl p-6 flex flex-col items-center">
           <div className="w-full max-w-sm text-xs">
             <PieChart width={400} height={400}>
@@ -283,7 +659,7 @@ function ErrorTrack() {
           </div>
         </div>
 
-        <div className="bg-white shadow-md rounded-2xl p-6 flex flex-col justify-center  items-center">
+        <div className="bg-white shadow-md rounded-2xl p-6 flex flex-col justify-center items-center">
           <div className="w-full max-w-sm">
             <BarChart width={400} height={300} data={barData}>
               <XAxis dataKey="method" stroke="#6B7280" className="text-sm" />
@@ -317,6 +693,7 @@ function ErrorTrack() {
       <AnimatePresence>
         {showPopup && isAllZero && (
           <motion.div
+            key={"popup"}
             initial={{ x: "100%", opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: "100%", opacity: 0 }}
@@ -344,7 +721,12 @@ function ErrorTrack() {
         )}
       </AnimatePresence>
 
-      <div className="max-w-4xl mx-auto">
+      <motion.div
+        className="max-w-4xl mx-auto"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
+      >
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center space-x-4">
             <FiAlertTriangle className="text-red-500" size={30} />
@@ -363,17 +745,54 @@ function ErrorTrack() {
         </div>
 
         <div
-          className="overflow-y-auto max-h-[70vh] p-4"
+          className="overflow-y-auto max-h-[70vh] p-4 transition-all duration-300 relative"
           onScroll={handleScroll}
+          id="error-logs-container"
         >
-          {data?.pages.map((page, index) => (
-            <React.Fragment key={index}>
+          {data?.pages.map((page, pageIndex) => (
+            <React.Fragment key={pageIndex}>
               {page.errors.map((error: ErrorLog, index) => (
-                <ErrorLogCard key={error._id} error={error} index={index} />
+                <ErrorLogCard
+                  key={error._id}
+                  error={error}
+                  index={index}
+                  isHighlighted={latestError && error._id === latestError._id}
+                  id={`error-log-${error._id}`}
+                />
               ))}
             </React.Fragment>
           ))}
-          {isFetchingNextPage && <p>Loading more errors...</p>}
+          {isFetchingNextPage && (
+            <motion.div
+              className="text-center py-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
+              <div className="inline-flex items-center px-4 py-2 bg-gray-100 rounded-lg">
+                <svg
+                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-600"
+                  xmlns="http:www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                <span>Loading more errors...</span>
+              </div>
+            </motion.div>
+          )}
         </div>
 
         {hasNextPage && (
@@ -394,7 +813,7 @@ function ErrorTrack() {
             </button>
           </div>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 }

@@ -41,3 +41,5 @@ export const sendRegisterOtpMail = async (email: string, otp: string) => {
         `
   );
 };
+
+

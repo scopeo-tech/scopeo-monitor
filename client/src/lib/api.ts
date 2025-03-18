@@ -2,8 +2,9 @@ import axiosInstance from "./util/axiosInstance";
 import axios from "axios";
 import { Project, userDetails } from "./interface";
 
+
 export const api = axios.create({
-  baseURL: "http://localhost:3001/api",
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
   withCredentials: true,
 });
 
@@ -14,6 +15,7 @@ export const loginUser = async (data: {
   email?: string;
   password: string;
 }) => {
+  console.log(process.env.NEXT_PUBLIC_API_URL);
   const response = await api.post("/auth/login", data);
   return response.data;
 };
@@ -29,7 +31,7 @@ export const registerUser = async (data: {
 
 export const logoutUser = async () => {
   const response = await api.post("/auth/logout");
-  console.log(response.data);
+  
   localStorage.removeItem("token");
   localStorage.removeItem("user");
   return response.data;
@@ -38,7 +40,7 @@ export const logoutUser = async () => {
 // Send OTP for registration
 export const sendOtpForRegister = async (email: string) => {
   const response = await api.get(`/auth/register/${email}`);
-  console.log(response.data);
+  
   return response.data;
 };
 
@@ -63,7 +65,7 @@ export const getUserInfo = async (): Promise<userDetails> => {
 //get user projects
 export const getUserProjects = async (): Promise<Project[]> => {
   const response = await axiosInstance.get("/user/list");
-  console.log(response.data.data);
+  
   return response.data.data;
 };
 
@@ -81,19 +83,19 @@ export const createProject = async (data: {
   notificationStatus: boolean;
 }): Promise<Project> => {
   const response = await axiosInstance.post("/project/create-project", data);
-  console.log(response.data);
+  
   return response.data;
 };
 
 export const getApiKey = async () => {
   const response = await axiosInstance.get("/project/api-key");
-  console.log(response.data);
+  
   return response.data;
 };
 
 export const getPassKey = async () => {
   const response = await axiosInstance.get("/project/pass-key");
-  console.log(response.data);
+  
   return response.data;
 };
 
@@ -101,13 +103,13 @@ export const getProjectPassKey = async (projectId: string) => {
   const response = await axiosInstance.get(
     `/project/get-project-passkey/${projectId}`
   );
-  console.log(response.data.data);
+  
   return response.data.data;
 };
 
 export const getProjectById = async (projectId: string) => {
   const response = await axiosInstance.get(`/user/project/${projectId}`);
-  console.log(response.data);
+  
   return response.data.data;
 };
 
@@ -119,7 +121,7 @@ export const updateProject = async (
     `/project/update-project/${projectId}`,
     data
   );
-  console.log(response.data);
+  
   return response.data;
 };
 
@@ -127,7 +129,7 @@ export const checkProjectName = async (name: string) => {
   const response = await axiosInstance.get(
     `/project/check-project-name/${name}`
   );
-  console.log(response.data.data);
+  
   return response.data;
 };
 
@@ -135,7 +137,7 @@ export const deleteProject = async (projectId: string) => {
   const response = await axiosInstance.delete(
     `/project/delete-project/${projectId}`
   );
-  console.log(response.data);
+  
   return response.data;
 };
 
@@ -145,7 +147,7 @@ export const updateProfile = async (data: {
   newPassword: string;
 }) => {
   const response = await axiosInstance.put("/user/update-profile", data);
-  console.log(response.data);
+  
   return response.data;
 };
 
@@ -156,7 +158,7 @@ export const checkUsername = async (username: string) => {
 
 export const deleteProfile = async (userId: string) => {
   const response = await axiosInstance.delete(`/user/delete-profile/${userId}`);
-  console.log(response.data);
+  
   return response.data;
 };
 // security stats
@@ -241,7 +243,7 @@ export const getLogs = async (projectId: string, filter: string) => {
   const response = await axiosInstance.get(`/project/get-logs/${projectId}`, {
     params: { filter },
   });
-  console.log(response.data);
+  
   return response.data;
 }
 
@@ -289,9 +291,32 @@ export const getStabilityMetrics = async (projectId: string , filter: string) =>
 };
 
 
+
+//contact
+export const contactUs = async (data:{firstname:string,lastname:string,email:string,message:string}) => {
+  const response = await axiosInstance.post("/user/contact", data);
+  console.log(response.data);
+  return response.data;
+}
+
 //faqs routes
 
 export const getTopFaqs = async () => {
   const response = await api.get("/faq/get-top-faqs");
   return response.data;
-};  
+};
+
+export const searchFaqs = async (query: string) => {
+  const response = await api.get(`/faq/get-search-faqs?query=${query}`);
+  return response.data;
+};
+
+export const getAISuggestion = async (query: string) => {
+  const response = await api.get(`/faq/get-ai-suggestion?query=${query}`);
+  return response.data.suggestion;
+};
+
+export const getAIGeneratedFaq = async (query: string) => {
+  const response = await api.get(`/faq/get-ai-generated-faqs?query=${query}`);
+  return response.data.data;
+};
