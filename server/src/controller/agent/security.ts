@@ -8,8 +8,7 @@ import { SecurityLogPayload } from "../../lib/types/type";
 import getTimeRange from "../../lib/util/getTimeRange";
 import checkProjectOwnership from "../../lib/util/checkProjectOwnership";
 import Notification from "../../model/notiModel"; 
-import { sendNotification } from "../../jobs/socket";
-import { Server } from "socket.io";
+import { io } from "../../socket";
 
 const handleIncomingSecurity = async (
   req: Request,
@@ -62,9 +61,7 @@ const handleIncomingSecurity = async (
           userAgent: security.userAgent,
         }
     }
-    Notification.create(notification)
-    const io = req.app.get("io") as Server;
-    sendNotification(io, project.user.toString(), notification);
+    io.emit("notification", notification);
   }
 
     if (security.isUnusual) {
@@ -79,9 +76,7 @@ const handleIncomingSecurity = async (
           userAgent: security.userAgent,
         },
       };
-      Notification.create(notification)
-      const io = req.app.get("io") as Server;
-      sendNotification(io, project.user.toString(), notification);
+      io.emit("notification", notification);
     }
   }
 

@@ -1,19 +1,32 @@
 "use client"
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { FiBell } from 'react-icons/fi';
 import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { getProjectById } from '@/lib/api';
 import { Project } from '@/lib/interface';
-import { useUserStore } from '@/lib/stores/userStore';
+import { useNotificationStore } from '@/lib/stores/notificationStore';
+import { useAuthStore } from '@/lib/stores/authStore';
 const MonitoringNavbar = () => {
+   const { notifications, initializeSocket } = useNotificationStore();
+    const token = localStorage.getItem("token");
+    const { user } = useAuthStore();
     const { projectID } = useParams<{ projectID: string }>();
     const { data: project } = useQuery<Project>({
       queryKey: ["project", projectID],
       queryFn: () => getProjectById(projectID),
     });
-    const {user}= useUserStore();
+
+     useEffect(() => {
+        if (user && token) {
+          initializeSocket(user._id, token);
+        }
+      }, [user, token, initializeSocket]);
+    
+      useEffect(() => {
+        console.log("notification from home", notifications);
+      }, [notifications]);
   return (
     <nav className="fixed top-0 left-64 w-[calc(87%-36px)] bg-white shadow-md flex items-center justify-between px-10 py-3">
       <div className="flex items-center">

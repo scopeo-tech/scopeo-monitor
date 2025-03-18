@@ -9,8 +9,11 @@ import CreateProjectModal from "../modal/createProjectModal";
 import { FiEdit, FiEye, FiEyeOff } from "react-icons/fi";
 import { FaCopy } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { useNotificationStore } from "@/lib/stores/notificationStore";
 
 const DefaultPage: FC = () => {
+  const { notifications, initializeSocket } = useNotificationStore();
+  const token = localStorage.getItem("token");
   const [formattedDate, setFormattedDate] = useState<string>("");
   const [day, setDay] = useState<string>("");
   const [visiblePassKeys, setVisiblePassKeys] = useState<Record<string, boolean>>({});
@@ -25,6 +28,15 @@ const DefaultPage: FC = () => {
     queryFn: getUserProjects,
   });
 
+  useEffect(() => {
+    if (user && token) {
+      initializeSocket(user._id, token);
+    }
+  }, [user, token, initializeSocket]);
+
+  useEffect(() => {
+    console.log("notification from home", notifications);
+  }, [notifications]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -133,13 +145,13 @@ const DefaultPage: FC = () => {
               {Array.isArray(projects) &&
                 projects.map((project: Project) => (
                   <tr key={project._id} className="border-b text-sm hover:bg-gray-50">
-                    <td className="py-4 px-4 text-gray-700 cursor-pointer" 
+                    <td className="py-4 px-4 text-gray-700 cursor-pointer"
                       onClick={() => router.push(`/${project._id}/health`)}>{project.name}</td>
                     <td className="py-4 px-4 ml-8">
                       <span
                         className={`inline-block w-2 h-2 rounded-full hover: ${project.status.connectionStatus
-                            ? "bg-green-500"
-                            : "bg-red-500"
+                          ? "bg-green-500"
+                          : "bg-red-500"
                           }`}
                       ></span>
                     </td>
@@ -158,7 +170,7 @@ const DefaultPage: FC = () => {
                         <>
                           {passKeys[project._id]}
                           <button
-                            onClick={() => handleCopy(passKeys[project._id] || "", project._id,"pass")}
+                            onClick={() => handleCopy(passKeys[project._id] || "", project._id, "pass")}
                             className="ml-2 text-gray-300 hover:text-gray-500 focus:outline-none"
                           >
                             <FaCopy size={16} />
