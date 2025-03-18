@@ -7,6 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 import { contactUs } from "@/lib/api";
 import Image from "next/image";
 import Navbar from "@/components/layout/navbar/navbar";
+import LoadingButton from "../ui/loadingButton";
 
 
 
@@ -189,13 +190,13 @@ const ContactPage = () => {
               )}
             </div>
             
-            <button
+            <LoadingButton
               type="submit"
-              className="bg-green-500 text-white py-3 px-6 rounded hover:bg-green-600 transition"
-              disabled={mutation.isPending}
-            >
-              {mutation.isPending ? "SENDING..." : "SEND MESSAGE"}
-            </button>
+              isLoading={mutation.isPending}
+              className="bg-green-500 text-white py-3 px-6 rounded hover:bg-green-600 transition">
+                SEND MESSAGE
+            </LoadingButton>
+
           </form>
         </div>
       </div>

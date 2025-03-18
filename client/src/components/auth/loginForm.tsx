@@ -14,6 +14,7 @@ import { getSession, signIn, useSession } from "next-auth/react";
 import { useNotificationStore } from "@/lib/stores/notificationStore";
 import axios from "axios";
 import Link from "next/link";
+import LoadingButton from "../ui/loadingButton";
 
 const LoginForm: FC = () => {
   const [loading, setLoading] = useState(false);
@@ -193,13 +194,14 @@ const LoginForm: FC = () => {
                 <div className="text-right text-sm text-gray-400 cursor-pointer hover:text-green-500 mt-2">
                   Forgot Password?
                 </div>
-                <button
+                <LoadingButton
                   type="submit"
-                  className="w-full bg-green-500 text-white py-3 rounded-full hover:bg-green-600 transition mt-4"
-                  disabled={isSubmitting || loading}
-                >
-                  {loading ? "Logging in..." : "Login"}
-                </button>
+                  isLoading={isSubmitting || loading}
+                  className="w-full bg-green-500 text-white py-3 rounded-full hover:bg-green-600 transition mt-4">
+                    Login
+                </LoadingButton>
+
+                
               </Form>
             )}
           </Formik>
