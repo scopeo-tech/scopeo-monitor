@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getLogs } from '@/lib/api';
 import { useParams } from 'next/navigation';
+import RecentLogsSkeleton from '../skeltons/logsSkeleton';
 
 
 const timeFilters = [
@@ -26,7 +27,7 @@ const Activity = () => {
 
     const logs = data?.data?.slice(0, 50) || [];
 
-    if (isLoading) return <p>Loading logs...</p>;
+    if (isLoading) return <RecentLogsSkeleton/>;
     if (isError) {
         return <p className="text-red-500">Error fetching logs.</p>;
     }

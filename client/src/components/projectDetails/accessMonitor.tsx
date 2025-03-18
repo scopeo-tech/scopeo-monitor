@@ -10,6 +10,7 @@ import LogsPage from './helper/loginLIst';
 import UnusualLoginSummary, { UnusualLoginSummaryProps } from './helper/unusualSummery';
 import LoginSummary, { LoginSummaryProps } from './helper/logSummery';
 import BruteForceSummary, { BruteForceSummaryProps } from './helper/failSummery';
+import AccessMonitorSkeleton from '../skeltons/accessMonitoringSkeleton';
 
 const loginOptions = [
   { label: "All Logins", value: "allLogins", api: allLogins },
@@ -86,6 +87,9 @@ const AccessMonitor = () => {
     setSelectedLoginType(option);
     setDropdown(false);
   };
+
+  if (isStatsLoading || isLoginDataLoading) return <AccessMonitorSkeleton />;
+
   return (
     <div className='pb-2 m-0 text-gray-600'>
       <Cards stats={stats} isLoading={isStatsLoading as boolean} />

@@ -29,6 +29,7 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import React from "react";
 import ErrorLogCard from "../ui/ErrorLogs";
 import { ErrorLog } from "@/lib/interface";
+import ErrorDashboardSkeleton from "../skeltons/errorTrackingSkeleton";
 
 const COLORS = ["#90BAAD", "#689689", "#B0CA87", "#ADF6B1"];
 
@@ -152,7 +153,7 @@ function ErrorTrack() {
     ]);
   };
 
-  if (isLoading) return <p>Loading error data...</p>;
+  if (isLoading) return <ErrorDashboardSkeleton/>;
   if (!projectID) return <p>No project selected.</p>;
 
   return (
