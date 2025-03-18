@@ -48,11 +48,11 @@ const handleIncomingSecurity = async (
 
   // Check if notifications are enabled for this project
   if (project.notificationStatus) {
-    const notifications = [];
 
+    let notification = {}
     if (security.isBruteForce) {
-      notifications.push({
-        message: `Brute force attack detected from ${security.ip}`,
+      notification = {
+        message: "Brute force attack detected"+security.ip + " " + security.userAgent,
         user: project.user,
         project: project._id,
         type: "brute_force",
@@ -60,13 +60,16 @@ const handleIncomingSecurity = async (
         metadata: {
           ip: security.ip,
           userAgent: security.userAgent,
-        },
-      });
+        }
     }
+    Notification.create(notification)
+    const io = req.app.get("io") as Server;
+    sendNotification(io, project.user.toString(), notification);
+  }
 
     if (security.isUnusual) {
-      notifications.push({
-        message: `Unusual login attempt detected: ${security.unusualReason}`,
+      notification = {
+        message: "Unusual login detected",
         user: project.user,
         project: project._id,
         type: "unusual_login",
@@ -75,18 +78,10 @@ const handleIncomingSecurity = async (
           ip: security.ip,
           userAgent: security.userAgent,
         },
-      });
-    }
-
-    if (notifications.length > 0) {
-      const savedNotifications = await Notification.insertMany(notifications);
-
-
+      };
+      Notification.create(notification)
       const io = req.app.get("io") as Server;
-      // Emit notifications to the user via Socket.IO
-      savedNotifications.forEach((notification)=>{
-        sendNotification(io, project.user.toString(), notification);
-      })
+      sendNotification(io, project.user.toString(), notification);
     }
   }
 
