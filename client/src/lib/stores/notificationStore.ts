@@ -63,7 +63,4 @@ export const useNotificationStore = create<NotificationState>((set) => {
       }
     },
   };
-<<<<<<< HEAD
-});
-=======
 });
