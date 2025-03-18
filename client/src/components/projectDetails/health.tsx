@@ -19,9 +19,6 @@ import {
   TrafficMetrics,
   StabilityMetrics,
 } from "@/lib/interface";
-import SystemMetricsSkeleton from "../skeltons/systemMetricsSkeleton";
-import PerformanceMetricsSkeleton from "../skeltons/performanceSkeleton";
-import ServerMetricsSkeleton from "../skeltons/serverSkeleton";
 import SkeletonMetrics from "../skeltons/systemMetricsSkeleton";
 
 
@@ -112,7 +109,7 @@ const Health = () => {
   if (perfLoading || serverLoading || systemLoading || trafficLoading || stabilityLoading) {
     return <SkeletonMetrics/>;
   }
-  
+
   if (!projectID || typeof projectID !== "string") {
     return <div>Invalid project ID</div>;
   }
