@@ -9,6 +9,7 @@ import CreateProjectModal from "../modal/createProjectModal";
 import { FiEdit, FiEye, FiEyeOff } from "react-icons/fi";
 import { FaCopy } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import TableSkeleton from "../skeltons/homePageTable";
 
 const DefaultPage: FC = () => {
   const [formattedDate, setFormattedDate] = useState<string>("");
@@ -116,7 +117,7 @@ const DefaultPage: FC = () => {
 
       <div className="mt-3 bg-white shadow-sm rounded-lg border border-gray-200 overflow-hidden">
         {isLoading ? (
-          <p className="p-4">Loading projects...</p>
+          <TableSkeleton />
         ) : isError ? (
           <p className="p-4 text-red-500">Error fetching projects!</p>
         ) : (

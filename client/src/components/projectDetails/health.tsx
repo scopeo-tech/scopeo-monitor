@@ -19,6 +19,7 @@ import {
   TrafficMetrics,
   StabilityMetrics,
 } from "@/lib/interface";
+import SkeletonMetrics from "../skeltons/systemMetricsSkeleton";
 
 
 const getHealthColor = (status : string) => {
@@ -106,8 +107,9 @@ const Health = () => {
   });
 
   if (perfLoading || serverLoading || systemLoading || trafficLoading || stabilityLoading) {
-    return <div>Loading data...</div>;
+    return <SkeletonMetrics/>;
   }
+
   if (!projectID || typeof projectID !== "string") {
     return <div>Invalid project ID</div>;
   }
