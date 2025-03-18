@@ -304,5 +304,19 @@ export const contactUs = async (data:{firstname:string,lastname:string,email:str
 export const getTopFaqs = async () => {
   const response = await api.get("/faq/get-top-faqs");
   return response.data;
-};  
+};
 
+export const searchFaqs = async (query: string) => {
+  const response = await api.get(`/faq/get-search-faqs?query=${query}`);
+  return response.data;
+};
+
+export const getAISuggestion = async (query: string) => {
+  const response = await api.get(`/faq/get-ai-suggestion?query=${query}`);
+  return response.data.suggestion;
+};
+
+export const getAIGeneratedFaq = async (query: string) => {
+  const response = await api.get(`/faq/get-ai-generated-faqs?query=${query}`);
+  return response.data.data;
+};
