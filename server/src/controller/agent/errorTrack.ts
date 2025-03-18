@@ -207,6 +207,7 @@ const getCommonError = async (
     route: mostCommonError._id.route,
     message: mostCommonError._id.message,
     count: mostCommonError.count,
+    firstSeen: mostCommonError.firstOccurrence,
   });
 };
 
@@ -236,6 +237,7 @@ const getLatestError = async (
   }
 
   res.status(200).json({
+    id: latestError._id,
     statusCode: latestError.statusCode,
     method: latestError.method,
     route: latestError.route,
