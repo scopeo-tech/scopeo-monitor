@@ -8,7 +8,7 @@ import { getProjectById, markAsRead } from "@/lib/api";
 import { Project } from "@/lib/interface";
 import { useNotificationStore } from "@/lib/stores/notificationStore";
 import { useAuthStore } from "@/lib/stores/authStore";
-import NotificationModal from "@/components/modal/notification"; // Import the modal
+import NotificationModal from "@/components/modal/notification";
 
 const MonitoringNavbar = () => {
   const { notifications, initializeSocket, clearNotifications } = useNotificationStore();
@@ -32,7 +32,7 @@ const MonitoringNavbar = () => {
     setIsOpen((prev) => !prev);
 
     try {
-      if (isOpen) return; // Prevent duplicate API calls when closing
+      if (isOpen) return;
 
       if (projectID) {
         await markAsRead(projectID);
@@ -44,7 +44,7 @@ const MonitoringNavbar = () => {
     }
   };
 
-  // Filter notifications only for the current project
+
   const projectNotifications = notifications.filter((n) => n.project === projectID);
 
   return (

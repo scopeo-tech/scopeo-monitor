@@ -60,12 +60,12 @@ const Navbar: FC = () => {
       </div>
 
       {user ? (
-        <div className="w-8 h-8 bg-rose-500 text-white flex items-center justify-center rounded-full text-lg">
+        <div className="w-8 h-8 cursor-pointer bg-rose-500 text-white flex items-center justify-center rounded-full text-lg">
           {user.username[0].toUpperCase()}
         </div>
       ) : (
         <Link href="/auth/login">
-          <button className="bg-emerald-500 text-white px-4 py-2 rounded-full hover:bg-emerald-600 transition-colors">
+          <button className="bg-emerald-500 text-white cursor-pointer px-4 py-2 rounded-full hover:bg-emerald-600 transition-colors">
             Sign In
           </button>
         </Link>
