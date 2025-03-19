@@ -8,7 +8,7 @@ import { getProjectById, markAsRead } from "@/lib/api";
 import { Project } from "@/lib/interface";
 import { useNotificationStore } from "@/lib/stores/notificationStore";
 import { useAuthStore } from "@/lib/stores/authStore";
-import NotificationModal from "@/components/modal/notification";
+import NotificationModal from "@/components/modal/notification"; 
 
 const MonitoringNavbar = () => {
   const { notifications, initializeSocket, clearNotifications } = useNotificationStore();
@@ -32,8 +32,6 @@ const MonitoringNavbar = () => {
     setIsOpen((prev) => !prev);
 
     try {
-      if (isOpen) return;
-
       if (projectID) {
         await markAsRead(projectID);
       }
@@ -44,11 +42,10 @@ const MonitoringNavbar = () => {
     }
   };
 
-
   const projectNotifications = notifications.filter((n) => n.project === projectID);
 
   return (
-    <nav className="fixed top-0 left-64 w-[calc(87%-36px)] bg-white shadow-md flex items-center justify-between px-10 py-3">
+    <nav className="fixed top-0 left-64 w-[calc(87%-36px)] bg-white shadow-md flex items-center z-50 justify-between px-10 py-3">
       <div className="flex items-center">
         <span className="text-gray-600 text-lg font-semibold">{project?.name}</span>
       </div>

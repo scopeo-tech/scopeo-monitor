@@ -72,18 +72,21 @@ function ErrorTrack() {
   } = useQuery({
     queryKey: ["errorStats", projectID, filter],
     queryFn: () => errorStats(projectID, filter),
+    refetchInterval: 6000,
     enabled: !!projectID,
   });
 
   const { data: latestError, refetch: latestErrorRefetch } = useQuery({
     queryKey: ["latestErrors", projectID, filter],
     queryFn: () => latestErrors(projectID, filter),
+    refetchInterval: 6000,
     enabled: !!projectID,
   });
 
   const { data: commonErrors, refetch: commonErrorsRefetch } = useQuery({
     queryKey: ["commonErrors", projectID, filter],
     queryFn: () => commonErros(projectID, filter),
+    refetchInterval: 6000,
     enabled: !!projectID,
   });
 
@@ -98,6 +101,7 @@ function ErrorTrack() {
   } = useQuery({
     queryKey: ["errorMethods", projectID, filter],
     queryFn: () => fetchErrorMethods(projectID, filter),
+    refetchInterval: 6000,
     enabled: !!projectID,
   });
 

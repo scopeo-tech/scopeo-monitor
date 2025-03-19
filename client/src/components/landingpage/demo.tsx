@@ -9,8 +9,7 @@ import accessdash from "@/assets/accessdash.jpg";
 import logs from "@/assets/logs.jpg";
 import health from "@/assets/health.jpeg";
 import { useRouter } from "next/navigation";
-
-
+import { motion } from "framer-motion";
 
 function DashboardDemo() {
     const [activeIndex, setActiveIndex] = useState(0);
@@ -52,28 +51,106 @@ function DashboardDemo() {
     };
 
     return (
-        <div className="w-full px-10 py-24 relative overflow-hidden bg-gradient-to-b from-white to-gray-50">
+        <motion.div 
+            className="w-full px-10 py-24 relative overflow-hidden bg-gradient-to-b from-white to-gray-50"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.8 }}
+        >
             {/* Title Section */}
-            <div className="text-center mb-12">
-                <h1 className="text-5xl font-bold text-black">Powerful</h1>
-                <h1 className="text-5xl text-emerald-500 font-bold mb-4">Dashboards</h1>
-                <p className="font-semibold text-[#515151] max-w-xl mx-auto">
+            <motion.div 
+                className="text-center mb-12"
+                initial={{ opacity: 0, y: -20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+            >
+                <motion.h1 
+                    className="text-5xl font-bold text-black"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 0.3 }}
+                >
+                    Powerful
+                </motion.h1>
+                <motion.h1 
+                    className="text-5xl text-emerald-500 font-bold mb-4"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 0.5 }}
+                >
+                    Dashboards
+                </motion.h1>
+                <motion.p 
+                    className="font-semibold text-[#515151] max-w-xl mx-auto"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 0.7 }}
+                >
                     Visualize your server performance, security, and health with our intuitive dashboards that provide actionable insights.
-                </p>
-            </div>
+                </motion.p>
+            </motion.div>
 
             {/* Background Elements */}
-            <FloatingCircle className="w-32 border-emerald-600 border-2 top-20 right-20 opacity-20 h-32" />
-            <IoSettingsSharp className="absolute text-6xl text-emerald-700 top-40 left-20 opacity-20" />
-            <div className="w-16 h-16 bg-emerald-200 rounded-md absolute top-1/3 left-1/4 opacity-20" />
-            <div className="h-20 w-20 rounded-full bg-green-300 absolute bottom-20 right-1/4 opacity-30" />
-            <div className="w-24 h-24 bg-emerald-700 rounded-md absolute bottom-40 left-20 opacity-10" />
+            <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 0.2 }}
+                transition={{ duration: 1.5, delay: 0.3 }}
+                whileHover={{ scale: 1.2, rotate: 45 }}
+                className="w-32 border-emerald-600 border-2 top-20 right-20 h-32 absolute"
+            >
+                <FloatingCircle className="w-full h-full" />
+            </motion.div>
+
+            <motion.div
+                whileInView={{ 
+                    opacity: [0.1, 0.2, 0.1]
+                }}
+                transition={{ 
+                    duration: 15, 
+                    ease: "linear", 
+                    repeat: Infinity 
+                }}
+                className="absolute"
+            >
+                <IoSettingsSharp className="text-6xl text-emerald-700 absolute top-40 left-20" />
+            </motion.div>
+
+            <motion.div 
+                className="w-16 h-16 bg-emerald-200 rounded-md absolute top-1/3 left-1/4"
+                whileInView={{ opacity: [0.1, 0.2, 0.1] }}
+                transition={{ duration: 4, repeat: Infinity }}
+                whileHover={{ scale: 1.2, backgroundColor: "#10b981" }}
+            />
+
+            <motion.div 
+                className="h-20 w-20 rounded-full bg-green-300 absolute bottom-20 right-1/4"
+                whileInView={{ opacity: [0.2, 0.3, 0.2] }}
+                transition={{ duration: 5, repeat: Infinity }}
+                whileHover={{ scale: 1.2, backgroundColor: "#6ee7b7" }}
+            />
+
+            <motion.div 
+                className="w-24 h-24 bg-emerald-700 rounded-md absolute bottom-40 left-20"
+                whileInView={{ opacity: [0.05, 0.1, 0.05] }}
+                transition={{ duration: 6, repeat: Infinity }}
+                whileHover={{ rotate: 45 }}
+            />
 
             {/* Dashboard Gallery */}
             <div className="relative max-w-6xl mx-auto h-[600px]">
                 {/* Main Active Dashboard */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="relative w-3/4 h-[450px] shadow-2xl rounded-lg overflow-hidden border-8 border-white transform transition-all duration-700">
+                <motion.div 
+                    className="absolute inset-0 flex items-center justify-center"
+                    key={activeIndex}
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                >
+                    <motion.div 
+                        className="relative w-3/4 h-[450px] shadow-2xl rounded-lg overflow-hidden border-8 border-white"
+                        whileHover={{ scale: 1.02 }}
+                        transition={{ duration: 0.3 }}
+                    >
                         <Image
                             src={dashboards[activeIndex].image}
                             alt={dashboards[activeIndex].title}
@@ -82,18 +159,20 @@ function DashboardDemo() {
                             className="rounded-lg"
                             priority
                         />
-                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
+                        <motion.div 
+                            className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6"
+                            initial={{ opacity: 0 }}
+                            whileInView={{ opacity: 1 }}
+                            transition={{ duration: 0.4, delay: 0.3 }}
+                        >
                             <h2 className="text-2xl font-bold text-white">{dashboards[activeIndex].title}</h2>
                             <p className="text-gray-200">{dashboards[activeIndex].description}</p>
-                        </div>
-                    </div>
-                </div>
-
+                        </motion.div>
+                    </motion.div>
+                </motion.div>
 
                 {dashboards.map((dashboard, index) => {
-
                     if (index === activeIndex) return null;
-
 
                     const positions = [
                         "bottom-[-50px] left-[10%] w-1/4 h-[180px] rotate-[-5deg]",
@@ -101,14 +180,21 @@ function DashboardDemo() {
                         "top-[35%] right-[-40px] w-1/4 h-[160px] rotate-[8deg]"
                     ];
 
-
                     const positionIndex = (index - activeIndex - 1 + dashboards.length) % positions.length;
 
                     return (
-                        <div
+                        <motion.div
                             key={dashboard.id}
-                            className={`absolute cursor-pointer ${positions[positionIndex]} shadow-lg border-4 border-white rounded-lg overflow-hidden z-10 transition-all duration-500 opacity-80 hover:opacity-100 hover:scale-105`}
+                            className={`absolute cursor-pointer ${positions[positionIndex]} shadow-lg border-4 border-white rounded-lg overflow-hidden z-10`}
                             onClick={() => setActiveIndex(index)}
+                            initial={{ opacity: 0 }}
+                            whileInView={{ opacity: 0.8 }}
+                            transition={{ duration: 0.5, delay: 0.2 * (index + 1) }}
+                            whileHover={{ 
+                                opacity: 1, 
+                                scale: 1.05,
+                                boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
+                            }}
                         >
                             <Image
                                 src={dashboard.image}
@@ -117,48 +203,64 @@ function DashboardDemo() {
                                 objectFit="cover"
                                 className="rounded-lg"
                             />
-                        </div>
+                        </motion.div>
                     );
                 })}
 
                 {/* Navigation Buttons */}
-                <button
+                <motion.button
                     className="absolute top-1/2 left-0 -translate-y-1/2 w-12 h-12 bg-emerald-500 hover:bg-emerald-600 rounded-full flex items-center justify-center text-white shadow-lg z-20 transition-all duration-300"
                     onClick={prevDashboard}
+                    whileHover={{ scale: 1.1, backgroundColor: "#059669" }}
+                    whileTap={{ scale: 0.95 }}
                 >
                     <FaArrowLeft />
-                </button>
-                <button
+                </motion.button>
+                
+                <motion.button
                     className="absolute top-1/2 right-0 -translate-y-1/2 w-12 h-12 bg-emerald-500 hover:bg-emerald-600 rounded-full flex items-center justify-center text-white shadow-lg z-20 transition-all duration-300"
                     onClick={nextDashboard}
+                    whileHover={{ scale: 1.1, backgroundColor: "#059669" }}
+                    whileTap={{ scale: 0.95 }}
                 >
                     <FaArrowRight />
-                </button>
+                </motion.button>
 
                 {/* Indicator Dots */}
-                <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                <motion.div 
+                    className="absolute bottom-0 left-1/2 transform -translate-x-1/2 flex space-x-2"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 0.8 }}
+                >
                     {dashboards.map((_, index) => (
-                        <button
+                        <motion.button
                             key={index}
-                            className={`w-3 h-3 rounded-full transition-all duration-300 ${index === activeIndex ? "bg-emerald-500 w-6" : "bg-gray-300"
-                                }`}
+                            className={`h-3 rounded-full transition-all duration-300 ${index === activeIndex ? "bg-emerald-500 w-6" : "bg-gray-300 w-3"}`}
                             onClick={() => setActiveIndex(index)}
+                            whileHover={{ scale: 1.2 }}
+                            whileTap={{ scale: 0.9 }}
                         />
                     ))}
-                </div>
+                </motion.div>
             </div>
 
-
-            <div className="text-center my-20">
-                <button
+            <motion.div 
+                className="text-center my-20"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ duration: 0.6, delay: 1 }}
+            >
+                <motion.button
                     onClick={() => router.push("/auth/login")}
-                    className="py-2 min-w-36 w-52 hover:w-96 hover:bg-emerald-600 transition-all duration-300 ease-out rounded-3xl bg-emerald-500 text-white"
+                    className="py-2 min-w-36 w-52 rounded-3xl bg-emerald-500 text-white"
+                    whileHover={{ width: "24rem", backgroundColor: "#059669" }}
+                    whileTap={{ scale: 0.98 }}
                 >
                     See All Features
-                </button>
-
-            </div>
-        </div>
+                </motion.button>
+            </motion.div>
+        </motion.div>
     );
 }
 
