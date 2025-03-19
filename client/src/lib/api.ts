@@ -246,7 +246,20 @@ export const getLogs = async (projectId: string, filter: string) => {
   return response.data;
 }
 
+export const getErrorAnalysis = async (errorMessage: string ) => {
+  const response = await axiosInstance.post("/project/get-error-analysis", {errorMessage});
+  return response.data;
+};
 
+export const resolveError = async (id: string) => {
+  const response = await axiosInstance.post(`/project/resolve-error/${id}`);
+  return response.data;
+};
+
+export const unResolveError = async (id: string) => {
+  const response = await axiosInstance.post(`/project/unresolve-error/${id}`);
+  return response.data;
+}
 // perfomance
 
 // Performance Metrics
@@ -330,3 +343,4 @@ export const markAsRead = async(projectID: string) => {
   const response = await axiosInstance.post(`/project/mark-as-read/${projectID}`);
   return response.data;
 }
+

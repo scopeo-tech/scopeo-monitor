@@ -33,6 +33,7 @@ export interface ErrorLog {
   projectId?: string;
   __v?: number;
   isHighlighted?: boolean; 
+  resolved?: boolean;
 }
 
 export interface Log {
@@ -174,4 +175,10 @@ export interface Notification {
   status: "unread" | "read";
   createdAt: string;
   updatedAt: string;
+}
+
+export interface AIErrorAnalysisResponse {
+  summary: string;
+  causes: string[];
+  fixes: string[];
 }
