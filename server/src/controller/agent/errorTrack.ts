@@ -5,6 +5,7 @@ import Error from "../../model/errorModel";
 import {AuthenticatedRequest, ErrorLogPayload} from "../../lib/types/type"
 import mongoose from "mongoose";
 import checkProjectOwnership from "../../lib/util/checkProjectOwnership";
+import { AIErrorAnalysis } from "../../lib/util/ai";
 
 const { ObjectId } = mongoose.Types;
 
@@ -324,4 +325,51 @@ const getAllErrors = async (req: Request, res: Response, next: NextFunction): Pr
 };
 
 
-export { getErrorStats, getCommonError, getLatestError, getErrorMethodPercentages, getAllErrors };
+const getAiErrorAnalysis = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const { errorMessage } = req.body as { errorMessage: string };
+  if (!errorMessage) {
+    return next(new CustomError(400, "Error message is required"));
+  }
+  try {
+    const response = await AIErrorAnalysis(errorMessage);
+    res.status(200).json(response);
+  } catch (error) {
+    console.error("AI Error:", error);
+    return next(new CustomError(500, "AI Error"));
+  }
+};
+
+const resolveError = async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    const updatedError = await Error.findByIdAndUpdate(
+      id,
+      { resolved: true },
+      { new: true }
+    );
+
+    if (!updatedError) {
+      return res.status(404).json({ message: "Error not found" });
+    }
+
+    res.status(200).json(updatedError);
+};
+
+const unResolveError = async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    const updatedError = await Error.findByIdAndUpdate(
+      id,
+      { resolved: false },
+      { new: true }
+    );
+
+    if (!updatedError) {
+      return res.status(404).json({ message: "Error not found" });
+    }
+
+    res.status(200).json(updatedError);
+};
+
+
+export { getErrorStats, getCommonError, getLatestError, getErrorMethodPercentages, getAllErrors, getAiErrorAnalysis, resolveError, unResolveError};
