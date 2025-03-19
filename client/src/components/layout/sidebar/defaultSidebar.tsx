@@ -8,6 +8,7 @@ import { FiEdit } from "react-icons/fi";
 import CreateProjectModal from "@/components/modal/createProjectModal";
 import LogoutModal from "@/components/modal/logoutModal";
 import Link from "next/link";
+import SidebarSkeleton from "@/components/skeltons/sidebarSkeleton";
 
 const Sidebar: FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,7 +34,7 @@ const Sidebar: FC = () => {
     return `${day}-${month}-${year}`;
   };
 
-  if (isLoading || countLoading) return <div>Loading...</div>;
+  if (isLoading || countLoading) return <SidebarSkeleton/>;
   if (isError || countError) return <div>Error</div>;
 
   return (

@@ -5,6 +5,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { updateProject, getUserProjects, checkProjectName ,deleteProject} from "@/lib/api";
 import { Project } from "@/lib/interface";
 import { FiAlertTriangle } from "react-icons/fi";
+import LoadingButton from "@/components/ui/loadingButton";
 
 export default function ProjectPage() {
   const [selectedProject, setSelectedProject] = useState("stepprime-ecommerce");
@@ -187,13 +188,13 @@ export default function ProjectPage() {
         <p className="text-gray-600 text-sm">
           Once deleted, this project and all its associated data will be permanently removed and cannot be recovered. Please confirm before proceeding.
         </p>
-        <button 
-            onClick={handleDelete}
-            className="mt-4 bg-red-600 text-white px-4 py-2 rounded-md"
-            disabled={deleteMutation.isPending}
-          >
-            {deleteMutation.isPending ? "Deleting..." : "Delete Project"}
-      </button>
+      <LoadingButton
+        onClick={handleDelete}
+        isLoading={deleteMutation.isPending}
+        className="mt-4 bg-red-600 text-white px-4 py-2 rounded-md">
+          Delete Project
+      </LoadingButton>
+
       </div>
     </div>
   );
