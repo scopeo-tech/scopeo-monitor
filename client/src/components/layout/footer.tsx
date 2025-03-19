@@ -41,7 +41,7 @@ const Footer: React.FC = () => {
       message: Yup.string().required("Message is required"),
     }),
     onSubmit: (values) => {
-      setError(""); // Clear previous errors
+      setError(""); 
       mutation.mutate(values);
     },
   });
@@ -126,11 +126,6 @@ const Footer: React.FC = () => {
           </button>
         </form>
       </div>
-
-
-
-
-
       <div className="bg-emerald-500 text-white py-6 px-10 flex flex-col">
   <div className="flex items-center space-x-3 mb-4">
     <div className="w-12 h-12 bg-emerald-500 rounded-lg flex items-center justify-center">
@@ -188,8 +183,7 @@ const Footer: React.FC = () => {
   </div>
 </div>
 {showModal && <SuccessModal onClose={() => setShowModal(false)} isOpen={true} message="Message sent successfully!" />}
-
-    </footer>
+   </footer>
   );
 };
 
