@@ -42,7 +42,6 @@ const MonitoringNavbar = () => {
     }
   };
 
-  
   const projectNotifications = notifications.filter((n) => n.project === projectID);
 
   return (

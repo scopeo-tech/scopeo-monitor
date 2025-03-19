@@ -13,7 +13,6 @@ import { useNotificationStore } from "@/lib/stores/notificationStore";
 import { IoNotificationsSharp } from "react-icons/io5"; 
 import TableSkeleton from "../skeltons/homePageTable";
 
-
 const DefaultPage: FC = () => {
   const { notifications, initializeSocket } = useNotificationStore();
   const token = localStorage.getItem("token");

@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import RecentLogsSkeleton from '../skeltons/logsSkeleton';
 import React, { useEffect, useState } from "react";

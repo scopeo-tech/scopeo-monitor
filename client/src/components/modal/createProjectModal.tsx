@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getApiKey, getPassKey, createProject,checkProjectName } from "@/lib/api";
 import { useAuthStore } from "@/lib/stores/authStore";
 import { AiOutlineClose } from "react-icons/ai"
+import LoadingButton from "../ui/loadingButton";
 
 interface CreateProjectModalProps {
   isOpen: boolean;
@@ -163,13 +164,13 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, onClose
             </div>
           </div>
           <div className="flex justify-center">
-          <button
+          <LoadingButton
             onClick={handleSubmit}
-            disabled={mutation.isPending}
-            className="w-96 py-2 mt-4 bg-green-500 text-white rounded-2xl hover:bg-green-600 transition-colors"
-          >
-            {mutation.isPending ? "Creating..." : "Create Project"}
-          </button>
+            isLoading={mutation.isPending}
+            className="w-96 py-2 mt-4 bg-green-500 text-white rounded-2xl hover:bg-green-600 transition-colors">              
+              Create Project
+          </LoadingButton>
+
           </div>
 
         </div>
