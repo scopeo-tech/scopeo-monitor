@@ -79,7 +79,7 @@ const Sidebar: FC = () => {
           <FaCog />
           <span>Settings</span>
         </Link>
-        <Link href="/home/help"
+        <Link href="/faq"
           className="flex items-center space-x-2 text-white hover:text-white/80">
           <FaQuestionCircle />
           <span>Get Help</span>
