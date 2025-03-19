@@ -46,7 +46,7 @@ const securitySchema = new Schema(
   { timestamps: true }
 );
 
-type ISecurity = InferSchemaType<typeof securitySchema>;
+export type ISecurity = InferSchemaType<typeof securitySchema>;
 
 const Security: Model<ISecurity> = model<ISecurity>("Security", securitySchema);
 export default Security;

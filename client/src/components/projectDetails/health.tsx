@@ -19,6 +19,7 @@ import {
   TrafficMetrics,
   StabilityMetrics,
 } from "@/lib/interface";
+import SkeletonMetrics from "../skeltons/systemMetricsSkeleton";
 
 
 const getHealthColor = (status : string) => {
@@ -106,8 +107,9 @@ const Health = () => {
   });
 
   if (perfLoading || serverLoading || systemLoading || trafficLoading || stabilityLoading) {
-    return <div>Loading data...</div>;
+    return <SkeletonMetrics/>;
   }
+
   if (!projectID || typeof projectID !== "string") {
     return <div>Invalid project ID</div>;
   }
@@ -124,7 +126,6 @@ const Health = () => {
     
     // Create a map to hold data for each hour
     const hourlyDataMap = new Map();
-    
     // Initialize the map with empty data for all hours
     timeIntervals.forEach(hourLabel => {
       hourlyDataMap.set(hourLabel, {
@@ -391,7 +392,7 @@ const Health = () => {
         <h3 className="text-sm font-semibold mb-4">Server Metrics</h3>
         <button onClick={()=>setServerFilter(onFilterClick(serverFilter))} className="font-semibold text-xs text-gray-400">{showTime(serverFilter)}</button>
       </div>
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-4 z-0">
         {/* Labels on the left */}
         <div className="space-y-2 text-xs text-gray-600 font-semibold">
           {pieData.map((item, index) => (

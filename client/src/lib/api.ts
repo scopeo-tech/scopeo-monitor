@@ -15,7 +15,6 @@ export const loginUser = async (data: {
   email?: string;
   password: string;
 }) => {
-  console.log(process.env.NEXT_PUBLIC_API_URL);
   const response = await api.post("/auth/login", data);
   return response.data;
 };
@@ -320,3 +319,14 @@ export const getAIGeneratedFaq = async (query: string) => {
   const response = await api.get(`/faq/get-ai-generated-faqs?query=${query}`);
   return response.data.data;
 };
+
+
+export const getNotification = async(projectID: string) => {
+  const response = await axiosInstance.get(`/project/get-notifications/${projectID}`);
+  return response.data;
+};
+
+export const markAsRead = async(projectID: string) => {
+  const response = await axiosInstance.post(`/project/mark-as-read/${projectID}`);
+  return response.data;
+}

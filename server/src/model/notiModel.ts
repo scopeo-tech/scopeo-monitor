@@ -39,7 +39,7 @@
     { timestamps: true }
     );
 
-    type INotification = InferSchemaType<typeof notificationSchema>;
+    export type INotification = InferSchemaType<typeof notificationSchema>;
 
     const Notification: Model<INotification> = mongoose.model<INotification>(
     "Notification",
