@@ -6,7 +6,7 @@ import {getBruteForceAttempts,getFailedLogins,getTotalLogins,getUnusualLogins,ge
 import { getErrorStats, getCommonError, getErrorMethodPercentages, getLatestError, getAllErrors } from "../controller/agent/errorTrack";
 import { getLogs } from "../controller/agent/logs";
 import { getErrorStabilityMetrics, getPerformanceData, getServerPerformanceMetrics, getSystemHealthMetrics, getTrafficLoadMetrics } from "../controller/agent/performance";
-
+import { getNotifications, markAsRead } from "../controller/project/notificationController";
 
 
 const router = express.Router();
@@ -43,8 +43,11 @@ router
 .get("/get-traffic-metrics/:projectId",tryCatch(getTrafficLoadMetrics))
 .get("/get-stability-metrics/:projectId",tryCatch(getErrorStabilityMetrics))
 
-
 //get serverLogs
 .get("/get-logs/:projectId",tryCatch(getLogs))
+
+//notifications
+.get("/get-notifications/:projectId",tryCatch(getNotifications))
+.post("/mark-as-read/:projectId",tryCatch(markAsRead))
 
 export default router

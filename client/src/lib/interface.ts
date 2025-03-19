@@ -32,6 +32,7 @@ export interface ErrorLog {
   _id?: string;
   projectId?: string;
   __v?: number;
+  isHighlighted?: boolean; 
 }
 
 export interface Log {

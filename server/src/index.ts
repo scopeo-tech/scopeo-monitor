@@ -9,18 +9,22 @@ import userRoutes from "./routes/userRoutes";
 import packageRouter from "./routes/packageRoute";
 import { flagOldStatusesJob, startUptimeCron } from "./jobs/cronJob";
 import faqRouter from "./routes/faqRoutes";
-import { createServer } from "http";
-import { initializeSocket } from "./jobs/socket";
+import { app, server } from "./socket";
 
 dotenv.config();
 
-const app = e();
 dbConnect();
 flagOldStatusesJob();
 startUptimeCron();
 
-app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true,
+  })
+);
 app.use(e.json());
+app.use(e.urlencoded({ extended: true }));
 
 app.use("/api/auth", authRouter);
 app.use("/api/project", projectRouter);
@@ -30,11 +34,8 @@ app.use("/api/faq", faqRouter);
 
 app.use(globalErrorHandler);
 
-const server = createServer(app);
-const io = initializeSocket(server);
-app.set("io", io); 
-
 const port = process.env.PORT || 3001;
+
 server.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

@@ -9,8 +9,14 @@ import CreateProjectModal from "../modal/createProjectModal";
 import { FiEdit, FiEye, FiEyeOff } from "react-icons/fi";
 import { FaCopy } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { useNotificationStore } from "@/lib/stores/notificationStore";
+import { IoNotificationsSharp } from "react-icons/io5"; 
+import TableSkeleton from "../skeltons/homePageTable";
+
 
 const DefaultPage: FC = () => {
+  const { notifications, initializeSocket } = useNotificationStore();
+  const token = localStorage.getItem("token");
   const [formattedDate, setFormattedDate] = useState<string>("");
   const [day, setDay] = useState<string>("");
   const [visiblePassKeys, setVisiblePassKeys] = useState<Record<string, boolean>>({});
@@ -18,13 +24,23 @@ const DefaultPage: FC = () => {
   const [copiedApiKey, setCopiedApiKey] = useState<string | null>(null);
   const [copiedPassKey, setCopiedPassKey] = useState<string | null>(null);
   const { user } = useAuthStore();
+  const [projectWithNotification, setProjectWithNotification] = useState<string[]>([]);
   const router = useRouter();
 
   const { data: projects, isLoading, isError } = useQuery<Project[]>({
     queryKey: ["userProjects"],
     queryFn: getUserProjects,
   });
+  useEffect(() => {
+    if (user && token) {
+      initializeSocket(user._id, token);
+    }
+  }, [user, token, initializeSocket]);
 
+  useEffect(()=>{
+    const projectWithNotification = notifications.map((notification) => notification.project.toString());
+    setProjectWithNotification([...new Set(projectWithNotification)]);
+  },[notifications])
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -116,7 +132,7 @@ const DefaultPage: FC = () => {
 
       <div className="mt-3 bg-white shadow-sm rounded-lg border border-gray-200 overflow-hidden">
         {isLoading ? (
-          <p className="p-4">Loading projects...</p>
+          <TableSkeleton />
         ) : isError ? (
           <p className="p-4 text-red-500">Error fetching projects!</p>
         ) : (
@@ -133,16 +149,19 @@ const DefaultPage: FC = () => {
               {Array.isArray(projects) &&
                 projects.map((project: Project) => (
                   <tr key={project._id} className="border-b text-sm hover:bg-gray-50">
-                    <td className="py-4 px-4 text-gray-700 cursor-pointer" 
+                    <td className="py-4 px-4 text-gray-700 cursor-pointer"
                       onClick={() => router.push(`/${project._id}/health`)}>{project.name}</td>
-                    <td className="py-4 px-4 ml-8">
-                      <span
-                        className={`inline-block w-2 h-2 rounded-full hover: ${project.status.connectionStatus
-                            ? "bg-green-500"
-                            : "bg-red-500"
-                          }`}
-                      ></span>
-                    </td>
+                    <td className="py-4 px-4 flex items-center ml-8">
+  <span
+    className={`inline-block w-2 h-2 rounded-full ${
+      project.status.connectionStatus ? "bg-green-500" : "bg-red-500"
+    }`}
+  ></span>
+  <IoNotificationsSharp
+    className={`ml-2 ${projectWithNotification.includes(project._id) ? "text-yellow-500" : "text-gray-400"}`}
+    size={16}
+  />
+</td>
                     <td className="py-4 px-4 text-gray-600 relative">
                       {project.apiKey}
                       <button
@@ -158,7 +177,7 @@ const DefaultPage: FC = () => {
                         <>
                           {passKeys[project._id]}
                           <button
-                            onClick={() => handleCopy(passKeys[project._id] || "", project._id,"pass")}
+                            onClick={() => handleCopy(passKeys[project._id] || "", project._id, "pass")}
                             className="ml-2 text-gray-300 hover:text-gray-500 focus:outline-none"
                           >
                             <FaCopy size={16} />

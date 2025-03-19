@@ -30,7 +30,7 @@ const logSchema = new Schema({
 },  
 },{ timestamps: true });
 
-type ILog = InferSchemaType<typeof logSchema>;
+export type ILog = InferSchemaType<typeof logSchema>;
 
 const Log:Model<ILog>=mongoose.model("Log", logSchema);
 export default Log 
