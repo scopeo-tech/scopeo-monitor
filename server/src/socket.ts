@@ -5,6 +5,7 @@ import { INotification } from "./model/notiModel";
 import express from "express";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { ILog } from "./model/logModel";
 
 dotenv.config();
 
@@ -62,24 +63,45 @@ io.on("connection", async (socket) => {
   socket.on(
     "notification",
     async (notification : INotification) => {
-      console.log("noti from socket", notification);
       const receiverSocketId = userSocketMap[notification.user.toString() as string];
-      console.log("receiverSocketId", receiverSocketId);
 
       //create notificaion in db
       try {
-        const newNotification = await Notification.create({
-          ...notification
-        });
-        // send notificaion to receiver
+        // send notification to receiver
         if (receiverSocketId) {
-          socket.to(receiverSocketId).emit("notification", newNotification);
+          socket.to(receiverSocketId).emit("notification", notification);
         }
       } catch (error) {
-        console.log("Error creating notificaion", error);
+        console.log("Error creating notification:", error);
+        console.log("Notification data:", notification);
       }
     }
   );
+
+  // logs event handler
+socket.on(
+  "logs",
+  async (logData: ILog,userId:string) => {
+    try {
+      const receiverSocketId = userSocketMap[userId];
+      
+      if (receiverSocketId) {
+        // Emitting to the same user who triggered the security event
+        socket.to(receiverSocketId).emit("logs", logData);
+      }
+      
+      // Optional: You could also log security events or perform additional actions
+      console.log("Log event received:", {
+       ...logData,
+      });
+      
+    } catch (error) {
+      console.log("Error processing security event:", error);
+      console.log("Security data:", logData);
+    }
+  }
+);
+
   socket.on("disconnect", () => {
     const disconnectedUser = Object.keys(userSocketMap).find(
       (key) => userSocketMap[key] === socket.id

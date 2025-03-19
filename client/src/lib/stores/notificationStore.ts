@@ -6,7 +6,7 @@ interface NotificationStore {
   notifications: Notification[];
   socket: Socket | null;
   initializeSocket: (userId: string, token: string) => void;
-  markAsRead: (id: string) => void;
+  clearNotifications: () => void; // Clears all notifications
 }
 
 export const useNotificationStore = create<NotificationStore>((set, get) => ({
@@ -34,12 +34,8 @@ export const useNotificationStore = create<NotificationStore>((set, get) => ({
     set({ socket });
   },
 
-  // Mark a notification as read
-  markAsRead: (id) => {
-    set((state) => ({
-      notifications: state.notifications.map((noti) =>
-        noti._id === id ? { ...noti, status: "read" } : noti
-      ),
-    }));
+  // Clear all notifications
+  clearNotifications: () => {
+    set({ notifications: [] });
   },
 }));

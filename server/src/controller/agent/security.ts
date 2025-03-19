@@ -6,9 +6,10 @@ import Security from "../../model/securityModel";
 import CustomError from "../../lib/util/CustomError";
 import { SecurityLogPayload } from "../../lib/types/type";
 import getTimeRange from "../../lib/util/getTimeRange";
+import Notification from "../../model/notiModel";
 import checkProjectOwnership from "../../lib/util/checkProjectOwnership";
-import Notification from "../../model/notiModel"; 
 import { io } from "../../socket";
+import User from "../../model/userModel";
 
 const handleIncomingSecurity = async (
   req: Request,
@@ -31,6 +32,8 @@ const handleIncomingSecurity = async (
     return next(new CustomError(400, "Missing required fields"));
   }
 
+  // const userId = project.user.toString() as string;
+
   const security = req.body as SecurityLogPayload;
 
   // Manage security log storage
@@ -43,7 +46,9 @@ const handleIncomingSecurity = async (
     await Security.deleteMany({ _id: { $in: oldIds } });
   }
 
-  await Security.create({ project: project._id, ...security });
+  const newSecurity = await Security.create({ project: project._id, ...security });
+
+  // io.emit("security", newSecurity, userId);
 
   // Check if notifications are enabled for this project
   if (project.notificationStatus) {
@@ -61,12 +66,13 @@ const handleIncomingSecurity = async (
           userAgent: security.userAgent,
         }
     }
-    io.emit("notification", notification);
+    const newNotification = await Notification.create(notification);
+    io.emit("notification", newNotification);
   }
 
     if (security.isUnusual) {
       notification = {
-        message: "Unusual login detected",
+        message: "Unusual login detected"+security.ip + " " + security.userAgent,
         user: project.user,
         project: project._id,
         type: "unusual_login",
@@ -76,7 +82,8 @@ const handleIncomingSecurity = async (
           userAgent: security.userAgent,
         },
       };
-      io.emit("notification", notification);
+      const newNotification = await Notification.create(notification);
+      io.emit("notification", newNotification);
     }
   }
 

@@ -10,6 +10,7 @@ import { FiEdit, FiEye, FiEyeOff } from "react-icons/fi";
 import { FaCopy } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useNotificationStore } from "@/lib/stores/notificationStore";
+import { IoNotificationsSharp } from "react-icons/io5"; 
 
 const DefaultPage: FC = () => {
   const { notifications, initializeSocket } = useNotificationStore();
@@ -21,22 +22,23 @@ const DefaultPage: FC = () => {
   const [copiedApiKey, setCopiedApiKey] = useState<string | null>(null);
   const [copiedPassKey, setCopiedPassKey] = useState<string | null>(null);
   const { user } = useAuthStore();
+  const [projectWithNotification, setProjectWithNotification] = useState<string[]>([]);
   const router = useRouter();
 
   const { data: projects, isLoading, isError } = useQuery<Project[]>({
     queryKey: ["userProjects"],
     queryFn: getUserProjects,
   });
-
   useEffect(() => {
     if (user && token) {
       initializeSocket(user._id, token);
     }
   }, [user, token, initializeSocket]);
 
-  useEffect(() => {
-    console.log("notification from home", notifications);
-  }, [notifications]);
+  useEffect(()=>{
+    const projectWithNotification = notifications.map((notification) => notification.project.toString());
+    setProjectWithNotification([...new Set(projectWithNotification)]);
+  },[notifications])
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -147,14 +149,17 @@ const DefaultPage: FC = () => {
                   <tr key={project._id} className="border-b text-sm hover:bg-gray-50">
                     <td className="py-4 px-4 text-gray-700 cursor-pointer"
                       onClick={() => router.push(`/${project._id}/health`)}>{project.name}</td>
-                    <td className="py-4 px-4 ml-8">
-                      <span
-                        className={`inline-block w-2 h-2 rounded-full hover: ${project.status.connectionStatus
-                          ? "bg-green-500"
-                          : "bg-red-500"
-                          }`}
-                      ></span>
-                    </td>
+                    <td className="py-4 px-4 flex items-center ml-8">
+  <span
+    className={`inline-block w-2 h-2 rounded-full ${
+      project.status.connectionStatus ? "bg-green-500" : "bg-red-500"
+    }`}
+  ></span>
+  <IoNotificationsSharp
+    className={`ml-2 ${projectWithNotification.includes(project._id) ? "text-yellow-500" : "text-gray-400"}`}
+    size={16}
+  />
+</td>
                     <td className="py-4 px-4 text-gray-600 relative">
                       {project.apiKey}
                       <button
