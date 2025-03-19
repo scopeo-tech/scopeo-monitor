@@ -11,6 +11,8 @@ import { FaCopy } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useNotificationStore } from "@/lib/stores/notificationStore";
 import { IoNotificationsSharp } from "react-icons/io5"; 
+import TableSkeleton from "../skeltons/homePageTable";
+
 
 const DefaultPage: FC = () => {
   const { notifications, initializeSocket } = useNotificationStore();
@@ -130,7 +132,7 @@ const DefaultPage: FC = () => {
 
       <div className="mt-3 bg-white shadow-sm rounded-lg border border-gray-200 overflow-hidden">
         {isLoading ? (
-          <p className="p-4">Loading projects...</p>
+          <TableSkeleton />
         ) : isError ? (
           <p className="p-4 text-red-500">Error fetching projects!</p>
         ) : (

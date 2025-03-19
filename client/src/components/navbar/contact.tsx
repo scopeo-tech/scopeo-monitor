@@ -7,17 +7,19 @@ import { useMutation } from "@tanstack/react-query";
 import { contactUs } from "@/lib/api";
 import Image from "next/image";
 import Navbar from "@/components/layout/navbar/navbar";
+import SuccessModal from "../modal/successModal";
+import website from "@/assets/website.svg"
 
 
 
 const ContactPage = () => {
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const mutation = useMutation({
     mutationFn: contactUs,
     onSuccess: () => {
-      setSuccess("Message sent successfully!");
+      setShowSuccessModal(true);
       formik.resetForm();
     },
     onError: () => {
@@ -39,7 +41,7 @@ const ContactPage = () => {
       message: Yup.string().required("Message is required"),
     }),
     onSubmit: (values) => {
-      setError(""); // Clear previous errors
+      setError(""); 
       mutation.mutate(values);
     },
   });
@@ -47,17 +49,20 @@ const ContactPage = () => {
   return (
     <div className="min-h-screen flex flex-col">
     <Navbar/>
+    {showSuccessModal && <SuccessModal onClose={() => setShowSuccessModal(false)} isOpen={true} message="Message sent successfully!" />}
+
     {/* Hero Section */}
-    <section className="bg-teal-700 py-16 text-center text-white">
-      <div className="container mx-auto px-4">
-        <h1 className="text-4xl font-bold mb-4">Contact us</h1>
-        <p>Get in touch and let us know how we can help.</p>
-      </div>
-    </section>
+    <section className="relative py-24 text-center text-black bg-cover bg-center" style={{backgroundImage: 'url("")'}}>
+  <div className="absolute inset-0 "></div>
+  <div className="container mx-auto px-4 relative z-10">
+    <h1 className="text-4xl font-bold ">Contact us</h1>
+    <p className="text-lg">Get in touch and let us know how we can help.</p>
+  </div>
+</section>
 
     {/* Contact Information Section */}
-    <section className="py-16">
-      <div className="container mx-auto px-4 flex flex-col md:flex-row">
+    <section className="py-16 mb-12 px-5">
+      <div className="container mx-auto px-4 flex flex-col md:flex-row ">
         <div className="w-full md:w-1/2 mb-8 md:mb-0">
           <h2 className="text-3xl font-bold mb-4">Get in touch</h2>
           <p className="text-gray-600 mb-8">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In vel neque vitae nulla adipiscing elit.</p>
@@ -72,7 +77,7 @@ const ContactPage = () => {
               </div>
               <div>
                 <h3 className="font-bold">Head Office</h3>
-                <p className="text-gray-600">12121 Somewhere World Rd 22<br />City, State</p>
+                <p className="text-gray-600 ">12121 Somewhere World Rd 22<br />City, State</p>
               </div>
             </div>
             
@@ -84,7 +89,7 @@ const ContactPage = () => {
               </div>
               <div>
                 <h3 className="font-bold">Email us</h3>
-                <p className="text-gray-600">info@mocounta.net<br />support@mocounta.net</p>
+                <p className="text-gray-600">scopeotech@gmail.com</p>
               </div>
             </div>
             
@@ -105,17 +110,11 @@ const ContactPage = () => {
         <div className="w-full md:w-1/2 relative">
           {/* Map Image - Using Next.js Image component for better performance */}
           <div className="relative h-64 md:h-full rounded-lg overflow-hidden">
-            <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
+            <div className="absolute inset-0 flex items-center justify-center">
               {/* Replace with proper Next.js Image component */}
               <div className="relative w-full h-full">
-                <Image 
-                  src="/images/map.jpg" 
-                  alt="Location Map" 
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  priority
-                />
-              </div>
+             <Image src={website} alt="website" fill className="object-cover" />
+              </div> 
             </div>
           </div>
           
@@ -127,16 +126,15 @@ const ContactPage = () => {
     </section>
 
     {/* Contact Form Section */}
-    <section className="bg-green-500 py-16">
-      <div className="container mx-auto px-4">
+    <section className="bg-emerald-500 py-16 bg-gradient-to-br from-emerald-500 to-emerald-600 mb-96">
+      <div className="container mx-auto px-4 h-36">
         <div className="text-center text-white mb-8">
-          <h2 className="text-3xl font-bold mb-4">Send us a message</h2>
-          <p className="max-w-xl mx-auto">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In vel neque vitae nulla adipiscing elit.</p>
+          <h2 className="text-3xl font-bold mb-2">Send us a message</h2>
+          <p className="max-w-xl mx-auto text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In vel neque, lacinia nec ullamcorper mattis, pulvinar dapibus leo.</p>
         </div>
         
-        <div className="bg-white p-8 rounded-lg shadow-lg max-w-3xl mx-auto">
-          {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">{error}</div>}
-          {success && <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">{success}</div>}
+        <div className="bg-white p-8 rounded shadow-lg max-w-2xl mx-auto">
+          {error && <div className=" text-red-700 px-4 py-3 rounded mb-4">{error}</div>}
           
           <form onSubmit={formik.handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -144,7 +142,7 @@ const ContactPage = () => {
                 <input
                   type="text"
                   placeholder="First Name"
-                  className="border p-3 rounded w-full"
+                  className="border hover:border-emerald-500 p-3 rounded-2xl w-full"
                   {...formik.getFieldProps("firstname")}
                 />
                 {formik.touched.firstname && formik.errors.firstname && (
@@ -155,7 +153,7 @@ const ContactPage = () => {
                 <input
                   type="text"
                   placeholder="Last Name"
-                  className="border p-3 rounded w-full"
+                  className="border hover:border-emerald-500 p-3 rounded-2xl w-full"
                   {...formik.getFieldProps("lastname")}
                 />
                   {formik.touched.lastname && formik.errors.lastname && (
@@ -163,13 +161,13 @@ const ContactPage = () => {
                 )}
               </div>
             </div>
-            
+
             <div>
               <div>
                 <input
                   type="email"
                   placeholder="Email"
-                  className="border p-3 rounded w-full"
+                  className="border hover:border-emerald-500  p-3 rounded-2xl w-full"
                   {...formik.getFieldProps("email")}
                 />
                 {formik.touched.email && formik.errors.email && (
@@ -177,25 +175,26 @@ const ContactPage = () => {
                 )}
               </div>
             </div>
-            
+
             <div>
               <textarea
                 placeholder="Message"
-                className="border p-3 rounded w-full h-32"
+                className="border p-3 hover:border-emerald-500 rounded-2xl w-full h-32"
                 {...formik.getFieldProps("message")}
               />
               {formik.touched.message && formik.errors.message && (
                 <p className="text-red-500 text-sm mt-1">{formik.errors.message}</p>
               )}
             </div>
-            
+             <div className="text-center">
             <button
               type="submit"
-              className="bg-green-500 text-white py-3 px-6 rounded hover:bg-green-600 transition"
+              className="bg-green-500 text-white  py-2 px-8 rounded-xl hover:bg-green-600 transition"
               disabled={mutation.isPending}
             >
               {mutation.isPending ? "SENDING..." : "SEND MESSAGE"}
             </button>
+            </div>
           </form>
         </div>
       </div>
