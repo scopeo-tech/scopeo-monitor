@@ -39,7 +39,7 @@ const AccessMonitor = () => {
         return <BruteForceSummary {...currentBruteSummary!} />;
     }
   }
-  // Stats query for the pie chart and metrics
+  
   const { data: stats = {
     totalLogins: 0,
     successLogins: 0,
@@ -51,11 +51,14 @@ const AccessMonitor = () => {
   }, isLoading: isStatsLoading } = useQuery({
     queryKey: ["securityStats", projectID, pieTimeRange],
     queryFn: () => securityStats(projectID, pieTimeRange),
-    enabled: !!projectID
+    enabled: !!projectID,
+    refetchInterval: 6000, 
   });
+
   const { data: loginData, isLoading: isLoginDataLoading } = useQuery({
     queryKey: ["loginData", projectID, lineTimeRange, selectedLoginType.value],
     queryFn: () => selectedLoginType.api(projectID, lineTimeRange),
+    refetchInterval: 6000,
     enabled: !!projectID
   });
   useEffect(() => {

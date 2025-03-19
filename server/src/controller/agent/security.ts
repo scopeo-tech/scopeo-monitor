@@ -48,9 +48,6 @@ const handleIncomingSecurity = async (
 
   const newSecurity = await Security.create({ project: project._id, ...security });
 
-  // io.emit("security", newSecurity, userId);
-
-  // Check if notifications are enabled for this project
   if (project.notificationStatus) {
 
     let notification = {}
@@ -85,6 +82,15 @@ const handleIncomingSecurity = async (
       const newNotification = await Notification.create(notification);
       io.emit("notification", newNotification);
     }
+  }
+
+  const notificationCount = await Notification.countDocuments({ project: project._id });
+  if (notificationCount >= 30) {
+    const oldNotifications = await Notification.find({ project: project._id })
+      .sort({ createdAt: 1 })
+      .limit(5);
+    const oldNotificationIds = oldNotifications.map((notification) => notification._id);
+    await Notification.deleteMany({ _id: { $in: oldNotificationIds } });
   }
 
   return res.status(200).json({ status: "success" });

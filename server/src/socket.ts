@@ -13,7 +13,7 @@ interface UserSocketMap {
   [userId: string]: string;
 }
 
-export const userSocketMap: UserSocketMap = {}; // stores the socket id of each user that is connected
+export const userSocketMap: UserSocketMap = {}; 
 console.log(process.env.CLIENT_URL);
 export const app = express();
 export const server = createServer(app);
@@ -51,7 +51,7 @@ io.on("connection", async (socket) => {
     console.log("user disconnected", socket.id);
   });
 
-  // user join event
+  
   socket.on("join", () => {
     console.log("user joined", socket.data.userId);
     userSocketMap[socket.data.userId] = socket.id;
@@ -59,15 +59,15 @@ io.on("connection", async (socket) => {
     console.log(userSocketMap);
   });
 
-  //send notification event
+  
   socket.on(
     "notification",
     async (notification : INotification) => {
       const receiverSocketId = userSocketMap[notification.user.toString() as string];
 
-      //create notificaion in db
+      
       try {
-        // send notification to receiver
+        
         if (receiverSocketId) {
           socket.to(receiverSocketId).emit("notification", notification);
         }
@@ -78,7 +78,7 @@ io.on("connection", async (socket) => {
     }
   );
 
-  // logs event handler
+  
 socket.on(
   "logs",
   async (logData: ILog,userId:string) => {
@@ -86,11 +86,11 @@ socket.on(
       const receiverSocketId = userSocketMap[userId];
       
       if (receiverSocketId) {
-        // Emitting to the same user who triggered the security event
+        
         socket.to(receiverSocketId).emit("logs", logData);
       }
       
-      // Optional: You could also log security events or perform additional actions
+      
       console.log("Log event received:", {
        ...logData,
       });

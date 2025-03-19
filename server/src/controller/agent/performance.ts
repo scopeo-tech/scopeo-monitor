@@ -3,97 +3,197 @@ import Performance from "../../model/performanceModel";
 import Project from "../../model/projectModel";
 import checkProjectOwnership from "../../lib/util/checkProjectOwnership";
 import { NextFunction } from "express-serve-static-core";
+import { io } from "../../socket";
+import Notification from "../../model/notiModel";
 import mongoose from "mongoose";
 
 const { ObjectId } = mongoose.Types;
 
 const handleIncomingPerformance = async (req: Request, res: Response) => {
-    const apiKey = req.headers["x-api-key"];
-    const passKey = req.headers["x-pass-key"];
+  const apiKey = req.headers["x-api-key"];
+  const passKey = req.headers["x-pass-key"];
 
-    if (!apiKey || !passKey) {
-      return res.status(401).json({ message: "API key and Pass key required" });
-    }
+  if (!apiKey || !passKey) {
+    return res.status(401).json({ message: "API key and Pass key required" });
+  }
 
-    const project = await Project.findOne({ apiKey, passKey });
+  const project = await Project.findOne({ apiKey, passKey });
 
-    if (!project) {
-      return res.status(403).json({ message: "Invalid API key or Pass key" });
-    }
+  if (!project) {
+    return res.status(403).json({ message: "Invalid API key or Pass key" });
+  }
 
-    const performanceData = req.body;
+  const performanceData = req.body;
 
-    const performanceCount = await Performance.countDocuments({ projectId: project._id });
+  const performanceCount = await Performance.countDocuments({ projectId: project._id });
 
-    if (performanceCount >= 1500) {
-      const oldPerformances = await Performance.find({ projectId: project._id })
-        .sort({ createdAt: 1 })
-        .limit(60);
-      
-      const oldIds = oldPerformances.map((perf) => perf._id);
-      await Performance.deleteMany({ _id: { $in: oldIds } });
-    }
+  if (performanceCount >= 1500) {
+    const oldPerformances = await Performance.find({ projectId: project._id })
+      .sort({ createdAt: 1 })
+      .limit(60);
+
+    const oldIds = oldPerformances.map((perf) => perf._id);
+    await Performance.deleteMany({ _id: { $in: oldIds } });
+  }
 
 
-    const latestPerformance = await Performance.findOne({ projectId: project._id }).sort({ createdAt: -1 });
+  const latestPerformance = await Performance.findOne({ projectId: project._id }).sort({ createdAt: -1 });
 
-    let updatedUptimePercentage = 100;
-    let status = "up";
-    let gapDuration = 0;
+  let updatedUptimePercentage = 100;
+  let status = "up";
+  let gapDuration = 0;
 
-    if (latestPerformance) {
-      const totalElapsedTime = (Date.now() - latestPerformance.createdAt.getTime()) / 1000;
+  if (latestPerformance) {
+    const totalElapsedTime = (Date.now() - latestPerformance.createdAt.getTime()) / 1000;
 
-      updatedUptimePercentage = totalElapsedTime > 0
-        ? (1 - (latestPerformance.gapDuration / totalElapsedTime)) * 100
-        : 100;
+    updatedUptimePercentage = totalElapsedTime > 0
+      ? (1 - (latestPerformance.gapDuration / totalElapsedTime)) * 100
+      : 100;
 
-      updatedUptimePercentage = Math.max(0, Math.min(100, updatedUptimePercentage));
+    updatedUptimePercentage = Math.max(0, Math.min(100, updatedUptimePercentage));
 
-      status = latestPerformance.status || "up";
-      gapDuration = latestPerformance.gapDuration || 0;
-    }
+    status = latestPerformance.status || "up";
+    gapDuration = latestPerformance.gapDuration || 0;
+  }
 
-    const newPerformance = new Performance({
-      ...performanceData,
-      projectId: project._id,
-      uptimePercentage: updatedUptimePercentage,
-      status: status,
-      gapDuration: gapDuration,
-    });
+  const newPerformance = new Performance({
+    ...performanceData,
+    projectId: project._id,
+    uptimePercentage: updatedUptimePercentage,
+    status: status,
+    gapDuration: gapDuration,
+  });
 
-    await newPerformance.save();
+  await newPerformance.save();
+  const cpuUsage = newPerformance.systemUsage
+    ? newPerformance.systemUsage.cpuUsage.reduce((a, b) => a + b, 0) / newPerformance.systemUsage.cpuUsage.length
+    : 0;
 
-    res.status(201).json({ message: "Performance data saved successfully" });
+  const diskUsage = newPerformance.systemUsage?.diskUsage?.usagePercent ?? 0;
+
+  const memoryUsage = newPerformance.systemUsage
+    ? newPerformance.systemUsage.memoryUsage?.usagePercent
+    : 0;
+
+  if (cpuUsage > 90) {
+    const notification = await Notification.create({
+      message: `High CPU usage detected on ${project.name}`,
+      project: project._id,
+      type: "high_cpu",
+      severity: "critical",
+      metadata: {
+        usage: cpuUsage
+      },
+      status: "unread",
+      user: project.user
+    })
+    io.emit("notification", notification)
+  }
+  if (cpuUsage > 80) {
+    const notification = await Notification.create({
+      message: `High CPU usage detected on ${project.name}`,
+      project: project._id,
+      type: "high_cpu",
+      severity: "warning",
+      metadata: {
+        usage: cpuUsage
+      },
+      status: "unread",
+      user: project.user
+    })
+    io.emit("notification", notification)
+  }
+
+  if (diskUsage > 90) {
+    const notification = await Notification.create({
+      message: `High Disk usage detected on ${project.name}`,
+      project: project._id,
+      type: "high_disk",
+      severity: "critical",
+      metadata: {
+        usage: diskUsage
+      },
+      status: "unread",
+      user: project.user
+    })
+    io.emit("notification", notification)
+  }
+  
+  if (diskUsage >80) {
+    const notification = await Notification.create({
+      message: `High Disk usage detected on ${project.name}`,
+      project: project._id,
+      type: "high_disk",
+      severity: "warning",
+      metadata: {
+        usage: diskUsage
+      },
+      status: "unread",
+      user: project.user
+    })
+    io.emit("notification", notification)
+  }
+
+  if ((memoryUsage ?? 0) > 90) {
+    const notification = await Notification.create({
+      message: `High Memory usage detected on ${project.name}`,
+      project: project._id,
+      type: "high_memory",
+      severity: "critical",
+      metadata: {
+        usage: memoryUsage
+      },
+      status: "unread",
+      user: project.user
+    })
+    io.emit("notification", notification)
+  }
+
+  if ((memoryUsage ?? 0) > 80) {
+    const notification = await Notification.create({
+      message: `High Memory usage detected on ${project.name}`,
+      project: project._id,
+      type: "high_memory",
+      severity: "warning",
+      metadata: {
+        usage: memoryUsage
+      },
+      status: "unread",
+      user: project.user
+    })
+    io.emit("notification", notification)
+  }
+
+  res.status(201).json({ message: "Performance data saved successfully" });
 };
 
 
 
 const checkUptimeStatus = async () => {
-    const twoMinutesAgo = new Date(Date.now() - 2 * 60 * 1000);
+  const twoMinutesAgo = new Date(Date.now() - 2 * 60 * 1000);
 
-    const projects = await Project.find();
+  const projects = await Project.find();
 
-    for (const project of projects) {
-      const latestPerformance = await Performance.findOne({
-        projectId: project._id,
-      }).sort({ createdAt: -1 });
+  for (const project of projects) {
+    const latestPerformance = await Performance.findOne({
+      projectId: project._id,
+    }).sort({ createdAt: -1 });
 
-      if (latestPerformance) {
-        const isDown = latestPerformance.createdAt < twoMinutesAgo;
+    if (latestPerformance) {
+      const isDown = latestPerformance.createdAt < twoMinutesAgo;
 
-        latestPerformance.status = isDown ? "down" : "up";
-        latestPerformance.gapDuration = isDown
-          ? (Date.now() - latestPerformance.createdAt.getTime()) / 1000
-          : 0;
+      latestPerformance.status = isDown ? "down" : "up";
+      latestPerformance.gapDuration = isDown
+        ? (Date.now() - latestPerformance.createdAt.getTime()) / 1000
+        : 0;
 
-        const totalTimeObserved = (Date.now() - project.createdAt.getTime()) / 1000;
-        const totalDownTime = latestPerformance.gapDuration;
-        latestPerformance.uptimePercentage = 100 * (1 - (totalDownTime / totalTimeObserved));
+      const totalTimeObserved = (Date.now() - project.createdAt.getTime()) / 1000;
+      const totalDownTime = latestPerformance.gapDuration;
+      latestPerformance.uptimePercentage = 100 * (1 - (totalDownTime / totalTimeObserved));
 
-        await latestPerformance.save();
-      }
+      await latestPerformance.save();
     }
+  }
 };
 
 
@@ -126,7 +226,7 @@ const getPerformanceData = async (req: Request, res: Response, next: NextFunctio
   }
   const dateFilter = getTimeFilter(filter as string || "");
   const projectIdObj = new ObjectId(projectId);
-  
+
   const allData = await Performance.aggregate([
     {
       $match: {
@@ -153,7 +253,7 @@ const getPerformanceData = async (req: Request, res: Response, next: NextFunctio
       }
     }
   ]);
-  
+
   if (allData.length === 0) {
     const emptyData = [
       {
@@ -185,14 +285,14 @@ const getPerformanceData = async (req: Request, res: Response, next: NextFunctio
       responseTime: item.responseTime,
       createdAt: item.createdAt,
       requests: item.requests.totalRequests,
-      averagePerSecond:item.requests.averagePerSecond,
-      peakedPerSecond:item.requests.peakedPerSecond,
-      failedReq:item.requests.failed,
-      success:item.requests.success,
-      errorrate:item.requests.errorRate,
-      cpuUsage:item.systemUsage.cpuUsage.reduce((a: number, b:number) => a + b, 0) / item.systemUsage.cpuUsage.length,
-      memoryUsage:item.systemUsage.memoryUsage.usagePercent,
-      diskUsage:item.systemUsage.diskUsage.usagePercent
+      averagePerSecond: item.requests.averagePerSecond,
+      peakedPerSecond: item.requests.peakedPerSecond,
+      failedReq: item.requests.failed,
+      success: item.requests.success,
+      errorrate: item.requests.errorRate,
+      cpuUsage: item.systemUsage.cpuUsage.reduce((a: number, b: number) => a + b, 0) / item.systemUsage.cpuUsage.length,
+      memoryUsage: item.systemUsage.memoryUsage.usagePercent,
+      diskUsage: item.systemUsage.diskUsage.usagePercent
     };
   })
   res.status(200).json(data);
@@ -223,10 +323,10 @@ const getServerPerformanceMetrics = async (req: Request, res: Response, next: Ne
         avgUptimePercentage: { $avg: "$uptimePercentage" },
         httpStatusCounts: { $mergeObjects: "$requests.httpStatusCounts" },
         latestStatus: { $last: "$status" },
-        upCount: { 
-          $sum: { 
-            $cond: [{ $eq: ["$status", "up"] }, 1, 0] 
-          } 
+        upCount: {
+          $sum: {
+            $cond: [{ $eq: ["$status", "up"] }, 1, 0]
+          }
         },
         totalCount: { $sum: 1 }
       },
@@ -237,8 +337,8 @@ const getServerPerformanceMetrics = async (req: Request, res: Response, next: Ne
         avgResponseTime: { $round: ["$avgResponseTime", 2] },
         avgLatency: { $round: ["$avgLatency", 2] },
         avgUptimePercentage: { $round: ["$avgUptimePercentage", 2] },
-        currentUptime: { 
-          $round: [{ $multiply: [{ $divide: ["$upCount", "$totalCount"] }, 100] }, 2] 
+        currentUptime: {
+          $round: [{ $multiply: [{ $divide: ["$upCount", "$totalCount"] }, 100] }, 2]
         },
         totalRequests: 1,
         httpStatusCounts: 1,
@@ -254,7 +354,7 @@ const getServerPerformanceMetrics = async (req: Request, res: Response, next: Ne
       message: "No performance data found for this project",
       data: {}
     });
-  }  
+  }
 
   res.status(200).json({
     projectId,
@@ -401,38 +501,38 @@ const getSystemHealthMetrics = async (req: Request, res: Response, next: NextFun
 
   const [metrics] = await Performance.aggregate(aggregationPipeline);
 
-    if (!metrics) {
-      return res.status(200).json({
-        projectId,
-        avgCpuUsage: 0,
-        maxCpuUsage: 0,
-        avgMemoryUsage: 0,
-        maxMemoryUsage: 0,
-        avgDiskUsage: 0,
-        maxDiskUsage: 0,
-        latestCpuUsage: 0,
-        latestMemoryUsage: 0,
-        latestDiskUsage: 0,
-        diskDetails: [],
-        timestamp: null,
-        healthStatus: { cpu: "healthy", memory: "healthy", disk: "healthy" },
-        recommendations: [],
-        overallHealth: "healthy"
-      });
+  if (!metrics) {
+    return res.status(200).json({
+      projectId,
+      avgCpuUsage: 0,
+      maxCpuUsage: 0,
+      avgMemoryUsage: 0,
+      maxMemoryUsage: 0,
+      avgDiskUsage: 0,
+      maxDiskUsage: 0,
+      latestCpuUsage: 0,
+      latestMemoryUsage: 0,
+      latestDiskUsage: 0,
+      diskDetails: [],
+      timestamp: null,
+      healthStatus: { cpu: "healthy", memory: "healthy", disk: "healthy" },
+      recommendations: [],
+      overallHealth: "healthy"
+    });
   }
 
   //disk drive warnings
   if (metrics.diskDetails && metrics.diskDetails.length > 0) {
     const criticalDisks = metrics.diskDetails.filter((disk: { drive: string; usagePercent: number }) => disk.usagePercent > 90);
     const warningDisks = metrics.diskDetails.filter((disk: { drive: string; usagePercent: number }) => disk.usagePercent > 75 && disk.usagePercent <= 90);
-    
+
     criticalDisks.forEach((disk: { drive: string; usagePercent: number }) => {
       metrics.recommendations.push({
         resource: `Disk ${disk.drive}`,
         message: `Critical: ${disk.drive} is at ${disk.usagePercent.toFixed(2)}% capacity. Immediate action required.`
       });
     });
-    
+
     warningDisks.forEach((disk: { drive: string; usagePercent: number }) => {
       metrics.recommendations.push({
         resource: `Disk ${disk.drive}`,
@@ -445,10 +545,10 @@ const getSystemHealthMetrics = async (req: Request, res: Response, next: NextFun
   const statusPriority = { critical: 3, warning: 2, healthy: 1 };
   const healthStatuses = [
     metrics.healthStatus.cpu,
-    metrics.healthStatus.memory, 
+    metrics.healthStatus.memory,
     metrics.healthStatus.disk
   ];
-  
+
   //highest priority status
   let highestStatus = "healthy";
   for (const status of healthStatuses) {
@@ -456,7 +556,7 @@ const getSystemHealthMetrics = async (req: Request, res: Response, next: NextFun
       highestStatus = status;
     }
   }
-  
+
   metrics.overallHealth = highestStatus;
 
   res.status(200).json({
@@ -504,20 +604,20 @@ const getTrafficLoadMetrics = async (req: Request, res: Response, next: NextFunc
         avgRequestsPerSecond: { $round: ["$avgRequestsPerSecond", 2] },
         peakRequestsPerSecond: 1,
         httpStatusCounts: 1,
-        errorRate: { 
+        errorRate: {
           $cond: [
             { $eq: ["$totalRequests", 0] },
             0,
             { $round: [{ $multiply: [{ $divide: ["$totalFailed", "$totalRequests"] }, 100] }, 2] }
           ]
         },
-        durationSeconds: { 
+        durationSeconds: {
           $divide: [
-            { $subtract: ["$latestTimestamp", "$earliestTimestamp"] }, 
+            { $subtract: ["$latestTimestamp", "$earliestTimestamp"] },
             1000
-          ] 
+          ]
         },
-        successRate: { 
+        successRate: {
           $cond: [
             { $eq: ["$totalRequests", 0] },
             0,
@@ -528,7 +628,7 @@ const getTrafficLoadMetrics = async (req: Request, res: Response, next: NextFunc
     },
     {
       $addFields: {
-        requestsPerMinute: { 
+        requestsPerMinute: {
           $cond: [
             { $eq: ["$durationSeconds", 0] },
             0,
@@ -580,7 +680,7 @@ const getTrafficLoadMetrics = async (req: Request, res: Response, next: NextFunc
       insights: ["No traffic data available for the selected period."]
     });
   }
-  
+
 
   const statusCodeGroups: { [key: string]: { [key: string]: number } } = {
     informational: {},
@@ -602,17 +702,17 @@ const getTrafficLoadMetrics = async (req: Request, res: Response, next: NextFunc
   }
 
   const insights = [];
-  
+
   if (metrics.errorRate > 5) {
     insights.push("High error rate detected. Investigate server-side issues.");
   } else if (metrics.errorRate > 1) {
     insights.push("Moderate error rate. Monitor for potential issues.");
   }
-  
+
   if (metrics.peakRequestsPerSecond > metrics.avgRequestsPerSecond * 3) {
     insights.push("Traffic spikes detected. Consider load balancing or scaling solutions.");
   }
-  
+
   if (statusCodeGroups.serverError && Object.keys(statusCodeGroups.serverError).length > 0) {
     insights.push("Server errors detected. Check application logs for details.");
   }
@@ -687,7 +787,7 @@ const getErrorStabilityMetrics = async (req: Request, res: Response, next: NextF
       errorRate: 0,
       message: "No error stability data found for this project",
     });
-  }  
+  }
 
   res.status(200).json({
     projectId,
@@ -700,4 +800,4 @@ const getErrorStabilityMetrics = async (req: Request, res: Response, next: NextF
 
 
 
-export { handleIncomingPerformance, checkUptimeStatus ,getPerformanceData , getServerPerformanceMetrics, getSystemHealthMetrics, getTrafficLoadMetrics , getErrorStabilityMetrics };
+export { handleIncomingPerformance, checkUptimeStatus, getPerformanceData, getServerPerformanceMetrics, getSystemHealthMetrics, getTrafficLoadMetrics, getErrorStabilityMetrics };

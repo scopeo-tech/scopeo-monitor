@@ -51,27 +51,27 @@ function convertBytes(bytes : number) : string {
 const Health = () => {
   const { projectID } = useParams() as { projectID: string };
   const [serverFilter, setServerFilter] = useState("24h");
-  // const [perfomanceFilter, setPerfomanceFilter] = useState("24h");
+
   const [systemFilter, setSystemFilter] = useState("24h");
   const [trafficFilter, setTrafficFilter] = useState("24h");
   const [stabilityFilter, setStabilityFilter] = useState("24h");
 
   const formatTimeDisplay = (date: Date) => {
-    return format(date, "ha"); // Format: 1pm, 2am, etc.
+    return format(date, "ha"); 
   };
 
   const generateTimeIntervals = () => {
-    // Get current time
+    
     const now = new Date();
     
-    // Create an array to hold all 24 hour intervals
+    
     const intervals = [];
     
-    // Start 23 hours ago from current time
+    
     const startTime = subHours(now, 23);
     startTime.setMinutes(0, 0, 0);
     
-    // Generate exactly 24 hourly intervals
+    
     for (let i = 0; i < 24; i++) {
       const time = addHours(startTime, i);
       intervals.push(formatTimeDisplay(time));
@@ -80,30 +80,35 @@ const Health = () => {
     return intervals;
   };
 
-  // Fetch all metrics
+  
   const { data: performanceData, isLoading: perfLoading, error: perfError } = useQuery<PerformanceMetrics[]>({
     queryKey: ["performanceData", projectID ],
     queryFn: () => getPerformanceData(projectID, "24h"),
+    refetchInterval: 6000,
   });
 
   const { data: serverMetrics, isLoading: serverLoading, error: serverError } = useQuery<ServerMetrics>({
     queryKey: ["serverMetrics", projectID, serverFilter],
     queryFn: () => getServerMetrics(projectID, serverFilter),
+    refetchInterval: 6000,
   });
 
   const { data: systemMetrics, isLoading: systemLoading, error: systemError } = useQuery<SystemMetrics>({
     queryKey: ["systemMetrics", projectID, systemFilter],
     queryFn: () => getSystemMetrics(projectID, systemFilter),
+    refetchInterval: 6000,
   });
 
   const { data: trafficMetrics, isLoading: trafficLoading, error: trafficError } = useQuery<TrafficMetrics>({
     queryKey: ["trafficMetrics", projectID, trafficFilter],
     queryFn: () => getTrafficMetrics(projectID, trafficFilter),
+    refetchInterval: 6000,
   });
 
   const { data: stabilityMetrics, isLoading: stabilityLoading, error: stabilityError } = useQuery<StabilityMetrics>({
     queryKey: ["stabilityMetrics", projectID, stabilityFilter],
     queryFn: () => getStabilityMetrics(projectID, stabilityFilter),
+    refetchInterval: 6000,
   });
 
   if (perfLoading || serverLoading || systemLoading || trafficLoading || stabilityLoading) {
@@ -121,12 +126,12 @@ const Health = () => {
   const prepareChartData = (performanceData: PerformanceMetrics[]) => {
     if (!performanceData || performanceData.length === 0) return [];
     
-    // Generate all 24 hour intervals
+    
     const timeIntervals = generateTimeIntervals();
     
-    // Create a map to hold data for each hour
+    
     const hourlyDataMap = new Map();
-    // Initialize the map with empty data for all hours
+    
     timeIntervals.forEach(hourLabel => {
       hourlyDataMap.set(hourLabel, {
         time: hourLabel,
@@ -141,7 +146,7 @@ const Health = () => {
         cpuUsage: 0,
         memoryUsage: 0,
         diskUsage: 0,
-        // Capped values (initially all 0)
+        
         uptimePercentage_capped: 0,
         latency_capped: 0,
         responseTime_capped: 0,
@@ -160,11 +165,11 @@ const Health = () => {
       const entryDate = new Date(entry.createdAt);
       const hourKey = formatTimeDisplay(entryDate);
       
-      // Only process if the hour is within our 24-hour window
+      
       if (hourlyDataMap.has(hourKey)) {
         hourlyDataMap.set(hourKey, {
           time: hourKey,
-          // Original data
+          
           uptimePercentage: entry.uptimePercentage,
           latency: entry.latency,
           responseTime: entry.responseTime,
@@ -176,7 +181,7 @@ const Health = () => {
           cpuUsage: entry.cpuUsage ?? 0,
           memoryUsage: entry.memoryUsage ?? 0,
           diskUsage: entry.diskUsage ?? 0,
-          // Capped values for display
+          
           uptimePercentage_capped: Math.min(entry.uptimePercentage, 200),
           latency_capped: Math.min(entry.latency, 200),
           responseTime_capped: Math.min(entry.responseTime, 200),
@@ -192,7 +197,7 @@ const Health = () => {
       }
     });
     
-    // Convert map to array and ensure it's sorted by time
+    
     return Array.from(hourlyDataMap.values());
   };
 
@@ -365,9 +370,9 @@ const Health = () => {
           boxShadow: "0 2px 8px rgba(0,0,0,0.15)"
         }}
         formatter={(value, name, props) => {
-          // Extract the original value name without the "_capped" suffix
+          
           const originalName = typeof name === 'string' ? name.replace('_capped', '') : name;
-          // Return the original value from the data
+          
           return [props.payload[originalName], originalName];
         }}
       />
@@ -415,7 +420,7 @@ const Health = () => {
               fill="#8884d8"
               strokeWidth={2}
               stroke="#fff"
-              cornerRadius={10} // Rounded edges
+              cornerRadius={5} 
             >
               {pieData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.color} />
