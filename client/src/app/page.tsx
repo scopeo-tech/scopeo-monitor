@@ -1,5 +1,5 @@
 import DashboardDemo from "@/components/landingpage/demo";
-import Features from "@/components/landingpage/features";
+import FeaturesSection from "@/components/landingpage/features";
 import Hero from "@/components/landingpage/hero";
 import HowWeWork from "@/components/landingpage/howWeWork";
 import Footer from "@/components/layout/footer";
@@ -11,7 +11,7 @@ export default function Home() {
     <>
       <Navbar/>
       <Hero/>
-      <Features/>
+      <FeaturesSection/>
       <HowWeWork/>
       <DashboardDemo/>
       <Footer/>
