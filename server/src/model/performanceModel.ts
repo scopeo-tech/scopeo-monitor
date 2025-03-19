@@ -57,7 +57,7 @@ const performanceSchema = new Schema(
   }
 );
 
-type IPerformance = InferSchemaType<typeof performanceSchema>;
+export type IPerformance = InferSchemaType<typeof performanceSchema>;
 
 const Performance: Model<IPerformance> = mongoose.model(
   "Performance",

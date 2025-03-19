@@ -5,6 +5,7 @@ import Log from "../../model/logModel";
 import CustomError from "../../lib/util/CustomError";
 import { AuthenticatedRequest} from "../../lib/types/type";
 import checkProjectOwnership from "../../lib/util/checkProjectOwnership";
+import { io } from "../../socket";
 
 export const handleIncomingLogs = async (
     req: Request,
@@ -48,7 +49,7 @@ export const handleIncomingLogs = async (
           await Log.deleteMany({ _id: { $in: oldIds } });
         }
         
-        await Log.create({
+       const newLogs = await Log.create({
           route,
           message,
           statusCode,
@@ -57,7 +58,9 @@ export const handleIncomingLogs = async (
           duration: log.duration,
           project: project._id
         });
+        io.emit("logs", newLogs, project.user.toString());
       }
+
       
       return res.status(200).json({ status: "success" });
     } catch (error) {
