@@ -113,3 +113,4 @@ export const handleIncomingLogs = async (
       return next(new CustomError(500, "Failed to fetch logs"));
     }
   }
+
