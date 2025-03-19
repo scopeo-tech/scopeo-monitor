@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { getUserInfo, updateProfile, checkUsername, deleteProfile ,logoutUser} from '@/lib/api';
+import LoadingButton from '@/components/ui/loadingButton';
 
 export default function ProfilePage() {
   const { data: user, isLoading, isError } = useQuery({
@@ -183,11 +184,13 @@ export default function ProfilePage() {
         <p className="text-gray-600 text-sm mb-3">
           Once you delete your profile, it will be deactivated immediately and all associated data will be permanently removed within approximately 30 days. This action is irreversible.
         </p>
-        <button onClick={handleDeleteProfile}
-          disabled={deleteMutation.isPending} 
-          className="px-4 py-2 bg-red-600 text-white rounded">
-          {deleteMutation.isPending ? "Deleting..." : "Delete Profile"}
-        </button>
+        <LoadingButton
+          onClick={handleDeleteProfile}
+          isLoading={deleteMutation.isPending}
+          className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+            Delete Profile
+        </LoadingButton>
+
       </div>
     </div>
   );
