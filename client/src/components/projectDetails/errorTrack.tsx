@@ -197,8 +197,6 @@ function ErrorTrack() {
       setShowCommonError(true);
     }, 500);
   };
-  // if (isLoading) return <p>Loading error data...</p>;
-
   if (isLoading) return <ErrorMetricsSkeleton/>;
   if (!projectID) return <p>No project selected.</p>;
 

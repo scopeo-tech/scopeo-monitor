@@ -11,7 +11,6 @@ import { FC } from "react";
 import { FaUser, FaLock } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { getSession, signIn, useSession } from "next-auth/react";
-import { useNotificationStore } from "@/lib/stores/notificationStore";
 import axios from "axios";
 import Link from "next/link";
 import LoadingButton from "../ui/loadingButton";
@@ -22,7 +21,6 @@ const LoginForm: FC = () => {
   const setUser = useAuthStore((state) => state.setUser);
   const user = useAuthStore((state) => state.user);
   const router = useRouter();
-  const {registerUser} = useNotificationStore();
 
   const { data: session, status } = useSession();
 
@@ -99,7 +97,6 @@ const LoginForm: FC = () => {
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("token", token);
       setUser(user);
-      registerUser(user._id);
       router.push("/home")
     }catch (err: unknown) {
       if (axios.isAxiosError(err) && err.response) {

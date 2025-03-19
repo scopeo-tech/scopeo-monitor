@@ -1,48 +1,131 @@
+
+"use client";
+
 import React from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { useMutation } from "@tanstack/react-query";
+import { contactUs } from "@/lib/api";
+import { useState } from "react";
 import { FaNpm } from "react-icons/fa";
 import { AiOutlineInstagram } from "react-icons/ai";
 import { FaGithub } from "react-icons/fa";
+import SuccessModal from "../modal/successModal";
 
 const Footer: React.FC = () => {
+  const [error, setError] = useState("");
+  const [showModal, setShowModal] = useState(false); 
+
+  const mutation = useMutation({
+    mutationFn: contactUs,
+    onSuccess: () => {
+      setShowModal(true); 
+      formik.resetForm();
+    },
+    onError: () => {
+      setError("Failed to send message. Please try again.");
+    },
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      firstname: "",
+      lastname: "",
+      email: "",
+      message: "",
+    },
+    validationSchema: Yup.object({
+      firstname: Yup.string().required("First name is required"),
+      lastname: Yup.string().required("Last name is required"),
+      email: Yup.string().email("Invalid email").required("Email is required"),
+      message: Yup.string().required("Message is required"),
+    }),
+    onSubmit: (values) => {
+      setError(""); 
+      mutation.mutate(values);
+    },
+  });
+
+
+
   return (
     <footer className="w-full">
       <div className="bg-emerald-100 h-auto flex flex-row items-center justify-between py-10 px-20 ">
   {/* Left Side - Heading Section */}
   <div className="flex flex-col items-start space-y-5">
-    <h1 className="text-8xl font-bold text-emerald-500">
-      GET IN <br /> TOUCH
-    </h1>
-    <h1 className="text-3xl font-bold text-emerald-500">Scopeo</h1>
-  </div>
+          <h1 className="text-8xl font-bold text-emerald-500">
+            GET IN <br /> TOUCH
+          </h1>
+          <h1 className="text-3xl font-bold text-emerald-500">Scopeo</h1>
+        </div>
 
-  {/* Right Side - Form */}
-  <div className="flex flex-col space-y-5 w-1/3">
-    <input
-      type="text"
-      placeholder="Your Name"
-      className="border-2 border-emerald-500 p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-emerald-500"
-    />
-    <input
-      type="email"
-      placeholder="Your Email"
-      className="border-2 border-emerald-500 p-3 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-emerald-500"
-    />
-    <textarea
-      placeholder="Your Message"
-      className="border-2 border-emerald-500 p-3 rounded-lg w-full h-24 resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500"
-    ></textarea>
+        {/* Right Side - Form */}
+        <form onSubmit={formik.handleSubmit} className="flex flex-col space-y-4 w-1/3">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input
+            type="text"
+            name="firstname"
+            placeholder="Firstname"
+            value={formik.values.firstname}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="border-2 border-emerald-500 p-3 rounded-2xl w-full"
+          />
+          {formik.touched.firstname && formik.errors.firstname && (
+            <p className="text-red-500 text-sm">{formik.errors.firstname}</p>
+          )}
 
-    {/* Submit Button */}
-    <button className="bg-emerald-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-emerald-600 transition self-start">
-      Send Message
-    </button>
-  </div>
-</div>
+          <input
+            type="text"
+            name="lastname"
+            placeholder="Lastname"
+            value={formik.values.lastname}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="border-2 border-emerald-500 p-3 rounded-2xl w-full"
+          />
+          {formik.touched.lastname && formik.errors.lastname && (
+            <p className="text-red-500 text-sm">{formik.errors.lastname}</p>
+          )}
+          </div>
 
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={formik.values.email}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="border-2 border-emerald-500 p-3 rounded-2xl w-full"
+          />
+          {formik.touched.email && formik.errors.email && (
+            <p className="text-red-500 text-sm">{formik.errors.email}</p>
+          )}
 
+          <textarea
+            name="message"
+            placeholder="Message"
+            value={formik.values.message}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="border-2 border-emerald-500 p-3 rounded-2xl w-full"
+          ></textarea>
+          {formik.touched.message && formik.errors.message && (
+            <p className="text-red-500 text-sm">{formik.errors.message}</p>
+          )}
 
+          {/* Display Success or Error Message */}
+          {error && <p className="text-red-600">{error}</p>}
 
-
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="bg-emerald-500 text-white py-3 px-4 rounded-lg font-semibold hover:bg-emerald-600 transition self-start"
+          >
+            Send Message
+          </button>
+        </form>
+      </div>
       <div className="bg-emerald-500 text-white py-6 px-10 flex flex-col">
   <div className="flex items-center space-x-3 mb-4">
     <div className="w-12 h-12 bg-emerald-500 rounded-lg flex items-center justify-center">
@@ -99,8 +182,8 @@ const Footer: React.FC = () => {
     © {new Date().getFullYear()} Scopeo. All rights reserved.
   </div>
 </div>
-
-    </footer>
+{showModal && <SuccessModal onClose={() => setShowModal(false)} isOpen={true} message="Message sent successfully!" />}
+   </footer>
   );
 };
 

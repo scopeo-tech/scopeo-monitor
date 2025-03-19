@@ -111,7 +111,6 @@ const userRegister = async (
 };
 
 const userLogin = async (req: Request, res: Response, next: NextFunction) => {
-  console.log("Hello workls")
   const { username, email, password } = loginSchema.parse(req.body);
 
   const user = await User.findOne({ $or: [{ username }, { email }] });

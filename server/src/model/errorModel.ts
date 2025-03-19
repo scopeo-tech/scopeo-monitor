@@ -22,12 +22,16 @@ const errorSchema = new Schema(
     message: {
       type: String,
       required: true,
-    }
+    },
+    resolved: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
 
-type IError = InferSchemaType<typeof errorSchema>;
+export type IError = InferSchemaType<typeof errorSchema>;
 
 const Error: Model<IError> = mongoose.model("Error", errorSchema);
 export default Error;
