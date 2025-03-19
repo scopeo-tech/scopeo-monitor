@@ -114,3 +114,27 @@ export const handleIncomingLogs = async (
     }
   }
 
+export const getRoutesFromDb= async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  if (!(await checkProjectOwnership(req, next))) return;
+  const { projectId } = req.params;
+  if (!projectId) {
+    return next(new CustomError(400, "Project ID is required"));
+  }
+  const routes = await Log.distinct("route", { project: new mongoose.Types.ObjectId(projectId) });
+  return res.status(200).json(routes);
+}
+
+
+export const logsByRoutes = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    if (!(await checkProjectOwnership(req, next))) return;
+    const { projectId } = req.params;
+    const {route } = req.query;
+    if (!projectId) {
+      return next(new CustomError(400, "Project ID is required"))
+    }
+    const logs = await Log.find({ 
+      project: new mongoose.Types.ObjectId(projectId),
+      route
+    }).sort({ createdAt: -1 });
+      return res.status(200).json(logs);
+      }

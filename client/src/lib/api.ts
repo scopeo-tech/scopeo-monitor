@@ -238,14 +238,6 @@ export const getAllErrors = async (projectId: string, page: number, limit: numbe
 };
 
 
-export const getLogs = async (projectId: string, filter: string) => {
-  const response = await axiosInstance.get(`/project/get-logs/${projectId}`, {
-    params: { filter },
-  });
-  
-  return response.data;
-}
-
 export const getErrorAnalysis = async (errorMessage: string ) => {
   const response = await axiosInstance.post("/project/get-error-analysis", {errorMessage});
   return response.data;
@@ -344,3 +336,23 @@ export const markAsRead = async(projectID: string) => {
   return response.data;
 }
 
+
+//logs
+
+export const getLogs = async (projectId: string, filter: string) => {
+  const response = await axiosInstance.get(`/project/get-logs/${projectId}`, {
+    params: { filter },
+  });
+  
+  return response.data;
+}
+
+export const getRoutesFromDb = async (projectId: string) => {
+  const response = await axiosInstance.get(`/project/get-logs-route/${projectId}`);
+  return response.data;
+}
+
+export const getLogsByRoute = async (projectId: string, route: string) => {
+  const response = await axiosInstance.get(`/project/get-logs-by-route/${projectId}?route=${route}`);
+  return response.data;
+}
