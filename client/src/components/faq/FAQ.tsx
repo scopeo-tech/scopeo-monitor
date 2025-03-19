@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
@@ -7,7 +8,7 @@ import faqImage3 from "../../assets/faqImage3.svg";
 import faqImage4 from "../../assets/faqImage4.svg";
 
 import { Faq } from "@/lib/interface";
-import {
+import {  
   getTopFaqs,
   searchFaqs,
   getAISuggestion,
