@@ -6,8 +6,8 @@ import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
 import FloatingCircle from "./floatingCircle";
 import errordash from "@/assets/errordash.png";
 import accessdash from "@/assets/accessdash.jpg";
-import logs from "@/assets/logs.jpg";
-import health from "@/assets/health.jpeg";
+import logs from "@/assets/logs.png";
+import health from "@/assets/health.png"
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
