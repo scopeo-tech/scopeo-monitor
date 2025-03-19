@@ -88,6 +88,25 @@ const FAQ = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const contentVariants = {
+    hidden: { height: 0, opacity: 0 },
+    visible: { 
+      height: "auto", 
+      opacity: 1,
+      transition: { 
+        height: { duration: 0.2, ease: "easeOut" },
+        opacity: { duration: 0.15, ease: "easeOut" } 
+      }
+    },
+    exit: { 
+      height: 0, 
+      opacity: 0,
+      transition: { 
+        height: { duration: 0.2, ease: "easeIn" },
+        opacity: { duration: 0.05, ease: "easeIn" } 
+      }
+    }
+  };
   
   return (
     <div className="px-5 md:px-20 overflow-hidden">
@@ -140,24 +159,31 @@ const FAQ = () => {
                 >
                   <h4
                     className="text-lg font-semibold cursor-pointer transition duration-200"
-                    onClick={() =>
-                      setClickedId(clickedId === faq._id ? null : faq._id)
-                    }
+                    onClick={() => {
+                      setClickedId(clickedId === faq._id ? null : faq._id);
+                      if (clickedId !== faq._id) {
+                        setClickedId(faq._id);
+                      } else {
+                        setClickedId(null);
+                      }
+                    }}
                   >
                     {faq.question}
                   </h4>
 
                   <AnimatePresence>
                     {(hoveredId === faq._id || clickedId === faq._id) && (
-                      <motion.p
-                        className="text-gray-600 text-sm mt-2 p-2 bg-gray-100 rounded-md"
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                      <motion.div
+                        className="overflow-hidden"
+                        variants={contentVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
                       >
-                        {faq.answer}
-                      </motion.p>
+                        <p className="text-gray-600 text-sm mt-2 p-2 bg-gray-100 rounded-md">
+                          {faq.answer}
+                        </p>
+                      </motion.div>
                     )}
                   </AnimatePresence>
                 </div>
