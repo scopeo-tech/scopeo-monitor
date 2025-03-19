@@ -1,5 +1,6 @@
 "use client";
 
+import RecentLogsSkeleton from '../skeltons/logsSkeleton';
 import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getLogs } from "@/lib/api";
@@ -44,9 +45,11 @@ const Activity = () => {
             socket.off("logs", handleNewLog); 
         };
     }, [socket]);
-
-    if (isLoading) return <p>Loading logs...</p>;
-    if (isError) return <p className="text-red-500">Error fetching logs.</p>;
+  
+    if (isLoading) return <RecentLogsSkeleton/>;
+    if (isError) {
+        return <p className="text-red-500">Error fetching logs.</p>;
+    }
 
     return (
         <div className="p-4">

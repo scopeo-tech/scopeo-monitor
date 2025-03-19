@@ -1,14 +1,13 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 import { ErrorLog } from "@/lib/interface";
-import { motion,AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { FiChevronDown, FiChevronUp, FiServer } from "react-icons/fi";
 
-const ErrorLogCard = ({ error, index }: { error: ErrorLog, index: number }) => {
+const ErrorLogCard = ({ error, index, isHighlighted, id }: { error: ErrorLog, index: number, isHighlighted?: boolean, id?: string }) => {
     const [isExpanded, setIsExpanded] = useState(false);
   
-    const getStatusColor = (statusCode:number) => {
+    const getStatusColor = (statusCode: number) => {
       if (statusCode >= 500) return 'bg-red-500';
       if (statusCode >= 400) return 'bg-orange-500';
       if (statusCode >= 300) return 'bg-yellow-500';
@@ -27,13 +26,27 @@ const ErrorLogCard = ({ error, index }: { error: ErrorLog, index: number }) => {
   
     return (
       <motion.div 
+        id={id}
         initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: index * 0.05 }}
-        className="bg-white rounded-xl shadow-lg border border-gray-100 mb-4 overflow-hidden"
+        animate={{ 
+          opacity: 1, 
+          y: 0,
+          scale: isHighlighted ? [1, 1.03, 1] : 1,
+        }}
+        transition={{ 
+          delay: index * 0.05,
+          scale: { duration: isHighlighted ? 0.8 : 0 }
+        }}
+        className={`bg-white rounded-xl shadow-lg border mb-4 overflow-hidden ${
+          isHighlighted 
+            ? 'border-blue-400 ring-2 ring-blue-200' 
+            : 'border-gray-100'
+        }`}
       >
         <div 
-          className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50"
+          className={`flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 ${
+            isHighlighted ? 'bg-blue-50' : ''
+          }`}
           onClick={() => setIsExpanded(!isExpanded)}
         >
           <div className="flex items-center space-x-4 w-full">
@@ -78,7 +91,7 @@ const ErrorLogCard = ({ error, index }: { error: ErrorLog, index: number }) => {
                   <p className="font-semibold text-gray-600">Error Details</p>
                   <pre className="bg-white p-3 rounded mt-2 text-xs overflow-x-auto">
                   {JSON.stringify(
-                      (({ _id, projectId, __v, ...rest }) => rest)(error), 
+                      (({ ...rest }) => rest)(error), 
                       null, 
                       2
                     )}
@@ -107,4 +120,4 @@ const ErrorLogCard = ({ error, index }: { error: ErrorLog, index: number }) => {
     );
   };
 
-  export default  ErrorLogCard;
+export default ErrorLogCard;
