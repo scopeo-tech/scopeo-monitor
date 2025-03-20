@@ -173,7 +173,7 @@ const Footer: React.FC = () => {
 
     <div className="ml-24">
       <h1 className="text-white text-xl font-semibold mb-2">CONTACT US</h1>
-      <p className="text-white">zemdevwork@gmail.com</p>
+      <p className="text-white">scopeo.tech@gmail.com</p>
     </div>
   </div>
 
