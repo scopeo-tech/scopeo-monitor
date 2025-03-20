@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -54,14 +55,6 @@ export default function ProfilePage() {
     return () => clearTimeout(delayCheck);
   }, [username]);
 
-
-  useEffect(() => {
-    const fetchhh = async () => {
-      const response = await checkUsername(username);
-      console.log(response,"waa")
-    }
-    fetchhh()
-  },[])
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
