@@ -4,7 +4,7 @@ import verifyToken from "../middleware/verifyToken";
 import tryCatch from "../lib/util/tryCatch";
 import {getBruteForceAttempts,getFailedLogins,getTotalLogins,getUnusualLogins,getSecurityStats} from "../controller/agent/security"
 import { getErrorStats, getCommonError, getErrorMethodPercentages, getLatestError, getAllErrors, getAiErrorAnalysis, resolveError, unResolveError } from "../controller/agent/errorTrack";
-import { getLogs } from "../controller/agent/logs";
+import { getLogs , getRoutesFromDb ,logsByRoutes } from "../controller/agent/logs";
 import { getErrorStabilityMetrics, getPerformanceData, getServerPerformanceMetrics, getSystemHealthMetrics, getTrafficLoadMetrics } from "../controller/agent/performance";
 import { getNotifications, markAsRead } from "../controller/project/notificationController";
 
@@ -48,6 +48,8 @@ router
 
 //get serverLogs
 .get("/get-logs/:projectId",tryCatch(getLogs))
+.get("/get-logs-route/:projectId",tryCatch(getRoutesFromDb))
+.get("/get-logs-by-route/:projectId",tryCatch(logsByRoutes))
 
 //notifications
 .get("/get-notifications/:projectId",tryCatch(getNotifications))
