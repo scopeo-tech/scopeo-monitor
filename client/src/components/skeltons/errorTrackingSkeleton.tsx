@@ -5,10 +5,11 @@ import { motion } from "framer-motion";
 interface SkeletonBoxProps {
   width: string | number;
   height: string | number;
+  className?: string;
 }
-const SkeletonBox: React.FC<SkeletonBoxProps> = ({ width, height }) => (
+const SkeletonBox: React.FC<SkeletonBoxProps> = ({ width, height,className  }) => (
   <div
-    className="bg-gray-200 animate-pulse rounded-lg"
+  className={`bg-gray-200 animate-pulse rounded-lg ${className || ""}`}
     style={{ width, height }}
   ></div>
 );
