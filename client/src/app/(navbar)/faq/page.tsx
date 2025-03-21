@@ -1,7 +1,7 @@
 import FAQ from '@/components/navbar/faq'
 import React from 'react'
 
-function faq() {
+function page() {
   return (
     <div>
       <FAQ/>
@@ -9,4 +9,4 @@ function faq() {
   )
 }
 
-export default faq
+export default page
