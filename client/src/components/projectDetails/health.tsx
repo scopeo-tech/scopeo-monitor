@@ -20,6 +20,7 @@ import {
   StabilityMetrics,
 } from "@/lib/interface";
 import SkeletonMetrics from "../skeltons/systemMetricsSkeleton";
+import withAuth from "@/lib/withAuth";
 
 
 const getHealthColor = (status : string) => {
@@ -534,4 +535,4 @@ const Health = () => {
   );
 };
 
-export default Health;
+export default withAuth(Health);

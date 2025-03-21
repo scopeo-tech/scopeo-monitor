@@ -10,28 +10,37 @@ import { FiEdit, FiEye, FiEyeOff } from "react-icons/fi";
 import { FaCopy } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useNotificationStore } from "@/lib/stores/notificationStore";
-import { IoNotificationsSharp } from "react-icons/io5"; 
+import { IoNotificationsSharp } from "react-icons/io5";
 import TableSkeleton from "../skeltons/homePageTable";
+import withAuth from "@/lib/withAuth";
 
 const DefaultPage: FC = () => {
   const { notifications, initializeSocket } = useNotificationStore();
   const [formattedDate, setFormattedDate] = useState<string>("");
   const [day, setDay] = useState<string>("");
-  const [visiblePassKeys, setVisiblePassKeys] = useState<Record<string, boolean>>({});
+  const [visiblePassKeys, setVisiblePassKeys] = useState<
+    Record<string, boolean>
+  >({});
   const [passKeys, setPassKeys] = useState<Record<string, string>>({});
   const [copiedApiKey, setCopiedApiKey] = useState<string | null>(null);
   const [copiedPassKey, setCopiedPassKey] = useState<string | null>(null);
   const { user } = useAuthStore();
-  const [projectWithNotification, setProjectWithNotification] = useState<string[]>([]);
+  const [projectWithNotification, setProjectWithNotification] = useState<
+    string[]
+  >([]);
   const router = useRouter();
   const [token, setToken] = useState<string | null>(null);
 
-useEffect(() => {
-  if (typeof window !== "undefined") {
-    setToken(localStorage.getItem("token"));
-  }
-}, []);
-  const { data: projects, isLoading, isError } = useQuery<Project[]>({
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setToken(localStorage.getItem("token"));
+    }
+  }, []);
+  const {
+    data: projects,
+    isLoading,
+    isError,
+  } = useQuery<Project[]>({
     queryKey: ["userProjects"],
     queryFn: getUserProjects,
   });
@@ -41,10 +50,12 @@ useEffect(() => {
     }
   }, [user, token, initializeSocket]);
 
-  useEffect(()=>{
-    const projectWithNotification = notifications.map((notification) => notification.project.toString());
+  useEffect(() => {
+    const projectWithNotification = notifications.map((notification) =>
+      notification.project.toString()
+    );
     setProjectWithNotification([...new Set(projectWithNotification)]);
-  },[notifications])
+  }, [notifications]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -70,7 +81,7 @@ useEffect(() => {
 
     try {
       const passKeyData = await getProjectPassKey(projectId);
-      console.log(passKeyData)
+      console.log(passKeyData);
       if (!passKeyData) {
         console.error("Error: No passKey received!");
         return;
@@ -96,7 +107,8 @@ useEffect(() => {
       return;
     }
 
-    navigator.clipboard.writeText(key)
+    navigator.clipboard
+      .writeText(key)
       .then(() => {
         if (type === "api") {
           setCopiedApiKey(projectId);
@@ -120,8 +132,12 @@ useEffect(() => {
       {/* Header */}
       <div className="flex justify-between items-center mb-12">
         <div>
-          <h1 className="text-base font-medium text-gray-700">{user?.username}&apos;s projects -</h1>
-          <p className="text-sm text-gray-500">{Array.isArray(projects) ? projects.length : 0} projects</p>
+          <h1 className="text-base font-medium text-gray-700">
+            {user?.username}&apos;s projects -
+          </h1>
+          <p className="text-sm text-gray-500">
+            {Array.isArray(projects) ? projects.length : 0} projects
+          </p>
         </div>
         <button
           className="text-gray-700 hover:text-gray-900 flex items-center gap-1 text-sm"
@@ -132,7 +148,9 @@ useEffect(() => {
       </div>
 
       {/* Project List */}
-      <h2 className="mt-6 mb-4 text-base font-medium text-gray-700">Project list</h2>
+      <h2 className="mt-6 mb-4 text-base font-medium text-gray-700">
+        Project list
+      </h2>
 
       <div className="mt-3 bg-white shadow-sm rounded-lg border border-gray-200 overflow-hidden">
         {isLoading ? (
@@ -143,45 +161,78 @@ useEffect(() => {
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b text-sm">
-                <th className="text-left py-4 px-4 font-medium text-gray-700">Project name</th>
-                <th className="text-left py-4 px-4 font-medium text-gray-700">Status</th>
-                <th className="text-left py-4 px-4 font-medium text-gray-700">API Key</th>
-                <th className="text-left py-4 px-4 font-medium text-gray-700">Pass Key</th>
+                <th className="text-left py-4 px-4 font-medium text-gray-700">
+                  Project name
+                </th>
+                <th className="text-left py-4 px-4 font-medium text-gray-700">
+                  Status
+                </th>
+                <th className="text-left py-4 px-4 font-medium text-gray-700">
+                  API Key
+                </th>
+                <th className="text-left py-4 px-4 font-medium text-gray-700">
+                  Pass Key
+                </th>
               </tr>
             </thead>
             <tbody>
               {Array.isArray(projects) &&
                 projects.map((project: Project) => (
-                  <tr key={project._id} className="border-b text-sm hover:bg-gray-50">
-                    <td className="py-4 px-4 text-gray-700 cursor-pointer"
-                      onClick={() => router.push(`/${project._id}/health`)}>{project.name}</td>
+                  <tr
+                    key={project._id}
+                    className="border-b text-sm hover:bg-gray-50"
+                  >
+                    <td
+                      className="py-4 px-4 text-gray-700 cursor-pointer"
+                      onClick={() => router.push(`/${project._id}/health`)}
+                    >
+                      {project.name}
+                    </td>
                     <td className="py-4 px-4 flex items-center ml-8">
-  <span
-    className={`inline-block w-2 h-2 rounded-full ${
-      project.status.connectionStatus ? "bg-green-500" : "bg-red-500"
-    }`}
-  ></span>
-  <IoNotificationsSharp
-    className={`ml-2 ${projectWithNotification.includes(project._id) ? "text-yellow-500" : "text-gray-400"}`}
-    size={16}
-  />
-</td>
+                      <span
+                        className={`inline-block w-2 h-2 rounded-full ${
+                          project.status.connectionStatus
+                            ? "bg-green-500"
+                            : "bg-red-500"
+                        }`}
+                      ></span>
+                      <IoNotificationsSharp
+                        className={`ml-2 ${
+                          projectWithNotification.includes(project._id)
+                            ? "text-yellow-500"
+                            : "text-gray-400"
+                        }`}
+                        size={16}
+                      />
+                    </td>
                     <td className="py-4 px-4 text-gray-600 relative">
                       {project.apiKey}
                       <button
-                        onClick={() => handleCopy(project.apiKey, project._id, "api")}
+                        onClick={() =>
+                          handleCopy(project.apiKey, project._id, "api")
+                        }
                         className="ml-2 text-gray-300 hover:text-gray-500 focus:outline-none"
                       >
                         <FaCopy />
                       </button>
-                      {copiedApiKey === project._id && <span className="text-xs text-green-500 absolute -top-4 left-4">Copied!</span>}
+                      {copiedApiKey === project._id && (
+                        <span className="text-xs text-green-500 absolute -top-4 left-4">
+                          Copied!
+                        </span>
+                      )}
                     </td>
                     <td className="py-4 px-4 text-gray-600 flex items-center w-40 relative">
                       {visiblePassKeys[project._id] ? (
                         <>
                           {passKeys[project._id]}
                           <button
-                            onClick={() => handleCopy(passKeys[project._id] || "", project._id, "pass")}
+                            onClick={() =>
+                              handleCopy(
+                                passKeys[project._id] || "",
+                                project._id,
+                                "pass"
+                              )
+                            }
                             className="ml-2 text-gray-300 hover:text-gray-500 focus:outline-none"
                           >
                             <FaCopy size={16} />
@@ -190,15 +241,22 @@ useEffect(() => {
                       ) : (
                         getHiddenPassKey()
                       )}
-                      {copiedPassKey === project._id && <span className="text-xs text-green-500 absolute -top-4 left-4">Copied!</span>}
+                      {copiedPassKey === project._id && (
+                        <span className="text-xs text-green-500 absolute -top-4 left-4">
+                          Copied!
+                        </span>
+                      )}
                       <button
                         onClick={() => togglePassKeyVisibility(project._id)}
                         className="ml-2 text-gray-500 hover:text-gray-700 focus:outline-none"
                       >
-                        {visiblePassKeys[project._id] ? <FiEye size={16} /> : <FiEyeOff size={16} />}
+                        {visiblePassKeys[project._id] ? (
+                          <FiEye size={16} />
+                        ) : (
+                          <FiEyeOff size={16} />
+                        )}
                       </button>
                     </td>
-
                   </tr>
                 ))}
             </tbody>
@@ -209,9 +267,12 @@ useEffect(() => {
           <p className="capitalize">{day}</p>
         </div>
       </div>
-      <CreateProjectModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <CreateProjectModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   );
 };
 
-export default DefaultPage;
+export default withAuth(DefaultPage);

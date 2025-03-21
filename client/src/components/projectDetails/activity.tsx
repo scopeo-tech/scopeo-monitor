@@ -7,6 +7,7 @@ import { getLogs , getRoutesFromDb,getLogsByRoute } from "@/lib/api";
 import { useParams } from "next/navigation";
 import { useNotificationStore } from "@/lib/stores/notificationStore";
 import { Log } from "@/lib/interface";
+import withAuth from '@/lib/withAuth';
 
 
 const timeFilters = [
@@ -127,4 +128,4 @@ const Activity = () => {
     );
 };
 
-export default Activity;
+export default withAuth(Activity);

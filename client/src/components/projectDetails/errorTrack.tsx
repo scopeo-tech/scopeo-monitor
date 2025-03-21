@@ -39,6 +39,7 @@ import React from "react";
 import ErrorLogCard from "../ui/ErrorLogs";
 import { ErrorLog } from "@/lib/interface";
 import ErrorMetricsSkeleton from "../skeltons/errorTrackingSkeleton";
+import withAuth from "@/lib/withAuth";
 
 const COLORS = ["#90BAAD", "#689689", "#B0CA87", "#ADF6B1"];
 
@@ -847,4 +848,4 @@ function ErrorTrack() {
   );
 }
 
-export default ErrorTrack;
+export default withAuth(ErrorTrack);
