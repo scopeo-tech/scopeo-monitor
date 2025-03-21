@@ -11,6 +11,7 @@ import UnusualLoginSummary, { UnusualLoginSummaryProps } from './helper/unusualS
 import LoginSummary, { LoginSummaryProps } from './helper/logSummery';
 import BruteForceSummary, { BruteForceSummaryProps } from './helper/failSummery';
 import AccessMonitorSkeleton from '../skeltons/accessMonitoringSkeleton';
+import withAuth from '@/lib/withAuth';
 
 const loginOptions = [
   { label: "All Logins", value: "allLogins", api: allLogins },
@@ -114,4 +115,4 @@ const AccessMonitor = () => {
   )
 }
 
-export default AccessMonitor
+export default withAuth(AccessMonitor);
