@@ -43,13 +43,13 @@ const Navbar: FC = () => {
       </Link>
 
       <div className="hidden md:flex font-semibold items-center space-x-12">
-        <Link href="#" className="text-gray-600 hover:text-gray-900">
+        <Link href="/developers" className="text-gray-600 hover:text-gray-900">
           Developers
         </Link>
-        <Link href="#" className="text-gray-600 hover:text-gray-900">
+        <Link href="/documentation" className="text-gray-600 hover:text-gray-900">
           Documentation
         </Link>
-        <Link href="#" className="text-gray-600 hover:text-gray-900">
+        <Link href="/about" className="text-gray-600 hover:text-gray-900">
           About Us
         </Link>
         <Link href="/contact" className="text-gray-600 hover:text-gray-900">
