@@ -6,7 +6,6 @@ import * as Yup from "yup";
 import { useMutation } from "@tanstack/react-query";
 import { contactUs } from "@/lib/api";
 import Image from "next/image";
-import Navbar from "@/components/layout/navbar/navbar";
 import LoadingButton from "../ui/loadingButton";
 import SuccessModal from "../modal/successModal";
 import website from "@/assets/website.svg"
@@ -49,11 +48,10 @@ const ContactPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-    <Navbar/>
     {showSuccessModal && <SuccessModal onClose={() => setShowSuccessModal(false)} isOpen={true} message="Message sent successfully!" />}
 
     {/* Hero Section */}
-    <section className="relative py-24 text-center text-black bg-cover bg-center" style={{backgroundImage: 'url("")'}}>
+    <section className="relative text-center text-black bg-cover bg-center" style={{backgroundImage: 'url("")'}}>
   <div className="absolute inset-0 "></div>
   <div className="container mx-auto px-4 relative z-10">
     <h1 className="text-4xl font-bold ">Contact us</h1>

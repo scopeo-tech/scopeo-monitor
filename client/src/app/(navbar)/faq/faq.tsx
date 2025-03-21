@@ -1,10 +1,12 @@
 import FAQ from '@/components/navbar/faq'
 import React from 'react'
 
-const page = () => {
+function faq() {
   return (
-    <div><FAQ/></div>
+    <div>
+      <FAQ/>
+    </div>
   )
 }
 
-export default page
+export default faq

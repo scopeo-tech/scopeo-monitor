@@ -6,8 +6,9 @@ import { useRouter } from 'next/navigation';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { getUserInfo, updateProfile, checkUsername, deleteProfile ,logoutUser} from '@/lib/api';
 import LoadingButton from '@/components/ui/loadingButton';
+import withAuth from '@/lib/withAuth';
 
-export default function ProfilePage() {
+function ProfilePage() {
   const { data: user, isLoading, isError } = useQuery({
     queryKey: ['userInfo'],
     queryFn: getUserInfo,
@@ -188,3 +189,5 @@ export default function ProfilePage() {
     </div>
   );
 }
+
+export default withAuth(ProfilePage);
