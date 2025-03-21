@@ -46,7 +46,7 @@ const Navbar: FC = () => {
         <Link href="#" className="text-gray-600 hover:text-gray-900">
           Developers
         </Link>
-        <Link href="#" className="text-gray-600 hover:text-gray-900">
+        <Link href="/documentation/DocText" className="text-gray-600 hover:text-gray-900">
           Documentation
         </Link>
         <Link href="#" className="text-gray-600 hover:text-gray-900">
