@@ -47,6 +47,7 @@ const MonitoringSidebar = () => {
 
   const projectName = useMemo(() => project?.name || "Loading...", [project]);
   const username = useMemo(() => user?.username || "Guest", [user]);
+  
 
   return (
     <div className="h-screen w-64 bg-emerald-400 text-white flex flex-col justify-between p-4">
