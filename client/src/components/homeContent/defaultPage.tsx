@@ -15,7 +15,6 @@ import TableSkeleton from "../skeltons/homePageTable";
 
 const DefaultPage: FC = () => {
   const { notifications, initializeSocket } = useNotificationStore();
-  const token = localStorage.getItem("token");
   const [formattedDate, setFormattedDate] = useState<string>("");
   const [day, setDay] = useState<string>("");
   const [visiblePassKeys, setVisiblePassKeys] = useState<Record<string, boolean>>({});
@@ -25,7 +24,13 @@ const DefaultPage: FC = () => {
   const { user } = useAuthStore();
   const [projectWithNotification, setProjectWithNotification] = useState<string[]>([]);
   const router = useRouter();
+  const [token, setToken] = useState<string | null>(null);
 
+useEffect(() => {
+  if (typeof window !== "undefined") {
+    setToken(localStorage.getItem("token"));
+  }
+}, []);
   const { data: projects, isLoading, isError } = useQuery<Project[]>({
     queryKey: ["userProjects"],
     queryFn: getUserProjects,
