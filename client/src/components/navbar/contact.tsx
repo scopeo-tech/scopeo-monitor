@@ -168,7 +168,7 @@ const ContactPage = () => {
                 <input
                   type="email"
                   placeholder="Email"
-                  className="border hover:border-emerald-500  p-3 rounded-2xl w-full"
+                  className="border-2 hover:border-emerald-500  p-3 rounded-2xl w-full"
                   {...formik.getFieldProps("email")}
                 />
                 {formik.touched.email && formik.errors.email && (
