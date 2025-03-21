@@ -38,14 +38,10 @@ const Activity = () => {
         refetchInterval:6000
       });
 
-      useEffect(()=>{
-        console.log(routes)
-      },[routes])
-
       const { data: logsByRoutesData} = useQuery<Log[]>({
         queryKey: ["logsByRoutes", projectID, selectedRoute],
         queryFn: () => getLogsByRoute(projectID, selectedRoute),
-        enabled: !!selectedRoute, // Only fetch if a route is selected
+        enabled: !!selectedRoute,
         refetchInterval: 6000,
     });
     const logs: Log[] = data?.data?.slice(0, 50) || [];

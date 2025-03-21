@@ -766,11 +766,13 @@ const getErrorStabilityMetrics = async (req: Request, res: Response, next: NextF
         _id: 0,
         failedRequests: 1,
         successRequests: 1,
+        totalRequests: 1,
         errorRate: {
-          $multiply: [
-            { $divide: ["$failedRequests", "$totalRequests"] },
-            100,
-          ],
+          $cond: {
+            if: { $eq: ["$totalRequests", 0] },
+            then: 0,
+            else: { $multiply: [{ $divide: ["$failedRequests", "$totalRequests"] }, 100] }
+          },
         },
       },
     },
