@@ -42,7 +42,7 @@ const MonitoringSidebar = () => {
     { name: "Error & Issue Tracking", icon: FiAlertTriangle, path: `/${projectID}/error` },
     { name: "Logs & Activity Tracking", icon: FiFileText, path: `/${projectID}/activity` },
     { name: "Settings", icon: FiSettings, path: "/home/settings/profile" },
-    { name: "Help", icon: FiHelpCircle, path: "/home/help" },
+    { name: "Help", icon: FiHelpCircle, path: "/faq" },
   ], [projectID]);
 
   const projectName = useMemo(() => project?.name || "Loading...", [project]);
