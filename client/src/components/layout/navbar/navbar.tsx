@@ -6,7 +6,7 @@ import { useUserStore } from "@/lib/stores/userStore";
 
 const Navbar: FC = () => {
   const { user } = useUserStore();
-  const path: string = user ? "/home" : "/";
+  const path: string = user ? "/" : "/";
 
   const [isScrolled, setIsScrolled] = useState(false);
 
