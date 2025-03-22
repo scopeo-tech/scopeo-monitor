@@ -1,22 +1,36 @@
 "use client";
 
 import Link from "next/link";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useState, useRef } from "react";
 import { useUserStore } from "@/lib/stores/userStore";
+import { FiUser, FiSettings, FiLogOut, FiHelpCircle } from "react-icons/fi";
 
 const Navbar: FC = () => {
   const { user } = useUserStore();
   const path: string = user ? "/" : "/";
-
   const [isScrolled, setIsScrolled] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20); 
+      setIsScrolled(window.scrollY > 20);
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
@@ -46,7 +60,7 @@ const Navbar: FC = () => {
         <Link href="/developers" className="text-gray-600 hover:text-gray-900">
           Developers
         </Link>
-        <Link href="/documentation" className="text-gray-600 hover:text-gray-900">
+        <Link href="/documentation/docText" className="text-gray-600 hover:text-gray-900">
           Documentation
         </Link>
         <Link href="/about" className="text-gray-600 hover:text-gray-900">
@@ -59,12 +73,49 @@ const Navbar: FC = () => {
           Faq
         </Link>
         {user && (
-          <Link href="/home" className="text-gray-600 hover:text-gray-900">Home</Link>)}
+          <Link href="/home" className="text-gray-600 hover:text-gray-900">Home</Link>
+        )}
       </div>
 
       {user ? (
-        <div className="w-8 h-8 cursor-pointer bg-rose-500 text-white flex items-center justify-center rounded-full text-lg">
-          {user.username[0].toUpperCase()}
+        <div className="relative" ref={dropdownRef}>
+          <div
+            className="w-8 h-8 cursor-pointer bg-rose-500 text-white flex items-center justify-center rounded-full text-lg"
+            onClick={() => setDropdownOpen(!dropdownOpen)}
+          >
+            {user.username[0].toUpperCase()}
+          </div>
+          {dropdownOpen && (
+            <div className="absolute right-5 top-14 bg-white shadow-lg rounded-lg w-64 p-4">
+              <div className="flex items-center space-x-3 border-b pb-3 mb-3">
+                <div className="w-10 h-10 bg-rose-500 text-white flex items-center justify-center rounded-full text-lg">
+                  {user.username[0].toUpperCase()}
+                </div>
+                <div>
+                  <p className="font-semibold text-gray-800">{user.username}</p>
+                  <p className="text-sm text-gray-500">{user.email}</p>
+                </div>
+              </div>
+              <div className="flex flex-col space-y-4">
+              <Link href="/home/settings/profile" className="flex items-center space-x-3 text-gray-700 hover:text-gray-900">
+                <FiUser className="w-5 h-5" />
+                <span>Profile</span>
+              </Link>
+              <Link href="/home/settings/project" className="flex items-center space-x-3 text-gray-700 hover:text-gray-900">
+                <FiSettings className="w-5 h-5" />
+                <span>Preferences</span>
+              </Link>
+              <Link href="/faq" className="flex items-center space-x-3 text-gray-700 hover:text-gray-900">
+               <FiHelpCircle className="w-5 h-5" />
+                <span>Help & Support</span>
+              </Link>
+              <button className="flex items-center space-x-3 text-gray-700 hover:text-gray-900 w-full">
+                <FiLogOut className="w-5 h-5" />
+                <span>Log out</span>
+              </button>
+              </div>
+            </div>
+          )}
         </div>
       ) : (
         <Link href="/auth/login">
