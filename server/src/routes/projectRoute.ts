@@ -7,6 +7,7 @@ import { getErrorStats, getCommonError, getErrorMethodPercentages, getLatestErro
 import { getLogs , getRoutesFromDb ,logsByRoutes } from "../controller/agent/logs";
 import { getErrorStabilityMetrics, getPerformanceData, getServerPerformanceMetrics, getSystemHealthMetrics, getTrafficLoadMetrics } from "../controller/agent/performance";
 import { getNotifications, markAsRead } from "../controller/project/notificationController";
+import cacheMiddleware from "../middleware/redisCache";
 
 
 const router = express.Router();
@@ -16,12 +17,12 @@ router.use(verifyToken);
 
 router
 
-.post("/create-project", tryCatch(createProject))
-.get("/api-key", tryCatch(getApiKey))
-.get("/pass-key", tryCatch(getPassKey))
-.get("/get-project-passkey/:projectId",tryCatch(getProjectPassKey))
+.get("/api-key",tryCatch(getApiKey))
+.get("/pass-key",tryCatch(getPassKey))
+.get("/get-project-passkey/:projectId",cacheMiddleware,tryCatch(getProjectPassKey))
+.get("/check-project-name/:name",cacheMiddleware,tryCatch(checkProjectName))
+.post("/create-project",tryCatch(createProject))
 .put("/update-project/:projectId",tryCatch(updateProject))
-.get("/check-project-name/:name",tryCatch(checkProjectName))
 .delete("/delete-project/:projectId",tryCatch(deleteProject))
 
 //Error Stats
