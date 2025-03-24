@@ -1307,66 +1307,6 @@ if (environment === 'development') {
     </div>
   ),
 },
-  "/docs/license": {
-  title: "License",
-  section: "Project Info",
-  prev: { href: "/docs/version", title: "Version" },
-  next: { href: "/docs/github", title: "GitHub Repo" },
-  content: () => (
-    <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-gray-900 dark:text-white">License</h1>
-      
-      <div className="mt-4 space-y-4">
-        <p className="text-gray-700 dark:text-gray-300">Hi! Licensing information for Scopeo.</p>
-        
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 my-6">
-          <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-white">MIT License</h2>
-          
-          <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
-            Copyright (c) 2025 Scopeo Project Team
-          </p>
-          
-          <p className="text-gray-700 dark:text-gray-300 mb-4">
-            Permission is hereby granted, free of charge, to any person obtaining a copy
-            of this software and associated documentation files (the &quot;Software&quot;), to deal
-            in the Software without restriction, including without limitation the rights
-            to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-            copies of the Software, and to permit persons to whom the Software is
-            furnished to do so, subject to the following conditions:
-          </p>
-          
-          <p className="text-gray-700 dark:text-gray-300 mb-4">
-            The above copyright notice and this permission notice shall be included in all
-            copies or substantial portions of the Software.
-          </p>
-          
-          <p className="text-gray-700 dark:text-gray-300 mb-4 font-medium">
-            THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-            IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-            FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-            AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-            LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-            OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-            SOFTWARE.
-          </p>
-        </div>
-        
-        <h3 className="text-lg font-medium text-gray-800 dark:text-white mt-6">What This License Means</h3>
-        
-        <ul className="list-disc pl-6 text-gray-700 dark:text-gray-300 space-y-2">
-          <li>You can freely use Scopeo in commercial applications</li>
-          <li>You can modify, distribute and sublicense the code</li>
-          <li>You must include the original license when you share the software</li>
-          <li>The software comes with no warranty of any kind</li>
-        </ul>
-        
-        <p className="text-gray-700 dark:text-gray-300 mt-4">
-          For questions about licensing, please contact us through our GitHub repository.
-        </p>
-      </div>
-    </div>
-  ),
-},
     "/docs/github": {
       title: "GitHub Repo",
       section: "Project Info",
@@ -1544,7 +1484,6 @@ if (environment === 'development') {
                     </a>
                   </li>
                 ))}
-              </ul>
               </ul>
             </div>
           </div>
