@@ -14,7 +14,6 @@ interface UserSocketMap {
 }
 
 export const userSocketMap: UserSocketMap = {}; 
-console.log(process.env.CLIENT_URL);
 export const app = express();
 export const server = createServer(app);
 export const io = new Server(server, {
@@ -27,7 +26,6 @@ export const io = new Server(server, {
 io.use((socket, next) => {
   const pass = socket.handshake.auth.pass;
   if (!pass) {
-    console.log("no token");
     return next(new Error("No socket token!"));
   }
 
@@ -35,7 +33,6 @@ io.use((socket, next) => {
     const decoded = jwt.verify(pass, process.env.JWT_TOKEN as string);
     socket.handshake.auth.userId = (decoded as { id: string }).id;
     socket.data.userId = (decoded as { id: string }).id;
-    console.log("decoded", decoded);
   } catch (error) {
     console.log("socket pass decode error", error);
     return next(new Error("Invalid socket token!"));
@@ -45,7 +42,6 @@ io.use((socket, next) => {
 });
 
 io.on("connection", async (socket) => {
-  console.log("a user connected", socket.id);
 
   socket.on("disconnect", () => {
     console.log("user disconnected", socket.id);
@@ -53,11 +49,8 @@ io.on("connection", async (socket) => {
 
   
   socket.on("join", () => {
-    console.log("user joined", socket.data.userId);
     userSocketMap[socket.data.userId] = socket.id;
-    console.log("user joined", socket.data.userId);
-    console.log(userSocketMap);
-  });
+      });
 
   
   socket.on(
@@ -90,11 +83,6 @@ socket.on(
         socket.to(receiverSocketId).emit("logs", logData);
       }
       
-      
-      console.log("Log event received:", {
-       ...logData,
-      });
-      
     } catch (error) {
       console.log("Error processing security event:", error);
       console.log("Security data:", logData);
@@ -109,7 +97,5 @@ socket.on(
     if (disconnectedUser) {
       delete userSocketMap[disconnectedUser];
     }
-    console.log("A user disconnected:", socket.id);
-    console.log(userSocketMap);
   });
 });
