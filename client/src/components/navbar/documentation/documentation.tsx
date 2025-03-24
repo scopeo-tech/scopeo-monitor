@@ -728,56 +728,8 @@ if (environment === 'development') {
       </ul>
     </div>
   </div>
-  prev: { href: "/docs/configuration", title: "configuration" },
-  next: { href: "/docs/aggregation", title: "Data Aggregation" },
-  content: () => (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-    <h1 className="text-4xl font-bold mb-6 pb-2 border-b-2 border-gray-200">Library with Agent</h1>
-    
-    <p className="text-lg text-gray-600 mb-8">Welcome to the Scopeo agent library documentation. This library provides a comprehensive suite of monitoring and observability tools for your applications.</p>
-    
-    <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-100">Performance and Health Monitoring</h2>
-      <p className="mb-4">Track your application&apos;s health metrics in real-time:</p>
-      <ul className="space-y-3 pl-5 list-disc">
-        <li className="relative pl-6"><span className="absolute left-0 top-2 h-2 w-2"></span><strong>Uptime Percentage:</strong> Automated health checks track system availability</li>
-        <li className="relative pl-6"><span className="absolute left-0 top-2 h-2 w-2"></span><strong>Response Time Tracking:</strong> Middleware captures request latency using high-resolution timing</li>
-        <li className="relative pl-6"><span className="absolute left-0 top-2 h-2 w-2"></span><strong>Connection Health:</strong> Monitor database connectivity and query performance</li>
-      </ul>
-    </div>
-    
-    <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-100">Security and Access Tracking</h2>
-      <p className="mb-4">Maintain robust security monitoring:</p>
-      <ul className="space-y-3 pl-5 list-disc ">
-        <li className="relative pl-6"><span className="absolute left-0 top-2 h-2 w-2 "></span><strong>Failed Login Detection:</strong> Track authentication failures with IP tracking</li>
-        <li className="relative pl-6"><span className="absolute left-0 top-2 h-2 w-2 "></span><strong>Unusual Login Alerts:</strong> Identify logins from new locations or devices</li>
-        <li className="relative pl-6"><span className="absolute left-0 top-2 h-2 w-2 "></span><strong>API Abuse Prevention:</strong> Rate limiting and unauthorized access detection</li>
-      </ul>
-    </div>
-    
-    <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-100">Error and Issue Reporting</h2>
-      <p className="mb-4">Gain insights into application errors:</p>
-      <ul className="space-y-3 pl-5 list-disc">
-        <li className="relative pl-6"><span className="absolute left-0 top-2 h-2 w-2 "></span><strong>Error Trends:</strong> Track error frequency and patterns over time</li>
-        <li className="relative pl-6"><span className="absolute left-0 top-2 h-2 w-2 "></span><strong>Common Issues:</strong> Identify the most frequent errors affecting your users</li>
-        <li className="relative pl-6"><span className="absolute left-0 top-2 h-2 w-2 "></span><strong>Automated Reporting:</strong> Global error handlers capture comprehensive details</li>
-      </ul>
-    </div>
-    
-    <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-100">Logs and User Activity</h2>
-      <p className="mb-4">Comprehensive logging for all system activity:</p>
-      <ul className="space-y-3 pl-5 list-disc">
-        <li className="relative pl-6"><span className="absolute left-0 top-2 h-2 w-2 "></span><strong>Structured Logging:</strong> Organized logs using Winston with severity levels</li>
-        <li className="relative pl-6"><span className="absolute left-0 top-2 h-2 w-2 "></span><strong>User Activity Tracking:</strong> Monitor API usage patterns and user behavior</li>
-        <li className="relative pl-6"><span className="absolute left-0 top-2 h-2 w-2 "></span><strong>Privacy-Focused:</strong> Automatically redacts sensitive information in logs</li>
-      </ul>
-    </div>
-  </div>
-      ),
-    },
+  ),
+  },
   "/docs/aggregation": {
   title: "Data Aggregation",
   section: "Data",
