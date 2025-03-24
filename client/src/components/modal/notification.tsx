@@ -36,9 +36,6 @@ const NotificationModal: React.FC<NotificationModalProps> = ({ onClose }) => {
     setAllNotifications([ ...dbNotification,...projectNotifications]);
   },[notifications, dbNotification, projectID]);
 
-  useEffect(() => {
-    console.log("ionot", notifications);
-  }, [notifications]);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
