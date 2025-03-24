@@ -317,7 +317,9 @@ const ScopeoDocumentation: React.FC = () => {
                 starts tracking performance, security, and error logs.
               </p>
 
-              <h3 className="text-xl font-semibold">
+              <h3
+               id="data-collection & processing"
+              className="text-xl font-semibold">
                 2. Data Collection & Processing
               </h3>
               <ul className="list-disc ml-6 flex flex-col space-y-2">
@@ -343,7 +345,9 @@ const ScopeoDocumentation: React.FC = () => {
                 server in real-time.
               </p>
 
-              <h3 className="text-xl font-semibold">
+              <h3 
+              id="real-time analysis & dashboard display"
+              className="text-xl font-semibold">
                 3. Real-Time Analysis & Dashboard Display
               </h3>
               <p>
@@ -369,7 +373,9 @@ const ScopeoDocumentation: React.FC = () => {
                 instantly on the dashboard.
               </p>
 
-              <h3 className="text-xl font-semibold">
+              <h3
+               id="alert & issue detection"
+               className="text-xl font-semibold">
                 4. Alerts & Issue Detection
               </h3>
               <p>Users receive real-time notifications when:</p>
@@ -383,7 +389,9 @@ const ScopeoDocumentation: React.FC = () => {
                 <strong>email, Slack, or other integrations</strong>.
               </p>
 
-              <h3 className="text-xl font-semibold">
+              <h3
+               id="taking action & optimizing performance"
+               className="text-xl font-semibold">
                 5. Taking Action & Optimizing Performance
               </h3>
               <ul className="list-disc ml-6 flex flex-col space-y-2">
@@ -723,7 +731,7 @@ if (environment === 'development') {
     },
   "/docs/aggregation": {
   title: "Data Aggregation",
-  section: "Library",
+  section: "Data",
   prev: { href: "/docs/library-agent", title: "Library with agent" },
   next: { href: "/docs/data-visualization", title: "Data Visualization" },
   content: () => (
@@ -799,7 +807,7 @@ if (environment === 'development') {
 },
 "/docs/data-visualization": { 
   title: "Data Visualization", 
-  section: "Library", 
+  section: "Data", 
   prev: { href: "/docs/aggregation", title: "Data Aggregation" }, 
   next: { href: "/docs/common-errors", title: "Common Errors" }, 
   content: () => ( 
@@ -812,7 +820,7 @@ if (environment === 'development') {
       
       <p className="text-lg text-gray-700 mb-6">Scopeo offers several visualization components for different monitoring aspects:</p>
       
-      <h3 className="text-2xl font-medium text-gray-800 mt-8 mb-3">Performance & Health Metrics Visualizations</h3>
+      <h4 className="text-2xl font-medium text-gray-800 mt-8 mb-3">Performance & Health Metrics Visualizations</h4>
       
       <ul className="list-disc pl-8 mb-6 text-gray-700 space-y-2">
         <li><span className="font-medium">System Metrics Dashboard</span>: Track CPU, memory, and disk usage with real-time percentage indicators and health status</li>
@@ -821,7 +829,7 @@ if (environment === 'development') {
         <li><span className="font-medium">Status Indicators</span>: Color-coded health status indicators (healthy, unhealthy, critical) for quick assessment</li>
       </ul>
       
-      <h3 className="text-2xl font-medium text-gray-800 mt-8 mb-3">Security & Access Visualizations</h3>
+      <h4 className="text-2xl font-medium text-gray-800 mt-8 mb-3">Security & Access Visualizations</h4>
       
       <ul className="list-disc pl-8 mb-6 text-gray-700 space-y-2">
         <li><span className="font-medium">Login Metrics Dashboard</span>: Monitor total logins, failed attempts, unusual activity, and potential brute force attacks</li>
@@ -830,7 +838,7 @@ if (environment === 'development') {
         <li><span className="font-medium">Security Alert Indicators</span>: Color-coded alert icons (green checkmarks, yellow/red warnings) for quick security status assessment</li>
       </ul>
       
-      <h3 className="text-2xl font-medium text-gray-800 mt-8 mb-3">Error & Issue Tracking Visualizations</h3>
+      <h4 className="text-2xl font-medium text-gray-800 mt-8 mb-3">Error & Issue Tracking Visualizations</h4>
       
       <ul className="list-disc pl-8 mb-6 text-gray-700 space-y-2">
         <li><span className="font-medium">Error Card Displays</span>: Highlighted cards showing latest and most common errors with route information</li>
@@ -839,7 +847,7 @@ if (environment === 'development') {
         <li><span className="font-medium">Error Timeline Integration</span>: Correlate errors with other metrics through shared timeline views</li>
       </ul>
       
-      <h3 className="text-2xl font-medium text-gray-800 mt-8 mb-3">Log & Activity Visualizations</h3>
+      <h4 className="text-2xl font-medium text-gray-800 mt-8 mb-3">Log & Activity Visualizations</h4>
       
       <ul className="list-disc pl-8 mb-6 text-gray-700 space-y-2">
         <li><span className="font-medium">Recent Logs Stream</span>: Real-time chronological display of server logs with HTTP method, endpoint, status code, and response time</li>
@@ -849,7 +857,7 @@ if (environment === 'development') {
       
       <h2 className="text-3xl font-semibold text-gray-800 mt-10 mb-4">Using the Dashboard</h2>
       
-      <h3 className="text-2xl font-medium text-gray-800 mt-8 mb-3">Understanding the Interface</h3>
+      <h4 className="text-2xl font-medium text-gray-800 mt-8 mb-3">Understanding the Interface</h4>
       
       <p className="text-lg text-gray-700 mb-4">The Scopeo dashboard is organized into several key sections:</p>
       
@@ -861,7 +869,7 @@ if (environment === 'development') {
         <li><span className="font-medium">Login Security Dashboard</span>: Tracks authentication attempts with security indicators and time-based visualization</li>
       </ol>
       
-      <h3 className="text-2xl font-medium text-gray-800 mt-8 mb-3">Time Range Selection</h3>
+      <h4 className="text-2xl font-medium text-gray-800 mt-8 mb-3">Time Range Selection</h4>
       
       <p className="text-lg text-gray-700 mb-4">Easily adjust your data visualization timeframes:</p>
       <ul className="list-disc pl-8 mb-6 text-gray-700 space-y-2">
@@ -870,9 +878,9 @@ if (environment === 'development') {
         <li><span className="font-medium">Custom Ranges</span>: Select specific time periods for detailed analysis</li>
       </ul>
       
-      <h3 className="text-2xl font-medium text-gray-800 mt-8 mb-3">Interpreting Key Metrics</h3>
+      <h4 className="text-2xl font-medium text-gray-800 mt-8 mb-3">Interpreting Key Metrics</h4>
       
-      <h4 className="text-xl font-medium text-gray-800 mt-6 mb-3">Performance Indicators</h4>
+      <h5 className="text-xl font-medium text-gray-800 mt-6 mb-3">Performance Indicators</h5>
       
       <ul className="list-disc pl-8 mb-6 text-gray-700 space-y-2">
         <li><span className="font-medium text-red-600">Critical Status</span> (red): Indicates metrics that have crossed critical thresholds requiring immediate attention</li>
@@ -924,7 +932,7 @@ if (environment === 'development') {
         <li>Error occurrences as they&apos;re logged in the Error panels</li>
       </ul>
       
-      <h3 className="text-2xl font-medium text-gray-800 mt-8 mb-3">Analyzing Patterns</h3>
+      <h4 className="text-2xl font-medium text-gray-800 mt-8 mb-3">Analyzing Patterns</h4>
       
       <p className="text-lg text-gray-700 mb-4">The time-series charts reveal important patterns:</p>
       <ul className="list-disc pl-8 mb-6 text-gray-700 space-y-2">
@@ -933,9 +941,9 @@ if (environment === 'development') {
         <li><span className="font-medium">Correlation</span>: Compare multiple metrics (CPU, memory, disk) on the same timeline to identify relationships</li>
       </ul>
       
-      <h2 className="text-3xl font-semibold text-gray-800 mt-10 mb-4">Best Practices</h2>
+      <h3 className="text-3xl font-semibold text-gray-800 mt-10 mb-4">Best Practices</h3>
       
-      <h3 className="text-2xl font-medium text-gray-800 mt-8 mb-3">Effective Dashboard Usage</h3>
+      <h4 className="text-2xl font-medium text-gray-800 mt-8 mb-3">Effective Dashboard Usage</h4>
       
       <ol className="list-decimal pl-8 mb-6 text-gray-700 space-y-2">
         <li><span className="font-medium">Start with Overview</span>: Begin with the System Metrics panel to assess overall health</li>
@@ -944,7 +952,7 @@ if (environment === 'development') {
         <li><span className="font-medium">Track Error Trends</span>: Use error distribution visualizations to focus troubleshooting efforts</li>
       </ol>
       
-      <h3 className="text-2xl font-medium text-gray-800 mt-8 mb-3">Troubleshooting with Visualizations</h3>
+      <h4 className="text-2xl font-medium text-gray-800 mt-8 mb-3">Troubleshooting with Visualizations</h4>
       
       <ol className="list-decimal pl-8 mb-6 text-gray-700 space-y-2">
         <li><span className="font-medium">Identify Error Patterns</span>: Use the Recent Logs panel to spot repeated error codes (like the multiple 401 errors)</li>
@@ -952,7 +960,7 @@ if (environment === 'development') {
         <li><span className="font-medium">Analyze Traffic Impact</span>: Compare Traffic Metrics with Error Rate to determine if errors increase with traffic volume</li>
       </ol>
       
-      <h3 className="text-2xl font-medium text-gray-800 mt-8 mb-3">Alert Configuration</h3>
+      <h4 className="text-2xl font-medium text-gray-800 mt-8 mb-3">Alert Configuration</h4>
       
       <p className="text-lg text-gray-700 mb-4">Set up alerts based on visualization thresholds:</p>
       <ul className="list-disc pl-8 mb-6 text-gray-700 space-y-2">
@@ -1040,14 +1048,14 @@ if (environment === 'development') {
       
       <div className="grid md:grid-cols-2 gap-6 mb-8">
         <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-          <h3 className="text-xl font-semibold text-gray-800 mb-3">Website Monitor</h3>
+          <h4 className="text-xl font-semibold text-gray-800 mb-3">Website Monitor</h4>
           <p className="text-gray-700">
             A web application dashboard that tracks and displays key metrics of deployed projects such as uptime, response times, errors, and logs in real-time.
           </p>
         </div>
         
         <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-          <h3 className="text-xl font-semibold text-gray-800 mb-3">Monitoring Libraries</h3>
+          <h4 className="text-xl font-semibold text-gray-800 mb-3">Monitoring Libraries</h4>
           <p className="text-gray-700">
             Lightweight libraries for both backend and frontend (optional) that provide security, logging, and error management functionality.
           </p>
@@ -1080,7 +1088,7 @@ if (environment === 'development') {
       
       <div className="grid md:grid-cols-2 gap-6 mb-8">
         <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-          <h3 className="text-xl font-semibold text-gray-800 mb-3">Frontend</h3>
+          <h4 className="text-xl font-semibold text-gray-800 mb-3">Frontend</h4>
           <ul className="list-disc pl-6 space-y-2 text-gray-700">
             <li><span className="font-medium">Framework</span>: Next.js with TypeScript</li>
             <li><span className="font-medium">Real-time Updates</span>: Socket.IO</li>
@@ -1090,7 +1098,7 @@ if (environment === 'development') {
         </div>
         
         <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-          <h3 className="text-xl font-semibold text-gray-800 mb-3">Backend</h3>
+          <h4 className="text-xl font-semibold text-gray-800 mb-3">Backend</h4>
           <ul className="list-disc pl-6 space-y-2 text-gray-700">
             <li><span className="font-medium">Server</span>: Node.js with Express and TypeScript</li>
             <li><span className="font-medium">Database</span>: MongoDB</li>
@@ -1158,7 +1166,7 @@ if (environment === 'development') {
       
       <div className="grid md:grid-cols-2 gap-6 mb-8">
         <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-          <h3 className="text-xl font-semibold text-gray-800 mb-3">User Management</h3>
+          <h4 className="text-xl font-semibold text-gray-800 mb-3">User Management</h4>
           <ul className="list-disc pl-6 space-y-2 text-gray-700">
             <li><code className="px-2 py-1 bg-gray-100 rounded">/api/auth/*</code> - Authentication operations</li>
             <li><code className="px-2 py-1 bg-gray-100 rounded">/api/user/*</code> - User profile management</li>
@@ -1166,7 +1174,7 @@ if (environment === 'development') {
         </div>
         
         <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-          <h3 className="text-xl font-semibold text-gray-800 mb-3">Project Management</h3>
+          <h4 className="text-xl font-semibold text-gray-800 mb-3">Project Management</h4>
           <ul className="list-disc pl-6 space-y-2 text-gray-700">
             <li><code className="px-2 py-1 bg-gray-100 rounded">/api/projects/*</code> - Project CRUD operations</li>
             <li><code className="px-2 py-1 bg-gray-100 rounded">/api/projects/:id/*</code> - Specific project operations</li>
@@ -1174,7 +1182,7 @@ if (environment === 'development') {
         </div>
         
         <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-          <h3 className="text-xl font-semibold text-gray-800 mb-3">Monitoring Data</h3>
+          <h4 className="text-xl font-semibold text-gray-800 mb-3">Monitoring Data</h4>
           <ul className="list-disc pl-6 space-y-2 text-gray-700">
             <li><code className="px-2 py-1 bg-gray-100 rounded">/api/security/*</code> - Security event endpoints</li>
             <li><code className="px-2 py-1 bg-gray-100 rounded">/api/issues/*</code> - Error tracking endpoints</li>
@@ -1184,7 +1192,7 @@ if (environment === 'development') {
         </div>
         
         <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-          <h3 className="text-xl font-semibold text-gray-800 mb-3">Support & Utilities</h3>
+          <h4 className="text-xl font-semibold text-gray-800 mb-3">Support & Utilities</h4>
           <ul className="list-disc pl-6 space-y-2 text-gray-700">
             <li><code className="px-2 py-1 bg-gray-100 rounded">/api/contact</code> - Contact form submission</li>
             <li><code className="px-2 py-1 bg-gray-100 rounded">/api/help/*</code> - Help and FAQ endpoints</li>
@@ -1210,7 +1218,7 @@ if (environment === 'development') {
       <h2 className="text-3xl font-semibold text-gray-800 mt-10 mb-4">Security Architecture</h2>
       
       <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mb-8">
-        <h3 className="text-xl font-semibold text-gray-800 mb-3">Key Security Measures</h3>
+        <h4 className="text-xl font-semibold text-gray-800 mb-3">Key Security Measures</h4>
         
         <ul className="list-disc pl-6 space-y-2 text-gray-700">
           <li><span className="font-medium">End-to-End Encryption</span> - All monitoring data is encrypted during transmission</li>
