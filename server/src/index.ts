@@ -10,6 +10,7 @@ import packageRouter from "./routes/packageRoute";
 import { flagOldStatusesJob, startUptimeCron } from "./jobs/cronJob";
 import faqRouter from "./routes/faqRoutes";
 import { app, server } from "./socket";
+import rateLimitMiddleware from "./middleware/rateLimit";
 
 dotenv.config();
 
@@ -25,6 +26,9 @@ app.use(
 );
 app.use(e.json());
 app.use(e.urlencoded({ extended: true }));
+
+app.use("/api",rateLimitMiddleware);
+
 
 app.use("/api/auth", authRouter);
 app.use("/api/project", projectRouter);
