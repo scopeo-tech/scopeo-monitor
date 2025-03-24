@@ -30,27 +30,47 @@ const AIAnalysisModal = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-      <div className="bg-black text-white w-[60%] my-12 max-h-[80vh] overflow-y-auto p-6 rounded-lg shadow-lg border border-gray-700">
-        <h2 className="text-xl font-bold mb-4 text-center">AI Error Analysis</h2>
+      <div className="bg-white text-black w-[60%] my-12 max-h-[80vh] overflow-y-auto p-6 rounded-lg shadow-lg border border-gray-700">
+        <h2 className="text-xl text-black font-bold mb-4 text-center">
+          AI Error Analysis
+        </h2>
 
         {data ? (
           <>
-            <p className="text-gray-300 mb-4">
-              <strong className="text-white">Summary:</strong> {data.summary}
+            <p className="text-gray-800 mb-4">
+              <strong className="text-black">Summary:</strong> {data.summary}
             </p>
 
-            <h4 className="text-lg font-semibold mt-4 mb-2">Possible Causes:</h4>
-            <ul className="list-disc ml-5 text-gray-400 space-y-2">
-              {data.causes.map((cause: string, index: number) => (
-                <li key={index}>{cause}</li>
-              ))}
+            <h4 className="text-lg font-semibold mt-4 mb-2">
+              Possible Causes:
+            </h4>
+            <ul className="list-disc ml-5 text-black space-y-2">
+              {data.causes.map((cause: string, index: number) => {
+                const cleanedCause = cause.replace(/\*\*/g, "");
+                const [title, ...desc] = cleanedCause.split(":");
+                return (
+                  <li key={index}>
+                    <strong className="text-gray-800">{title.trim()}:</strong>{" "}
+                    {desc.join(":").trim()}
+                  </li>
+                );
+              })}
             </ul>
 
-            <h4 className="text-lg font-semibold mt-4 mb-2">Suggested Fixes:</h4>
-            <ul className="list-disc ml-5 text-gray-400 space-y-2">
-              {data.fixes.map((fix: string, index: number) => (
-                <li key={index}>{fix}</li>
-              ))}
+            <h4 className="text-lg font-semibold mt-4 mb-2">
+              Suggested Fixes:
+            </h4>
+            <ul className="list-disc ml-5 text-black space-y-2">
+              {data.fixes.map((fix: string, index: number) => {
+                const cleanedFix = fix.replace(/\*\*/g, "");
+                const [title, ...desc] = cleanedFix.split(":");
+                return (
+                  <li key={index}>
+                    <strong className="text-gray-800">{title.trim()}:</strong>{" "}
+                    {desc.join(":").trim()}
+                  </li>
+                );
+              })}
             </ul>
           </>
         ) : (
