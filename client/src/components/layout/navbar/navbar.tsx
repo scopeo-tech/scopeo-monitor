@@ -21,7 +21,6 @@ const Navbar: FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -59,7 +58,7 @@ const Navbar: FC = () => {
         <Link href="/developers" className="text-gray-600 hover:text-gray-900">
           Developers
         </Link>
-        <Link href="/documentation/docText" className="text-gray-600 hover:text-gray-900">
+        <Link href="/documentation" className="text-gray-600 hover:text-gray-900">
           Documentation
         </Link>
         <Link href="/about" className="text-gray-600 hover:text-gray-900">
