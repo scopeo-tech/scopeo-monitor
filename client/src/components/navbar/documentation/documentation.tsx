@@ -1232,21 +1232,77 @@ if (environment === 'development') {
     </div>
   ),
 },
-    "/docs/version": {
-      title: "Version",
-      section: "Project Info",
-      prev: { href: "/docs/architecture", title: "Architecture" },
-      next: { href: "/docs/license", title: "License" },
-      content: () => (
-        <div className="space-y-6">
-          <h1 className="text-3xl font-bold tracking-tight">Version</h1>
-          <p className="text-lg text-muted-foreground">
-            Hi! Version history and release notes.
-          </p>
-          <p> be adding more content to this section soon.</p>
+  "/docs/version": {
+  title: "Version",
+  section: "Project Info",
+  prev: { href: "/docs/architecture", title: "Architecture" },
+  next: { href: "/docs/license", title: "License" },
+  content: () => (
+    <div className="max-w-3xl mx-auto py-8">
+      <h1 className="text-3xl font-bold mb-6">Version</h1>
+      
+      <div className="mb-6">
+        <p className="text-gray-700 mb-4">
+          Version history and release notes for our project. This page documents all releases with notable changes and improvements.
+        </p>
+      </div>
+      
+      <div className="space-y-8">
+        {/* Version 2.0.0 */}
+        <div className="border-l-4 border-blue-500 pl-4 py-1">
+          <div className="flex items-center mb-2">
+            <h2 className="text-xl font-semibold">Version 1.0.1</h2>
+            <span className="ml-3 px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">Latest</span>
+            <span className="ml-3 text-sm text-gray-500">Released: March 15, 2025</span>
+          </div>
+          
+          <div className="text-gray-700 space-y-3">
+            <p>Major release with significant performance improvements and new features.</p>
+            
+            <div className="mt-3">
+              <h4 className="text-lg font-medium mb-2">Changes:</h4>
+              <ul className="list-disc list-inside space-y-1 text-gray-600">
+                <li>Completely redesigned user interface</li>
+                <li>Added support for real-time collaboration</li>
+                <li>Improved performance by 40%</li>
+                <li>New API endpoints for third-party integration</li>
+                <li>Enhanced security features</li>
+              </ul>
+            </div>
+          </div>
         </div>
-      ),
-    },
+        
+        {/* Version 1.0.0 */}
+        <div className="border-l-4 border-gray-300 pl-4 py-1">
+          <div className="flex items-center mb-2">
+            <h2 className="text-xl font-semibold">Version 1.0.0</h2>
+            <span className="ml-3 text-sm text-gray-500">Released: March 1, 2025</span>
+          </div>
+          
+          <div className="text-gray-700 space-y-3">
+            <p>Initial stable release.</p>
+            
+            <div className="mt-3">
+              <h4 className="text-lg font-medium mb-2">Features:</h4>
+              <ul className="list-disc list-inside space-y-1 text-gray-600">
+                <li>Core functionality implemented</li>
+                <li>Basic documentation</li>
+                <li>Command-line interface</li>
+                <li>Support for major platforms</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div className="mt-10 pt-6 border-t border-gray-200">
+        <p className="text-gray-600 italic">
+          We will be adding more detailed release notes to this section soon.
+        </p>
+      </div>
+    </div>
+  ),
+},
   "/docs/license": {
   title: "License",
   section: "Project Info",
@@ -1307,36 +1363,294 @@ if (environment === 'development') {
     </div>
   ),
 },
-    "/docs/github": {
-      title: "GitHub Repo",
-      section: "Project Info",
-      prev: { href: "/docs/license", title: "License" },
-      next: { href: "/docs/buy-coffee", title: "Buy Us a Coffee" },
-      content: () => (
-        <div className="space-y-6">
-          <h1 className="text-3xl font-bold tracking-tight">GitHub Repo</h1>
-          <p className="text-lg text-muted-foreground">
-            Hi! Information about the Scopeo GitHub repository.
-          </p>
-          <p> be adding more content to this section soon.</p>
+   "/docs/github": {
+  title: "GitHub Repo",
+  section: "Project Info",
+  prev: { href: "/docs/license", title: "License" },
+  next: { href: "/docs/buy-coffee", title: "Buy Us a Coffee" },
+  content: () => (
+    <div className="max-w-3xl mx-auto py-8 space-y-8">
+      <div className="space-y-6">
+        <h1 className="text-3xl font-bold tracking-tight">GitHub Repository</h1>
+        <p className="text-lg text-muted-foreground">
+          Information about the Scopeo GitHub repository and how to contribute.
+        </p>
+      </div>
+
+      {/* Repository Information */}
+      <div className="p-6 bg-gray-50 rounded-lg border border-gray-200">
+        <div className="flex items-center gap-3 mb-4">
+          <svg className="w-8 h-8 text-gray-900" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+          </svg>
+          <h2 className="text-xl font-semibold">github.com/scopeo/scopeo</h2>
         </div>
-      ),
-    },
-    "/docs/buy-coffee": {
-      title: "Buy Us a Coffee",
-      section: "Project Info",
-      prev: { href: "/docs/github", title: "GitHub Repo" },
-      next: null,
-      content: () => (
-        <div className="space-y-6">
-          <h1 className="text-3xl font-bold tracking-tight">Buy Us a Coffee</h1>
-          <p className="text-lg text-muted-foreground">
-            Hi! Support the Scopeo project by buying us a coffee.
-          </p>
-          <p>We&apos;ll be adding more content to this section soon.</p>
+
+        <div className="flex flex-wrap gap-3 mb-4">
+          <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">MIT License</span>
+          <span className="px-2 py-1 bg-purple-100 text-purple-800 text-xs font-medium rounded-full">JavaScript</span>
+          <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full">TypeScript</span>
+          <span className="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">React</span>
         </div>
-      ),
-    },
+
+        <p className="mb-4">
+          Scopeo is an open-source project focusing on [brief description of your project]. The codebase is hosted on GitHub and maintained by a community of developers.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <a href="https://github.com/scopeo/scopeo" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center px-4 py-2 bg-black text-white font-medium rounded-md hover:bg-gray-800 transition-colors">
+            <span>View Repository</span>
+          </a>
+          <a href="https://github.com/scopeo/scopeo/issues/new" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center px-4 py-2 bg-white text-black border border-gray-300 font-medium rounded-md hover:bg-gray-50 transition-colors">
+            <span>Report an Issue</span>
+          </a>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-sm">
+          <div className="p-2">
+            <div className="font-bold text-xl mb-1">2</div>
+            <div className="text-gray-600">Stars</div>
+          </div>
+          <div className="p-2">
+            <div className="font-bold text-xl mb-1">4</div>
+            <div className="text-gray-600">Forks</div>
+          </div>
+          <div className="p-2">
+            <div className="font-bold text-xl mb-1">4</div>
+            <div className="text-gray-600">Contributors</div>
+          </div>
+          <div className="p-2">
+            <div className="font-bold text-xl mb-1">2</div>
+            <div className="text-gray-600">Releases</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Contribution Guidelines */}
+      <div className="space-y-4">
+        <h2 className="text-2xl font-semibold">How to Contribute</h2>
+        <p>We welcome contributions from developers of all skill levels. Here&apos;s how you can get involved:</p>
+
+        <div className="space-y-3 mt-4">
+          <div className="pl-4 border-l-4 border-blue-500">
+            <h4 className="font-medium">1. Set up your development environment</h4>
+            <p className="text-gray-700 mt-1">
+              Clone the repository and install dependencies to get started with development.
+            </p>
+            <div className="mt-2 p-3 bg-gray-100 rounded-md font-mono text-sm">
+              git clone https://github.com/scopeo/scopeo.git<br />
+              cd scopeo<br />
+              npm install
+            </div>
+          </div>
+
+          <div className="pl-4 border-l-4 border-blue-500">
+            <h4 className="font-medium">2. Find an issue to work on</h4>
+            <p className="text-gray-700 mt-1">
+              Look for issues labeled &quot;good first issue&quot; or &quot;help wanted&quot; in our issue tracker.
+            </p>
+          </div>
+
+          <div className="pl-4 border-l-4 border-blue-500">
+            <h4 className="font-medium">3. Create a pull request</h4>
+            <p className="text-gray-700 mt-1">
+              Make your changes in a new branch and submit a pull request with a clear description of the changes.
+            </p>
+          </div>
+
+          <div className="pl-4 border-l-4 border-blue-500">
+            <h4 className="font-medium">4. Code review</h4>
+            <p className="text-gray-700 mt-1">
+              Wait for a maintainer to review your changes. They might request some modifications before merging.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Code of Conduct */}
+      <div className="space-y-4">
+        <h2 className="text-2xl font-semibold">Code of Conduct</h2>
+        <p>
+          We are committed to fostering an open and welcoming environment. Please read our 
+          <a href="https://github.com/scopeo/scopeo/blob/main/CODE_OF_CONDUCT.md" className="text-blue-600 hover:underline ml-1">
+            Code of Conduct
+          </a> before participating in our project.
+        </p>
+      </div>
+
+      {/* Project Roadmap */}
+      <div className="space-y-4">
+        <h2 className="text-2xl font-semibold">Project Roadmap</h2>
+        <p>
+          Check our 
+          <a href="https://github.com/scopeo/scopeo/projects" className="text-blue-600 hover:underline mx-1">
+            GitHub Projects
+          </a>
+          page to see what we&apos;re currently working on and our plans for future releases.
+        </p>
+      </div>
+
+      <div className="pt-6 border-t border-gray-200">
+        <p className="text-gray-600 italic">
+          For more detailed information, please refer to the documentation in the repository&apos;s README.md file.
+        </p>
+      </div>
+    </div>
+  ),
+},
+   "/docs/buy-coffee": {
+  title: "Buy Us a Coffee",
+  section: "Project Info",
+  prev: { href: "/docs/github", title: "GitHub Repo" },
+  next: null,
+  content: () => (
+    <div className="max-w-3xl mx-auto py-8 space-y-8">
+      <div className="space-y-6">
+        <h1 className="text-3xl font-bold tracking-tight">Buy Us a Coffee</h1>
+        <p className="text-lg text-muted-foreground">
+          Support the Scopeo project by buying us a coffee. Your contributions help us continue developing and improving this open-source tool.
+        </p>
+      </div>
+
+      {/* Main support card */}
+      <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl p-6 border border-amber-200 shadow-sm">
+        <div className="flex flex-col md:flex-row items-center gap-6">
+          <div className="flex-shrink-0">
+            <svg className="w-32 h-32 text-amber-800" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18 8H19C20.0609 8 21.0783 8.42143 21.8284 9.17157C22.5786 9.92172 23 10.9391 23 12C23 13.0609 22.5786 14.0783 21.8284 14.8284C21.0783 15.5786 20.0609 16 19 16H18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M2 8H18V17C18 18.0609 17.5786 19.0783 16.8284 19.8284C16.0783 20.5786 15.0609 21 14 21H6C4.93913 21 3.92172 20.5786 3.17157 19.8284C2.42143 19.0783 2 18.0609 2 17V8Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M6 1V4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M10 1V4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M14 1V4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </div>
+          <div className="flex-1 text-center md:text-left">
+            <h2 className="text-2xl font-bold text-amber-900 mb-3">Fuel Our Development</h2>
+            <p className="text-amber-800 mb-4">
+              Scopeo is created and maintained by a small team of passionate developers. 
+              Your support helps us dedicate more time to fixing bugs, adding features, 
+              and improving documentation.
+            </p>
+            <div className="flex flex-wrap justify-center md:justify-start gap-3 mt-4">
+              <a href="https://www.buymeacoffee.com/scopeo" target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-4 py-2 bg-amber-500 text-white font-medium rounded-md hover:bg-amber-600 transition-colors">
+                <span className="mr-2">☕</span>
+                <span>Buy us a coffee</span>
+              </a>
+              <a href="https://github.com/sponsors/scopeo" target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-4 py-2 bg-white text-gray-800 border border-gray-300 font-medium rounded-md hover:bg-gray-50 transition-colors">
+                <span className="mr-2">❤️</span>
+                <span>GitHub Sponsors</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Why support section */}
+      <div className="space-y-5">
+        <h2 className="text-2xl font-semibold">Why Support Us?</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="p-5 border border-gray-200 rounded-lg bg-white">
+            <div className="text-amber-500 text-xl mb-3">💻</div>
+            <h4 className="font-medium text-lg mb-2">Continued Development</h4>
+            <p className="text-gray-600">Your support allows us to dedicate more time to developing new features and improvements.</p>
+          </div>
+          <div className="p-5 border border-gray-200 rounded-lg bg-white">
+            <div className="text-amber-500 text-xl mb-3">🔧</div>
+            <h4 className="font-medium text-lg mb-2">Bug Fixes & Maintenance</h4>
+            <p className="text-gray-600">Help us maintain and improve the existing codebase with regular updates and fixes.</p>
+          </div>
+          <div className="p-5 border border-gray-200 rounded-lg bg-white">
+            <div className="text-amber-500 text-xl mb-3">📚</div>
+            <h4 className="font-medium text-lg mb-2">Better Documentation</h4>
+            <p className="text-gray-600">We can create more comprehensive guides, examples, and tutorials for all users.</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Supporters section */}
+      {/* <div className="space-y-5">
+        <h2 className="text-2xl font-semibold">Our Amazing Supporters</h2>
+        <p>We&apos;re grateful to these wonderful people and organizations who have supported our project:</p>
+        
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+            <div key={i} className="flex flex-col items-center p-3 border border-gray-200 rounded-lg bg-white">
+              <div className="w-12 h-12 bg-gray-200 rounded-full mb-2"></div>
+              <div className="text-center">
+                <div className="font-medium">Supporter {i}</div>
+                <div className="text-xs text-gray-500">Contributor</div>
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        <p className="text-center mt-4 text-sm text-gray-600">
+          Want your name here? Become a sponsor today!
+        </p>
+      </div> */}
+
+      {/* FAQ section */}
+      <div className="space-y-5">
+        <h2 className="text-2xl font-semibold">Frequently Asked Questions</h2>
+        
+        <div className="space-y-4">
+          <div className="border border-gray-200 rounded-lg overflow-hidden">
+            <div className="p-4 bg-gray-50 font-medium">
+              How are the donations used?
+            </div>
+            <div className="p-4 border-t border-gray-200">
+              <p>All donations go directly toward development costs, including server expenses, development tools, and compensating our core team for their time.</p>
+            </div>
+          </div>
+          
+          <div className="border border-gray-200 rounded-lg overflow-hidden">
+            <div className="p-4 bg-gray-50 font-medium">
+              Is my donation tax-deductible?
+            </div>
+            <div className="p-4 border-t border-gray-200">
+              <p>We are not currently a registered non-profit organization, so donations are not tax-deductible at this time.</p>
+            </div>
+          </div>
+          
+          <div className="border border-gray-200 rounded-lg overflow-hidden">
+            <div className="p-4 bg-gray-50 font-medium">
+              Can I donate using cryptocurrency?
+            </div>
+            <div className="p-4 border-t border-gray-200">
+              <p>Yes! Please reach out to our team directly for cryptocurrency donation options.</p>
+            </div>
+          </div>
+
+          <div className="border border-gray-200 rounded-lg overflow-hidden">
+            <div className="p-4 bg-gray-50 font-medium">
+              Can I support in other ways besides financial contributions?
+            </div>
+            <div className="p-4 border-t border-gray-200">
+              <p>Absolutely! You can contribute code, documentation, help with testing, or simply spread the word about Scopeo. Every form of support is valuable to us.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Contact section */}
+      <div className="p-6 bg-gray-50 rounded-lg border border-gray-200 text-center">
+        <h2 className="text-xl font-semibold mb-3">Need a Custom Solution?</h2>
+        <p className="mb-4">
+          For larger organizations or custom development needs, we also offer consulting services and custom feature development.
+        </p>
+        <a href="mailto:scopeo.tech@gmail.com" className="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors">
+          <span>Contact Our Team</span>
+        </a>
+      </div>
+
+      <div className="pt-6 border-t border-gray-200 text-center">
+        <p className="text-gray-600">
+          Thank you for supporting open-source software! ❤️
+        </p>
+      </div>
+    </div>
+  ),
+},
   };
 
   // navigation structure

@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer';
 import CustomError from '../lib/util/CustomError';
 import dotenv from 'dotenv';
+import logger from '../lib/util/logger';
 
 dotenv.config();
 
@@ -22,7 +23,7 @@ export const sendEmail = async (firstName:string,lastName:string , email: string
             html: body,
         });
     } catch (error) {
-        console.log(error);
+        logger.error(error);
         throw new CustomError(500, "Error when sending Email");
     }
 }

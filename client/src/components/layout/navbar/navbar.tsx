@@ -55,9 +55,9 @@ const Navbar: FC = () => {
       </Link>
 
       <div className="hidden md:flex font-semibold items-center space-x-12">
-        <Link href="/developers" className="text-gray-600 hover:text-gray-900">
-          Developers
-        </Link>
+      {user && (
+          <Link href="/home" className="text-gray-600 hover:text-gray-900">Home</Link>
+        )}
         <Link href="/documentation" className="text-gray-600 hover:text-gray-900">
           Documentation
         </Link>
@@ -70,9 +70,7 @@ const Navbar: FC = () => {
         <Link href="/faq" className="text-gray-600 hover:text-gray-900">
           Faq
         </Link>
-        {user && (
-          <Link href="/home" className="text-gray-600 hover:text-gray-900">Home</Link>
-        )}
+       
       </div>
 
       {user ? (
