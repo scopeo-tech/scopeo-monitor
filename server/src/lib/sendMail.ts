@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import  CustomError from "./util/CustomError";
+import logger from "./util/logger";
 const sendMail = async (email: string, title: string, body: string) => {
   try {
     const transporter = nodemailer.createTransport({
@@ -22,7 +23,7 @@ const sendMail = async (email: string, title: string, body: string) => {
     });
     return info;
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     throw new CustomError(500, "Error when sending Email");
   }
 };

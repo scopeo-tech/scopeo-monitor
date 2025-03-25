@@ -14,6 +14,7 @@ import { IoNotificationsSharp } from "react-icons/io5";
 import TableSkeleton from "../skeltons/homePageTable";
 import withAuth from "@/lib/withAuth";
 
+
 const DefaultPage: FC = () => {
   const { notifications, initializeSocket } = useNotificationStore();
   const [formattedDate, setFormattedDate] = useState<string>("");
@@ -81,7 +82,6 @@ const DefaultPage: FC = () => {
 
     try {
       const passKeyData = await getProjectPassKey(projectId);
-      console.log(passKeyData);
       if (!passKeyData) {
         console.error("Error: No passKey received!");
         return;
