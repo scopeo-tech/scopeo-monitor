@@ -2,6 +2,7 @@ import Image from "next/image";
 import website from "@/assets/website.svg";
 import { IoMdContact } from "react-icons/io";
 import Navbar from "../layout/navbar/navbar";
+import Aboutus from '@/assets/Aboutus.svg'
 
 const About: React.FC = () => {
   return (
@@ -25,7 +26,7 @@ Designed for teams of all sizes, our platform adapts to your workflow and scales
         {/* Right Side: Image */}
         <div className="w-1/2 relative h-full">
           <Image
-            src={website}
+            src={Aboutus}
             alt="website"
             fill
             className="object-cover"
