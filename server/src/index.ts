@@ -11,6 +11,8 @@ import { flagOldStatusesJob, startUptimeCron } from "./jobs/cronJob";
 import faqRouter from "./routes/faqRoutes";
 import { app, server } from "./socket";
 import rateLimitMiddleware from "./middleware/rateLimit";
+import morganMiddleware from "./config/morganConfig";
+import logger from "./lib/util/logger";
 
 dotenv.config();
 
@@ -27,8 +29,8 @@ app.use(
 app.use(e.json());
 app.use(e.urlencoded({ extended: true }));
 
+app.use(morganMiddleware);
 app.use("/api",rateLimitMiddleware);
-
 
 app.use("/api/auth", authRouter);
 app.use("/api/project", projectRouter);
@@ -41,5 +43,5 @@ app.use(globalErrorHandler);
 const port = process.env.PORT || 3001;
 
 server.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  logger.info(`Server is running on port ${port}`);
 });

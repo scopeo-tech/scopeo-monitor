@@ -81,7 +81,6 @@ const DefaultPage: FC = () => {
 
     try {
       const passKeyData = await getProjectPassKey(projectId);
-      console.log(passKeyData);
       if (!passKeyData) {
         console.error("Error: No passKey received!");
         return;
