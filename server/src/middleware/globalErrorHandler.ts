@@ -15,7 +15,6 @@ const globalErrorHandler = (
   const message = err.message || "Internal Server Error";
   const status = err.status || "error";
 
-  console.error("errr", message);
   console.log(err);
 
 

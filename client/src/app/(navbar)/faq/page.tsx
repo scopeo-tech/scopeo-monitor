@@ -1,9 +1,11 @@
 import FAQ from '@/components/navbar/faq'
 import React from 'react'
 
-const page = () => {
+function page() {
   return (
-    <div><FAQ/></div>
+    <div>
+      <FAQ/>
+    </div>
   )
 }
 

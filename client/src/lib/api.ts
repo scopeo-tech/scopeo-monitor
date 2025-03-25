@@ -299,7 +299,6 @@ export const getStabilityMetrics = async (projectId: string , filter: string) =>
 //contact
 export const contactUs = async (data:{firstname:string,lastname:string,email:string,message:string}) => {
   const response = await axiosInstance.post("/user/contact", data);
-  console.log(response.data);
   return response.data;
 }
 

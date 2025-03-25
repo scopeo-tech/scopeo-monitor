@@ -32,7 +32,6 @@ const RegisterForm: FC = () => {
   const { data: session, status } = useSession();
   useEffect(() => {
     if (status === "authenticated" && session?.idToken) {
-      console.log("Session loaded :", session);
       handleGoogleLogin(session?.idToken);
     }
   }, [session, status]);
@@ -103,9 +102,6 @@ const RegisterForm: FC = () => {
     }
   };
 
-  useEffect(() => {
-    console.log("OTP Verified state changed:", isOtpVerified);
-  }, [isOtpVerified]);
   const handleVerifyOtp = async () => {
     setLoading(true);
     setError(null);
@@ -113,11 +109,9 @@ const RegisterForm: FC = () => {
       await verifyOtp({ email: userEmail, otp });
       setIsOtpVerified(true);
       setIsOtpModalOpen(false);
-      console.log("otp verified");
       
     } catch (err) {
       setError((err as Error).message);
-      console.log("error", error);
     } finally {
       setLoading(false);
     }

@@ -28,7 +28,6 @@ export const useUserStore = create<UserState>((set) => ({
         localStorage.removeItem("user");
         localStorage.removeItem("token");
       }
-      console.log("User logged out successfully.");
     } catch (error) {
       console.error("Logout failed:", error);
     }

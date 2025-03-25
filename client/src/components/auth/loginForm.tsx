@@ -27,7 +27,6 @@ const LoginForm: FC = () => {
 
   useEffect(() => {
     if (status === "authenticated" && session?.idToken) {
-      console.log("Session loaded :", session);
       handleGoogleLogin(session?.idToken);
     }
   }, [session, status]);
