@@ -11,6 +11,7 @@ import UnusualLoginSummary, { UnusualLoginSummaryProps } from './helper/unusualS
 import LoginSummary, { LoginSummaryProps } from './helper/logSummery';
 import BruteForceSummary, { BruteForceSummaryProps } from './helper/failSummery';
 import AccessMonitorSkeleton from '../skeltons/accessMonitoringSkeleton';
+import withAuth from '@/lib/withAuth';
 
 const loginOptions = [
   { label: "All Logins", value: "allLogins", api: allLogins },
@@ -39,7 +40,7 @@ const AccessMonitor = () => {
         return <BruteForceSummary {...currentBruteSummary!} />;
     }
   }
-  // Stats query for the pie chart and metrics
+  
   const { data: stats = {
     totalLogins: 0,
     successLogins: 0,
@@ -51,11 +52,14 @@ const AccessMonitor = () => {
   }, isLoading: isStatsLoading } = useQuery({
     queryKey: ["securityStats", projectID, pieTimeRange],
     queryFn: () => securityStats(projectID, pieTimeRange),
-    enabled: !!projectID
+    enabled: !!projectID,
+    refetchInterval: 6000, 
   });
+
   const { data: loginData, isLoading: isLoginDataLoading } = useQuery({
     queryKey: ["loginData", projectID, lineTimeRange, selectedLoginType.value],
     queryFn: () => selectedLoginType.api(projectID, lineTimeRange),
+    refetchInterval: 6000,
     enabled: !!projectID
   });
   useEffect(() => {
@@ -111,4 +115,4 @@ const AccessMonitor = () => {
   )
 }
 
-export default AccessMonitor
+export default withAuth(AccessMonitor);

@@ -41,12 +41,13 @@ const MonitoringSidebar = () => {
     { name: "Security & Access Monitoring", icon: FiLock, path: `/${projectID}/security` },
     { name: "Error & Issue Tracking", icon: FiAlertTriangle, path: `/${projectID}/error` },
     { name: "Logs & Activity Tracking", icon: FiFileText, path: `/${projectID}/activity` },
-    { name: "Settings", icon: FiSettings, path: "/home/settings" },
-    { name: "Help", icon: FiHelpCircle, path: "/home/help" },
+    { name: "Settings", icon: FiSettings, path: "/home/settings/profile" },
+    { name: "Help", icon: FiHelpCircle, path: "/faq" },
   ], [projectID]);
 
   const projectName = useMemo(() => project?.name || "Loading...", [project]);
   const username = useMemo(() => user?.username || "Guest", [user]);
+  
 
   return (
     <div className="h-screen w-64 bg-emerald-400 text-white flex flex-col justify-between p-4">

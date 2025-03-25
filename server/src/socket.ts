@@ -6,6 +6,7 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { ILog } from "./model/logModel";
+import logger from "./lib/util/logger";
 
 dotenv.config();
 
@@ -13,8 +14,7 @@ interface UserSocketMap {
   [userId: string]: string;
 }
 
-export const userSocketMap: UserSocketMap = {}; // stores the socket id of each user that is connected
-console.log(process.env.CLIENT_URL);
+export const userSocketMap: UserSocketMap = {}; 
 export const app = express();
 export const server = createServer(app);
 export const io = new Server(server, {
@@ -27,7 +27,6 @@ export const io = new Server(server, {
 io.use((socket, next) => {
   const pass = socket.handshake.auth.pass;
   if (!pass) {
-    console.log("no token");
     return next(new Error("No socket token!"));
   }
 
@@ -35,9 +34,8 @@ io.use((socket, next) => {
     const decoded = jwt.verify(pass, process.env.JWT_TOKEN as string);
     socket.handshake.auth.userId = (decoded as { id: string }).id;
     socket.data.userId = (decoded as { id: string }).id;
-    console.log("decoded", decoded);
   } catch (error) {
-    console.log("socket pass decode error", error);
+    logger.error("socket pass decode error", error);
     return next(new Error("Invalid socket token!"));
   }
 
@@ -45,40 +43,36 @@ io.use((socket, next) => {
 });
 
 io.on("connection", async (socket) => {
-  console.log("a user connected", socket.id);
 
   socket.on("disconnect", () => {
-    console.log("user disconnected", socket.id);
+    logger.info("user disconnected", socket.id);
   });
 
-  // user join event
+  
   socket.on("join", () => {
-    console.log("user joined", socket.data.userId);
     userSocketMap[socket.data.userId] = socket.id;
-    console.log("user joined", socket.data.userId);
-    console.log(userSocketMap);
-  });
+      });
 
-  //send notification event
+  
   socket.on(
     "notification",
     async (notification : INotification) => {
       const receiverSocketId = userSocketMap[notification.user.toString() as string];
 
-      //create notificaion in db
+      
       try {
-        // send notification to receiver
+        
         if (receiverSocketId) {
           socket.to(receiverSocketId).emit("notification", notification);
         }
       } catch (error) {
-        console.log("Error creating notification:", error);
-        console.log("Notification data:", notification);
+        logger.error("Error creating notification:", error);
+        logger.error("Notification data:", notification);
       }
     }
   );
 
-  // logs event handler
+  
 socket.on(
   "logs",
   async (logData: ILog,userId:string) => {
@@ -86,18 +80,13 @@ socket.on(
       const receiverSocketId = userSocketMap[userId];
       
       if (receiverSocketId) {
-        // Emitting to the same user who triggered the security event
+        
         socket.to(receiverSocketId).emit("logs", logData);
       }
       
-      // Optional: You could also log security events or perform additional actions
-      console.log("Log event received:", {
-       ...logData,
-      });
-      
     } catch (error) {
-      console.log("Error processing security event:", error);
-      console.log("Security data:", logData);
+      logger.error("Error processing security event:", error);
+      logger.error("Security data:", logData);
     }
   }
 );
@@ -109,7 +98,5 @@ socket.on(
     if (disconnectedUser) {
       delete userSocketMap[disconnectedUser];
     }
-    console.log("A user disconnected:", socket.id);
-    console.log(userSocketMap);
   });
 });

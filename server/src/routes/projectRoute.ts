@@ -4,9 +4,10 @@ import verifyToken from "../middleware/verifyToken";
 import tryCatch from "../lib/util/tryCatch";
 import {getBruteForceAttempts,getFailedLogins,getTotalLogins,getUnusualLogins,getSecurityStats} from "../controller/agent/security"
 import { getErrorStats, getCommonError, getErrorMethodPercentages, getLatestError, getAllErrors, getAiErrorAnalysis, resolveError, unResolveError } from "../controller/agent/errorTrack";
-import { getLogs } from "../controller/agent/logs";
+import { getLogs , getRoutesFromDb ,logsByRoutes } from "../controller/agent/logs";
 import { getErrorStabilityMetrics, getPerformanceData, getServerPerformanceMetrics, getSystemHealthMetrics, getTrafficLoadMetrics } from "../controller/agent/performance";
 import { getNotifications, markAsRead } from "../controller/project/notificationController";
+import cacheMiddleware from "../middleware/redisCache";
 
 
 const router = express.Router();
@@ -16,12 +17,12 @@ router.use(verifyToken);
 
 router
 
-.post("/create-project", tryCatch(createProject))
-.get("/api-key", tryCatch(getApiKey))
-.get("/pass-key", tryCatch(getPassKey))
-.get("/get-project-passkey/:projectId",tryCatch(getProjectPassKey))
+.get("/api-key",tryCatch(getApiKey))
+.get("/pass-key",tryCatch(getPassKey))
+.get("/get-project-passkey/:projectId",cacheMiddleware,tryCatch(getProjectPassKey))
+.get("/check-project-name/:name",cacheMiddleware,tryCatch(checkProjectName))
+.post("/create-project",tryCatch(createProject))
 .put("/update-project/:projectId",tryCatch(updateProject))
-.get("/check-project-name/:name",tryCatch(checkProjectName))
 .delete("/delete-project/:projectId",tryCatch(deleteProject))
 
 //Error Stats
@@ -48,6 +49,8 @@ router
 
 //get serverLogs
 .get("/get-logs/:projectId",tryCatch(getLogs))
+.get("/get-logs-route/:projectId",tryCatch(getRoutesFromDb))
+.get("/get-logs-by-route/:projectId",tryCatch(logsByRoutes))
 
 //notifications
 .get("/get-notifications/:projectId",tryCatch(getNotifications))

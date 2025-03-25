@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { useEffect, useState } from "react";
@@ -26,7 +27,6 @@ const LoginForm: FC = () => {
 
   useEffect(() => {
     if (status === "authenticated" && session?.idToken) {
-      console.log("Session loaded :", session);
       handleGoogleLogin(session?.idToken);
     }
   }, [session, status]);

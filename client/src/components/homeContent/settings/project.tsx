@@ -6,8 +6,9 @@ import { updateProject, getUserProjects, checkProjectName ,deleteProject} from "
 import { Project } from "@/lib/interface";
 import { FiAlertTriangle } from "react-icons/fi";
 import LoadingButton from "@/components/ui/loadingButton";
+import withAuth from "@/lib/withAuth";
 
-export default function ProjectPage() {
+function ProjectPage() {
   const [selectedProject, setSelectedProject] = useState("stepprime-ecommerce");
   const [projectName, setProjectName] = useState("");
   const [passkey, setPasskey] = useState("");
@@ -199,3 +200,6 @@ export default function ProjectPage() {
     </div>
   );
 }
+
+
+export default withAuth(ProjectPage);

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -5,8 +6,9 @@ import { useRouter } from 'next/navigation';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { getUserInfo, updateProfile, checkUsername, deleteProfile ,logoutUser} from '@/lib/api';
 import LoadingButton from '@/components/ui/loadingButton';
+import withAuth from '@/lib/withAuth';
 
-export default function ProfilePage() {
+function ProfilePage() {
   const { data: user, isLoading, isError } = useQuery({
     queryKey: ['userInfo'],
     queryFn: getUserInfo,
@@ -53,16 +55,6 @@ export default function ProfilePage() {
 
     return () => clearTimeout(delayCheck);
   }, [username]);
-
-
-  useEffect(() => {
-    const fetchhh = async () => {
-      const response = await checkUsername(username);
-      console.log(response,"waa")
-    }
-    fetchhh()
-  },[])
-
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
     setHasChangedUsername(true);
@@ -138,7 +130,6 @@ export default function ProfilePage() {
         <label className="block text-gray-600 font-normal mt-3">Email</label>
         <input type="email" className="w-full p-2 border rounded text-gray-500" value={user?.email} readOnly />
       </div>
-
       <div className="mb-6">
         <h3 className="text-lg font-medium mb-2">Change Your Password</h3>
         <label className="block text-gray-600 font-normal">Current Password</label>
@@ -158,7 +149,6 @@ export default function ProfilePage() {
         />
         {errors.newPassword && <p className="text-sm text-red-600">{errors.newPassword}</p>}
       </div>
-
       <div className="mb-6 flex items-center justify-between">
         <span className="text-gray-600 font-normal">Allow Notifications</span>
         <button
@@ -170,7 +160,6 @@ export default function ProfilePage() {
           <div className={`absolute top-1 left-1 w-4 h-4 rounded-full transition-transform ${notificationStatus ? 'translate-x-6 bg-gray-500' : 'translate-x-0  bg-white'}`} />
         </button>
       </div>
-      
       <button 
         onClick={handleSaveChanges} 
         className={`mt-4 px-4 py-2 rounded-md ${isSubmitDisabled ? "bg-gray-400 cursor-not-allowed" : "bg-green-600"}`} 
@@ -178,7 +167,6 @@ export default function ProfilePage() {
       >
         Save Changes
       </button>
-      
       <div className="mt-8 p-2 border-t">
         <h3 className="text-lg font-medium mt-2">Delete Profile</h3>
         <p className="text-gray-600 text-sm mb-3">
@@ -190,8 +178,9 @@ export default function ProfilePage() {
           className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
             Delete Profile
         </LoadingButton>
-
       </div>
     </div>
   );
 }
+
+export default withAuth(ProfilePage);
