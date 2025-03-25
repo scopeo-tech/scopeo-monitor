@@ -6,6 +6,7 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { ILog } from "./model/logModel";
+import logger from "./lib/util/logger";
 
 dotenv.config();
 
@@ -34,7 +35,7 @@ io.use((socket, next) => {
     socket.handshake.auth.userId = (decoded as { id: string }).id;
     socket.data.userId = (decoded as { id: string }).id;
   } catch (error) {
-    console.log("socket pass decode error", error);
+    logger.error("socket pass decode error", error);
     return next(new Error("Invalid socket token!"));
   }
 
@@ -44,7 +45,7 @@ io.use((socket, next) => {
 io.on("connection", async (socket) => {
 
   socket.on("disconnect", () => {
-    console.log("user disconnected", socket.id);
+    logger.info("user disconnected", socket.id);
   });
 
   
@@ -65,8 +66,8 @@ io.on("connection", async (socket) => {
           socket.to(receiverSocketId).emit("notification", notification);
         }
       } catch (error) {
-        console.log("Error creating notification:", error);
-        console.log("Notification data:", notification);
+        logger.error("Error creating notification:", error);
+        logger.error("Notification data:", notification);
       }
     }
   );
@@ -84,8 +85,8 @@ socket.on(
       }
       
     } catch (error) {
-      console.log("Error processing security event:", error);
-      console.log("Security data:", logData);
+      logger.error("Error processing security event:", error);
+      logger.error("Security data:", logData);
     }
   }
 );
