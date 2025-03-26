@@ -15,9 +15,11 @@ import { getSession, signIn, useSession } from "next-auth/react";
 import axios from "axios";
 import Link from "next/link";
 import LoadingButton from "../ui/loadingButton";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const LoginForm: FC = () => {
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); 
   const [error, setError] = useState<string | null>(null);
   const setUser = useAuthStore((state) => state.setUser);
   const user = useAuthStore((state) => state.user);
@@ -117,7 +119,7 @@ const LoginForm: FC = () => {
     <div className="flex h-screen items-center justify-center bg-white">
       <div className="flex w-3/4 max-w-4xl shadow-md rounded-lg overflow-hidden">
         {/* Left Side - Welcome Message */}
-        <div className="w-1/2 bg-green-500 text-white flex flex-col items-center justify-center p-10 rounded-l-lg">
+        <div className="w-1/2 bg-emerald-500 text-white flex flex-col items-center justify-center p-10 rounded-l-lg">
           <h2 className="text-3xl font-medium mb-6">Welcome Back</h2>
           <p className="text-center mb-1">To stay connected with us</p>
           <p className="text-center mb-14">
@@ -126,7 +128,7 @@ const LoginForm: FC = () => {
 
           <p className="mt-8 mb-4">Don&apos;t have an account?</p>
           <Link href="/auth/register"
-            className="px-8 py-2 border text-center border-white rounded-full text-white hover:bg-white hover:text-green-500 transition w-64"  
+            className="px-8 py-2 border text-center border-white rounded-full text-white  hover:bg-white hover:text-emerald-500 transition w-64"  
           >
             Register now
           </Link>
@@ -134,7 +136,7 @@ const LoginForm: FC = () => {
 
         {/* Right Side - Login Form */}
         <div className="w-1/2 p-10 flex flex-col justify-center bg-white">
-          <h2 className="text-2xl font-medium text-green-500 mb-8">Login</h2>
+          <h2 className="text-2xl font-medium text-emerald-500 mb-8">Login</h2>
 
           <Formik
             initialValues={{ emailOrUsername: "", password: "" }}
@@ -158,12 +160,12 @@ const LoginForm: FC = () => {
             {({ isSubmitting }) => (
               <Form className="flex flex-col space-y-6">
                 <div className="relative">
-                  <FaUser className="absolute left-0 top-1/2 transform -translate-y-1/2 text-green-500" />
+                  <FaUser className="absolute left-0 top-1/2 transform -translate-y-1/2 text-emerald-500" />
                   <Field
                     name="emailOrUsername"
                     type="text"
                     placeholder="username / email"
-                    className="w-full pl-6 pb-2 border-b border-gray-300 focus:outline-none focus:border-green-500 bg-white"
+                    className="w-full pl-6 pb-2 border-b border-gray-300 focus:outline-none focus:border-emerald-500 bg-white"
                   />
                   <ErrorMessage
                     name="email"
@@ -172,29 +174,30 @@ const LoginForm: FC = () => {
                   />
                 </div>
                 <div className="relative">
-                  <FaLock className="absolute left-0 top-1/2 transform -translate-y-1/2 text-green-500" />
+                  <FaLock className="absolute left-0 top-1/2 transform -translate-y-1/2 text-emerald-500" />
                   <Field
                     name="password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     placeholder="Password"
-                    className="w-full pl-6 pb-2 border-b border-gray-300 focus:outline-none focus:border-green-500 bg-white"
+                    className="w-full pl-6 pr-10 pb-2 border-b border-gray-300 focus:outline-none focus:border-emerald-500 bg-white"
                   />
-
-                  <ErrorMessage
-                    name="password"
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
-                  {error && <div className="text-red-500 text-sm text-start">{error}</div>}
-
+                  <button
+                    type="button"
+                    className="absolute right-0 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
+                  <ErrorMessage name="password" component="div" className="text-red-500 text-sm absolute -bottom-5" />
+                  {error && <div className="text-red-500 text-sm">{error}</div>}
                 </div>
-                <div className="text-right text-sm text-gray-400 cursor-pointer hover:text-green-500 mt-2">
+                <div className="text-right text-sm text-gray-400 cursor-pointer hover:text-emerald-500 mt-2">
                   Forgot Password?
                 </div>
                 <LoadingButton
                   type="submit"
                   isLoading={isSubmitting || loading}
-                  className="w-full bg-green-500 text-white py-3 rounded-full hover:bg-green-600 transition mt-4">
+                  className="w-full bg-emerald-500 text-white py-3 rounded-full hover:bg-emerald-600 transition mt-4">
                     Login
                 </LoadingButton>
 
