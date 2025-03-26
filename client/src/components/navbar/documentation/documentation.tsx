@@ -1273,7 +1273,7 @@ if (environment === 'development') {
         {/* Version 2.0.0 */}
         <div className="border-l-4 border-blue-500 pl-4 py-1">
           <div className="flex items-center mb-2">
-            <h2 className="text-xl font-semibold">Version 2.0.0</h2>
+            <h2 className="text-xl font-semibold">Version 1.0.1</h2>
             <span className="ml-3 px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">Latest</span>
             <span className="ml-3 text-sm text-gray-500">Released: March 15, 2025</span>
           </div>
@@ -1298,7 +1298,7 @@ if (environment === 'development') {
         <div className="border-l-4 border-gray-300 pl-4 py-1">
           <div className="flex items-center mb-2">
             <h2 className="text-xl font-semibold">Version 1.0.0</h2>
-            <span className="ml-3 text-sm text-gray-500">Released: October 10, 2024</span>
+            <span className="ml-3 text-sm text-gray-500">Released: March 1, 2025</span>
           </div>
           
           <div className="text-gray-700 space-y-3">
