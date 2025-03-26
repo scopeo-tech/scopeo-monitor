@@ -59,7 +59,7 @@ const ContactPage = () => {
         className="relative text-center text-black bg-cover bg-center"
         style={{ backgroundImage: 'url("")' }}
       >
-        <div className="container mx-auto px-4 relative z-10">
+        <div className="container mx-auto px-4 relative z-10 mb-6 mt-6">
           <h1 className="text-4xl font-bold ">Contact us</h1>
           <p className="text-lg">
             Get in touch and let us know how we can help.
@@ -164,10 +164,8 @@ const ContactPage = () => {
           </div>
 
           <div className="w-full md:w-1/2 relative">
-            {/* Map Image - Using Next.js Image component for better performance */}
             <div className="relative h-64 md:h-full rounded-lg overflow-hidden">
               <div className="absolute inset-0 flex items-center justify-center">
-                {/* Replace with proper Next.js Image component */}
                 <div className="relative w-full h-full">
                   <Image
                     src={website}
@@ -263,11 +261,11 @@ const ContactPage = () => {
                 )}
               </div>
               
-              <div className="text-center">
+              <div className=" flex justify-center text-center">
                 <LoadingButton
                   type="submit"
                   isLoading={mutation.isPending}
-                  className="bg-green-500 text-white py-3 px-6 rounded hover:bg-green-600 transition"
+                  className="bg-emerald-500 text-white py-3 px-6 rounded transition"
                 >
                   SEND MESSAGE
                 </LoadingButton>

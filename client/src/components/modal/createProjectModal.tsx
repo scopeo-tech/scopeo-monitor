@@ -110,7 +110,7 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, onClose
                 placeholder="Enter project name"
               />
              {isNameTaken !== null && (
-              <p className={`text-sm ${isNameTaken ? "text-red-600" : "text-green-600"}`}>
+              <p className={`text-sm ${isNameTaken ? "text-red-600" : "text-emerald-600"}`}>
                 {isNameTaken ? `❌ ${resMessage}` : `✅ ${resMessage}`}
               </p>
             )}
@@ -132,7 +132,7 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, onClose
               />
               <button
                 onClick={fetchKeys}
-                className="absolute right-8 top-1 px-3 p-2 bg-green-500 text-white text-sm rounded-2xl"
+                className="absolute right-8 top-1 px-3 p-2 bg-emerald-500 text-white text-sm rounded-2xl"
                 disabled={apiLoading || passLoading}
               >
                 Get API
@@ -167,7 +167,7 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, onClose
           <LoadingButton
             onClick={handleSubmit}
             isLoading={mutation.isPending}
-            className="w-96 py-2 mt-4 bg-green-500 text-white rounded-2xl hover:bg-green-600 transition-colors">              
+            className="w-96 py-2 mt-4 bg-emerald-500 text-white rounded-2xl hover:bg-emerald-600 transition-colors">              
               Create Project
           </LoadingButton>
 
