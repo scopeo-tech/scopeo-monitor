@@ -10,7 +10,7 @@ interface NotificationStore {
 }
 
 export const useNotificationStore = create<NotificationStore>((set, get) => ({
-  notifications: [],
+  notifications: typeof window !== "undefined" ? JSON.parse(localStorage.getItem("notifications") || "[]") : [],
   socket: null,
 
   initializeSocket: (userId, token) => {
@@ -26,6 +26,7 @@ export const useNotificationStore = create<NotificationStore>((set, get) => ({
       set((state) => ({
         notifications: [newNotification, ...state.notifications],
       }));
+      localStorage.setItem("notifications", JSON.stringify(get().notifications));
     });
 
     set({ socket });
@@ -33,5 +34,6 @@ export const useNotificationStore = create<NotificationStore>((set, get) => ({
 
   clearNotifications: () => {
     set({ notifications: [] });
+    localStorage.setItem("notifications", "[]");
   },
 }));
