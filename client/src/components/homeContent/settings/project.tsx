@@ -187,7 +187,7 @@ function ProjectPage() {
       <div className="mt-8 border-t pt-4">
         <h3 className="text-lg font-semibold">Delete Project:</h3>
         <p className="text-gray-600 text-sm">
-          Once deleted, this project and all its associated data will be permanently removed and cannot be recovered. Please confirm before proceeding.
+          Once deleted, this project and all its associated data will be permanently removed and cannot be recovered. Please remove configuration and associated functionalities after deletion. Make sure before proceeding.
         </p>
       <LoadingButton
         onClick={handleDelete}
