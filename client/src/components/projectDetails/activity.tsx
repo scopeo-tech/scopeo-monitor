@@ -3,11 +3,13 @@
 import RecentLogsSkeleton from '../skeltons/logsSkeleton';
 import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getLogs , getRoutesFromDb,getLogsByRoute } from "@/lib/api";
+import { getLogs , getRoutesFromDb,getLogsByRoute, getProjectById } from "@/lib/api";
 import { useParams } from "next/navigation";
 import { useNotificationStore } from "@/lib/stores/notificationStore";
-import { Log } from "@/lib/interface";
+import { Log, Project } from "@/lib/interface";
 import withAuth from '@/lib/withAuth';
+import { generateLogsPDF } from '@/lib/util/pdf';
+import { BsFileEarmarkPdfFill } from 'react-icons/bs';
 
 
 const timeFilters = [
@@ -45,6 +47,10 @@ const Activity = () => {
         enabled: !!selectedRoute,
         refetchInterval: 6000,
     });
+    const { data: project } = useQuery<Project>({
+          queryKey: ["project", projectID],
+          queryFn: () => getProjectById(projectID),
+        });
     const logs: Log[] = data?.data?.slice(0, 50) || [];
 
     
@@ -67,10 +73,19 @@ const Activity = () => {
         return <p className="text-red-500">Error fetching logs.</p>;
     }
 
+    const handleDownloadPdf = ()=>{
+        if (project) {
+            generateLogsPDF(project.name, logs);
+        }
+    }
+
     return (
         <div className="p-4">
             <div className="flex justify-between items-center mb-4">
+                <div className='flex items-center gap-4'>
                 <h2 className="text-2xl font-bold">Recent Logs</h2>
+                <button title="Download data as pdf" onClick={handleDownloadPdf} className="bg-blue py-1 px-2 text-gray-400 hover:text-gray-500"><BsFileEarmarkPdfFill className="text-sm" />  </button>
+                </div>
                 <select
                     value={filter}
                     onChange={(e) => setFilter(e.target.value)}
