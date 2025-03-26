@@ -1,5 +1,4 @@
 import Image from "next/image";
-import website from "@/assets/website.svg";
 import { IoMdContact } from "react-icons/io";
 import Navbar from "../layout/navbar/navbar";
 import Aboutus from '@/assets/Aboutus.svg'

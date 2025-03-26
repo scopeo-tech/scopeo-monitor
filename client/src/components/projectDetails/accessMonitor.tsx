@@ -5,13 +5,15 @@ import Piechart from './helper/piechart';
 import LineGraph from './helper/lineGraph';
 import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
-import { unususalLogin, allLogins, bruteForceLogin, failedLogins, securityStats } from '@/lib/api'
+import { unususalLogin, allLogins, bruteForceLogin, failedLogins, securityStats, getProjectById } from '@/lib/api'
 import LogsPage from './helper/loginLIst';
 import UnusualLoginSummary, { UnusualLoginSummaryProps } from './helper/unusualSummery';
 import LoginSummary, { LoginSummaryProps } from './helper/logSummery';
 import BruteForceSummary, { BruteForceSummaryProps } from './helper/failSummery';
 import AccessMonitorSkeleton from '../skeltons/accessMonitoringSkeleton';
 import withAuth from '@/lib/withAuth';
+import { generateSecurityPDF } from '@/lib/util/pdf';
+import { Project } from '@/lib/interface';
 
 const loginOptions = [
   { label: "All Logins", value: "allLogins", api: allLogins },
@@ -92,13 +94,26 @@ const AccessMonitor = () => {
     setDropdown(false);
   };
 
+  const { data: project } = useQuery<Project>({
+        queryKey: ["project", projectID],
+        queryFn: () => getProjectById(projectID),
+      });
+
+  const handleDownloadPDF = () => {
+    if (project) {
+      generateSecurityPDF(project.name, stats, currentLogins);
+    } else {
+      console.error("Project data is not available");
+    }
+  }
+
   if (isStatsLoading || isLoginDataLoading) return <AccessMonitorSkeleton />;
 
   return (
     <div className='pb-2 m-0 text-gray-600'>
       <Cards stats={stats} isLoading={isStatsLoading as boolean} />
       <div className="flex h-96 justify-between pt-2 w-full gap-1">
-        <LineGraph currentLogins={currentLogins} lineTimeRange={lineTimeRange as string} handleLineTimeRangeChange={handleLineTimeRangeChange} loginOptions={loginOptions} selectedLoginType={selectedLoginType} handleLoginTypeChange={handleLoginTypeChange} dropDown={dropDown} setDropdown={setDropdown} />
+        <LineGraph handleDownloadPDF={handleDownloadPDF} currentLogins={currentLogins} lineTimeRange={lineTimeRange as string} handleLineTimeRangeChange={handleLineTimeRangeChange} loginOptions={loginOptions} selectedLoginType={selectedLoginType} handleLoginTypeChange={handleLoginTypeChange} dropDown={dropDown} setDropdown={setDropdown} />
         < Piechart stats={stats} pieTimeRange={pieTimeRange} setPieTimeRange={setPieTimeRange} isStatsLoading={isStatsLoading} />
       </div>
       {/* third section */}

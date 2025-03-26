@@ -9,6 +9,7 @@ import {
   ComposedChart
 } from 'recharts'
 import { format, parseISO, subDays, startOfDay, addHours } from 'date-fns'
+import { BsFileEarmarkPdfFill } from 'react-icons/bs';
 
 
 interface LoginData {
@@ -55,6 +56,7 @@ interface LineGraphProps {
   lineTimeRange: string;
   loginOptions: LoginOption[];
   handleLineTimeRangeChange: () => void;
+  handleDownloadPDF: () => void;
   currentLogins: LoginData[];
   selectedLoginType: LoginOption;
   handleLoginTypeChange: (option: LoginOption) => void;
@@ -157,7 +159,8 @@ function LineGraph({
   selectedLoginType,
   handleLoginTypeChange,
   dropDown,
-  setDropdown
+  setDropdown,
+  handleDownloadPDF
 }: LineGraphProps) {
   const processedLoginData = useMemo(() =>
     processLoginData(currentLogins, lineTimeRange),
@@ -186,6 +189,7 @@ function LineGraph({
                 ))}
               </div>
             )}
+            <button title="Download data as pdf" onClick={handleDownloadPDF} className="bg-blue py-1 px-2 text-gray-400 hover:text-gray-500"><BsFileEarmarkPdfFill className="text-sm" />  </button>
           </div>
           <button
             onClick={handleLineTimeRangeChange}

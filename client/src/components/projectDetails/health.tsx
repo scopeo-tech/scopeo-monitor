@@ -11,6 +11,7 @@ import {
   getSystemMetrics,
   getTrafficMetrics,
   getStabilityMetrics,
+  getProjectById,
 } from "@/lib/api"; ;
 import {
   PerformanceMetrics,
@@ -18,9 +19,12 @@ import {
   SystemMetrics,
   TrafficMetrics,
   StabilityMetrics,
+  Project,
 } from "@/lib/interface";
 import SkeletonMetrics from "../skeltons/systemMetricsSkeleton";
 import withAuth from "@/lib/withAuth";
+import { generateHealthMetricsPDF } from "@/lib/util/pdf"; 
+import { BsFileEarmarkPdfFill } from "react-icons/bs";
 
 
 const getHealthColor = (status : string) => {
@@ -111,6 +115,11 @@ const Health = () => {
     queryFn: () => getStabilityMetrics(projectID, stabilityFilter),
     refetchInterval: 6000,
   });
+
+  const { data: project } = useQuery<Project>({
+      queryKey: ["project", projectID],
+      queryFn: () => getProjectById(projectID),
+    });
 
   if (perfLoading || serverLoading || systemLoading || trafficLoading || stabilityLoading) {
     return <SkeletonMetrics/>;
@@ -222,6 +231,19 @@ const Health = () => {
     { name: "Avg Uptime", value: serverMetrics?.avgUptimePercentage || 0.1, color: "#ef4444" },
   ];
 
+  const handleDownloadPDF = () => {
+    if (performanceData && serverMetrics && systemMetrics && trafficMetrics && stabilityMetrics) {
+      generateHealthMetricsPDF(
+        project?.name ?? "Project", 
+        performanceData[0], 
+        serverMetrics, 
+        systemMetrics, 
+        trafficMetrics, 
+        stabilityMetrics
+      );
+    }
+  };
+
   return (
     <div className="grid grid-cols-3 gap-4 p-4">
   {/* First Row: Server Metrics */}
@@ -231,10 +253,10 @@ const Health = () => {
       
       <div className="flex items-center">
         <div className="w-[5px] mt-1 me-1 h-[5px] rounded-full bg-gray-400"/>
-        <button onClick={()=>setSystemFilter(onFilterClick(systemFilter))} className="font-semibold text-xs text-gray-400">{showTime(systemFilter)}</button>
+        <button onClick={()=>setSystemFilter(onFilterClick(systemFilter))} className="font-semibold text-xs text-gray-500 hover:text-gray-600">{showTime(systemFilter)}</button>
       </div>
     </div>
-    <div className="space-y-3 text-xs text-gray-600 font-semibold overflow-y-auto max-h-80   scrollbar-hide">
+    <div className="space-y-3 text-xs text-gray-500 hover:text-gray-600 font-semibold overflow-y-auto max-h-80   scrollbar-hide">
   {/* Overall Health */}
   <div className="flex items-center justify-between">
     <div className="flex items-center gap-1">
@@ -340,10 +362,11 @@ const Health = () => {
   {/* First Row: Performance Chart */}
   <div className="bg-white p-4 col-span-2 h-96 rounded-lg shadow-sm">
   <div className="flex ps-2 pe-2 w-full items-center justify-between mb-4">
-    <div className="space-y-1">
+    <div className="space-y-1 flex items-center">
       <p className="font-semibold text-sm">Performance Metrics (Last 24 Hours)</p>
+      <button title="Download data as pdf" onClick={handleDownloadPDF} className="bg-blue py-1 px-2 text-gray-400 hover:text-gray-500"><BsFileEarmarkPdfFill className="text-sm" />  </button>
     </div>
-    <div className="flex text-xs font-semibold text-gray-500">
+    <div className="flex text-xs font-semibold text-gray-500 hover:text-gray-600">
       <p>X-Time</p>
       <p className="ps-10">Y-Metrics</p>
     </div>
@@ -396,11 +419,11 @@ const Health = () => {
   <div className="bg-white p-4 col-span-1 rounded-lg shadow-sm">
       <div className="flex w-full justify-between">
         <h3 className="text-sm font-semibold mb-4">Server Metrics</h3>
-        <button onClick={()=>setServerFilter(onFilterClick(serverFilter))} className="font-semibold text-xs text-gray-400">{showTime(serverFilter)}</button>
+        <button onClick={()=>setServerFilter(onFilterClick(serverFilter))} className="font-semibold text-xs text-gray-500 hover:text-gray-600">{showTime(serverFilter)}</button>
       </div>
       <div className="flex items-center space-x-4 z-0">
         {/* Labels on the left */}
-        <div className="space-y-2 text-xs text-gray-600 font-semibold">
+        <div className="space-y-2 text-xs text-gray-500 hover:text-gray-600 font-semibold">
           {pieData.map((item, index) => (
             <div key={index} className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }}></span>
@@ -439,11 +462,11 @@ const Health = () => {
       <h3 className="text-sm font-semibold">Traffic Metrics</h3>
       <div className="flex items-center">
         <div className="w-[5px] mt-1 me-1 h-[5px] rounded-full bg-gray-400"/>
-        <button onClick={()=>setTrafficFilter(onFilterClick(trafficFilter))} className="font-semibold text-xs text-gray-400">{showTime(trafficFilter)}
+        <button onClick={()=>setTrafficFilter(onFilterClick(trafficFilter))} className="font-semibold text-xs text-gray-500 hover:text-gray-600">{showTime(trafficFilter)}
         </button>
       </div>
     </div>
-    <div className="space-y-3 text-xs text-gray-600 font-semibold">
+    <div className="space-y-3 text-xs text-gray-500 hover:text-gray-600 font-semibold">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1">
           <span className="w-2.5 h-2.5 rounded-full bg-green-500"></span>
@@ -504,10 +527,10 @@ const Health = () => {
       <h3 className="text-sm font-semibold">Stability Metrics</h3>
       <div className="flex items-center">
         <div className="w-[5px] mt-1 me-1 h-[5px] rounded-full bg-gray-400"/>
-        <button onClick={()=>setStabilityFilter(onFilterClick(stabilityFilter))} className="font-semibold text-xs text-gray-400">{showTime(stabilityFilter)}</button>
+        <button onClick={()=>setStabilityFilter(onFilterClick(stabilityFilter))} className="font-semibold text-xs text-gray-500 hover:text-gray-600">{showTime(stabilityFilter)}</button>
       </div>
     </div>
-    <div className="space-y-3 text-xs text-gray-600 font-semibold">
+    <div className="space-y-3 text-xs text-gray-500 hover:text-gray-600 font-semibold">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1">
           <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
