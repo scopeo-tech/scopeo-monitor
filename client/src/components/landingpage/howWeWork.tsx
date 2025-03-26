@@ -36,24 +36,24 @@ function HowWeWork() {
 
   return (
     <motion.div 
-      className="w-full flex px-10 py-20 bg-white relative overflow-hidden"
+      className="w-full flex max-lg:flex-col px-4 lg:px-10 py-10 lg:py-20 bg-white relative overflow-hidden"
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
     >
       {/* Left Title & Design Section */}
-      <div className="flex flex-col w-1/3 gap-5 relative">
+      <div className="flex flex-col w-full lg:w-1/3 gap-5 relative max-lg:mb-10">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
         >
-          <h1 className="text-5xl font-bold text-black">How our</h1>
-          <h1 className="text-5xl text-emerald-500 font-bold">service works</h1>
+          <h1 className="max-lg:text-3xl lg:text-5xl font-bold text-black">How our</h1>
+          <h1 className="max-lg:text-3xl lg:text-5xl text-emerald-500 font-bold">service works</h1>
         </motion.div>
         
         <motion.p 
-          className="font-semibold text-[#515151] w-4/5"
+          className="font-semibold text-[#515151] w-full lg:w-4/5"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.1 }}
@@ -62,8 +62,7 @@ function HowWeWork() {
         </motion.p>
 
         {/* Background Security & Monitoring Icons */}
-        <div className="w-full h-[600px] relative">
-          {/* SVG icons with opacity animations */}
+        <div className="w-full h-[600px] relative max-lg:hidden">
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 0.2 }}
@@ -118,7 +117,7 @@ function HowWeWork() {
             <IoSettingsSharp className="absolute text-6xl text-emerald-400 bottom-[100px] left-[80px]" />
           </motion.div>
 
-          {/* Shape animations with various effects */}
+          {/* Shape animations remain unchanged */}
           <motion.div 
             className="w-28 h-28 bg-emerald-200 rounded-md absolute top-32 right-20" 
             initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
@@ -154,10 +153,10 @@ function HowWeWork() {
       </div>
 
       {/* Right Timeline Section */}
-      <div className="flex gap-10 py-8 w-2/3">
+      <div className="flex max-lg:flex-col lg:flex-row gap-5 lg:gap-10 py-4 lg:py-8 w-full lg:w-2/3">
         {/* Vertical Timeline Line with Nodes */}
         <motion.div 
-          className="w-1 flex flex-col justify-between py-10 h-full border-l-2 border-[#515151] relative"
+          className="max-lg:hidden lg:flex w-1 flex-col justify-between py-10 h-full border-l-2 border-[#515151] relative"
           initial={{ opacity: 0, scaleY: 0 }}
           whileInView={{ opacity: 1, scaleY: 1 }}
           transition={{ duration: 0.6 }}
@@ -190,11 +189,11 @@ function HowWeWork() {
         </motion.div>
 
         {/* Steps Content Section */}
-        <div className="flex flex-col justify-between gap-8 h-full w-full">
+        <div className="flex flex-col gap-4 lg:gap-8 h-full w-full">
           {steps.map((step, index) => (
             <motion.div 
               key={index} 
-              className="flex items-center gap-4 p-5 bg-emerald-100 rounded-lg shadow-md"
+              className="flex items-center gap-4 p-4 lg:p-5 bg-emerald-100 rounded-lg shadow-md"
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4, delay: 0.2 + (0.1 * index) }}
@@ -202,15 +201,15 @@ function HowWeWork() {
             >
               {/* Circular Icon Container matching your Features style */}
               <motion.div 
-                className="w-16 h-16 flex-shrink-0 flex items-center justify-center rounded-full bg-emerald-200"
+                className="w-12 lg:w-16 h-12 lg:h-16 flex-shrink-0 flex items-center justify-center rounded-full bg-emerald-200"
                 whileHover={{ rotate: 10, backgroundColor: "#6ee7b7", scale: 1.1 }}
                 transition={{ duration: 0.2 }}
               >
                 {step.icon}
               </motion.div>
               <div className="max-w-xl">
-                <h2 className="text-lg font-bold text-black">{step.title}</h2>
-                <p className="text-sm font-semibold text-gray-600">{step.desc}</p>
+                <h2 className="text-base lg:text-lg font-bold text-black">{step.title}</h2>
+                <p className="text-xs lg:text-sm font-semibold text-gray-600">{step.desc}</p>
               </div>
             </motion.div>
           ))}
