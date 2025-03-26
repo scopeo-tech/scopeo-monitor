@@ -11,7 +11,7 @@ import OtpModal from "../modal/otpModal";
 import { useRouter } from "next/navigation";
 import * as Yup from "yup";
 import { FC } from "react";
-import { FaUser, FaEnvelope, FaLock,FaEye,FaEyeSlash } from "react-icons/fa";
+import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import Image from "next/image";
 import { getSession, signIn, useSession } from "next-auth/react";
@@ -39,10 +39,10 @@ const RegisterForm: FC = () => {
     }
   }, [session, status]);
 
-  if(user) {
+  if (user) {
     router.push("/home");
   }
-  
+
   const handleSignIn = async () => {
     try {
       await signIn("google", { redirect: false }).then(async (response) => {
@@ -94,9 +94,9 @@ const RegisterForm: FC = () => {
       await sendOtpForRegister(email);
       setUserEmail(email);
       setIsOtpModalOpen(true);
-    }  catch (error) {
+    } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        setError(error.response.data?.message || "Registration failed"); 
+        setError(error.response.data?.message || "Registration failed");
       } else {
         setError("Network error, please check your connection.");
       }
@@ -112,7 +112,7 @@ const RegisterForm: FC = () => {
       await verifyOtp({ email: userEmail, otp });
       setIsOtpVerified(true);
       setIsOtpModalOpen(false);
-      
+
     } catch (err) {
       setError((err as Error).message);
     } finally {
@@ -125,10 +125,10 @@ const RegisterForm: FC = () => {
     try {
       await registerUser(data);
       router.push("/auth/login");
-    }  catch (err) {
+    } catch (err) {
       setError((err as Error).message);
       console.log("error", error);
-    
+
     } finally {
       setLoading(false);
     }
@@ -162,105 +162,105 @@ const RegisterForm: FC = () => {
                 .required("Required"),
               terms: Yup.boolean().oneOf([true], "You must accept the terms"),
             })}
-            onSubmit={async(values) => {
+            onSubmit={async (values) => {
               if (!isOtpVerified) {
                 await handleGetOtp(values.email);
               } else {
-               
-                await handleRegister({ 
-                  username: values.username, 
-                  email: values.email, 
-                  password: values.password 
+
+                await handleRegister({
+                  username: values.username,
+                  email: values.email,
+                  password: values.password
                 });
               }
             }}
           >
             {({ isSubmitting }) => (
-             <Form className="flex flex-col">
-             <div className="relative ">
-               <div className="relative flex items-center ">
-                 <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-emerald-500" />
-                 <Field
-                   name="username"
-                   type="text"
-                   placeholder="Username"
-                   className="w-full pl-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-emerald-500"
-                 />
-               </div>
-               <div className="h-[20px] relative">
-                 <ErrorMessage name="username" component="div" className="text-red-500 text-sm absolute -bottom-5" />
-                 {error && <div className="text-red-500 text-sm text-start absolute -bottom-5">{error}</div>}
-               </div>
-                 
-              
-             </div>
-           
-             <div className="relative flex items-center mb-5">
-               <FaEnvelope className="absolute left-3 top-1/2 transform -translate-y-1/2 text-emerald-500" />
-               <Field
-                 name="email"
-                 type="email"
-                 placeholder="Email"
-                 className="w-full pl-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-emerald-500"
-               />
-             <ErrorMessage name="email" component="div" className="text-red-500 text-sm absolute -bottom-5" />
-             </div>
-           
-             <div className="relative flex items-center mb-5">
-               <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-emerald-500" />
-               <Field
-                 name="password"
-                 type={showPassword ? "text" : "password"}
-                 placeholder="Password"
-                 className="w-full pl-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-emerald-500"
-               />
-               <button
-                 type="button"
-                 className="absolute right-0 text-gray-500 hover:text-gray-700 mr-4"
-                 onClick={() => setShowPassword((prev) => !prev)}
-               >
-                 {showPassword ? <FaEyeSlash /> : <FaEye />}
-               </button>
-               <ErrorMessage name="password" component="div" className="text-red-500 text-sm absolute -bottom-5" />
-             </div>
-           
-             <div className="relative flex items-center mb-5">
-               <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-emerald-500" />
-               <Field
-                 name="confirmPassword"
-                 type="password"
-                 placeholder="Confirm Password"
-                 className="w-full pl-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-emerald-500"
-               />
-               <ErrorMessage name="confirmPassword" component="div" className="text-red-500 text-sm absolute -bottom-5" />
-             </div>
-           
-             <div className="flex items-center mb-5">
-               <Field name="terms" type="checkbox" className="mr-2 form-checkbox text-emerald-500 focus:ring-emerald-500" />
-               <label className="text-sm text-gray-500">I Agree To The Terms & Conditions</label>
-               <ErrorMessage name="terms" component="div" className="text-red-500 text-sm ml-2" />
-             </div>
-           
-             <button type="submit" className="w-full bg-emerald-500 text-white py-3 rounded-full hover:bg-emerald-600 transition" disabled={isSubmitting || loading}>
-               {isOtpVerified ? "Register" : "Get OTP"}
-             </button>
-           
-             <div className="flex items-center justify-center my-2">
-               <span className="px-3 text-gray-400 text-sm">or</span>
-             </div>
-           
-             <button onClick={handleSignIn} type="button" className="w-full flex items-center justify-center border border-gray-300 py-3 rounded-full text-gray-700 hover:bg-gray-50 transition">
-               <FcGoogle className="mr-2 text-lg" /> Login with Google
-             </button>
-           
-             <p className="mt-6 text-center text-gray-500">
-               Already have an account?{" "}
-               <Link href="/auth/login" className="text-emerald-500 hover:underline">
-                 Login
-               </Link>
-             </p>
-           </Form>
-           
+              <Form className="flex flex-col">
+                <div className="relative ">
+                  <div className="relative flex items-center ">
+                    <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-emerald-500" />
+                    <Field
+                      name="username"
+                      type="text"
+                      placeholder="Username"
+                      className="w-full pl-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-emerald-500"
+                    />
+                  </div>
+                  <div className="h-[20px] relative">
+                    <ErrorMessage name="username" component="div" className="text-red-500 text-sm absolute -bottom-5" />
+                    {error && <div className="text-red-500 text-sm text-start absolute -bottom-5">{error}</div>}
+                  </div>
+
+
+                </div>
+
+                <div className="relative flex items-center mb-5">
+                  <FaEnvelope className="absolute left-3 top-1/2 transform -translate-y-1/2 text-emerald-500" />
+                  <Field
+                    name="email"
+                    type="email"
+                    placeholder="Email"
+                    className="w-full pl-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-emerald-500"
+                  />
+                  <ErrorMessage name="email" component="div" className="text-red-500 text-sm absolute -bottom-5" />
+                </div>
+
+                <div className="relative flex items-center mb-5">
+                  <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-emerald-500" />
+                  <Field
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Password"
+                    className="w-full pl-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-emerald-500"
+                  />
+                  <button
+                    type="button"
+                    className="absolute right-0 text-gray-500 hover:text-gray-700 mr-4"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
+                  <ErrorMessage name="password" component="div" className="text-red-500 text-sm absolute -bottom-5" />
+                </div>
+
+                <div className="relative flex items-center mb-5">
+                  <FaLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-emerald-500" />
+                  <Field
+                    name="confirmPassword"
+                    type="password"
+                    placeholder="Confirm Password"
+                    className="w-full pl-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-emerald-500"
+                  />
+                  <ErrorMessage name="confirmPassword" component="div" className="text-red-500 text-sm absolute -bottom-5" />
+                </div>
+
+                <div className="flex items-center mb-5">
+                  <Field name="terms" type="checkbox" className="mr-2 form-checkbox text-emerald-500 focus:ring-emerald-500" />
+                  <label className="text-sm text-gray-500">I Agree To The Terms & Conditions</label>
+                  <ErrorMessage name="terms" component="div" className="text-red-500 text-sm ml-2" />
+                </div>
+
+                <button type="submit" className="w-full bg-emerald-500 text-white py-3 rounded-full hover:bg-emerald-600 transition" disabled={isSubmitting || loading}>
+                  {isOtpVerified ? "Register" : "Get OTP"}
+                </button>
+
+                <div className="flex items-center justify-center my-2">
+                  <span className="px-3 text-gray-400 text-sm">or</span>
+                </div>
+
+                <button onClick={handleSignIn} type="button" className="w-full flex items-center justify-center border border-gray-300 py-3 rounded-full text-gray-700 hover:bg-gray-50 transition">
+                  <FcGoogle className="mr-2 text-lg" /> Login with Google
+                </button>
+
+                <p className="mt-6 text-center text-gray-500">
+                  Already have an account?{" "}
+                  <Link href="/auth/login" className="text-emerald-500 hover:underline">
+                    Login
+                  </Link>
+                </p>
+              </Form>
+
             )}
           </Formik>
         </div>
