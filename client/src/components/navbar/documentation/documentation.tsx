@@ -45,23 +45,6 @@ interface TableOfContentsItem {
   title: string;
 }
 
-// SVG Icon components
-const CopyIcon: React.FC = () => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
-    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
-  </svg>
-);
-
 const LogoIcon: React.FC = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -96,6 +79,7 @@ const NavIcon: React.FC<{ direction?: "left" | "right" }> = ({
     <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
   </svg>
 );
+
 
 // SidebarLink component
 const SidebarLink: React.FC<SidebarLinkProps> = ({
@@ -143,6 +127,22 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
 // Package manager tabs component
 const PackageManagerTabs: React.FC = () => {
   const [packageManager, setPackageManager] = useState<string>("npm");
+  const [copiedState, setCopiedState] = useState<{ [key: string]: boolean }>({
+    npm: false,
+    yarn: false,
+    pnpm: false,
+  });
+  const copyToClipboard = async (pkg: string) => {
+    try {
+      await navigator.clipboard.writeText(commands[pkg]);
+      setCopiedState((prev) => ({ ...prev, [pkg]: true }));
+      setTimeout(() => {
+        setCopiedState((prev) => ({ ...prev, [pkg]: false }));
+      }, 2000);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
+  };
 
   const commands: Record<string, string> = {
     npm: "npm install scopeo",
@@ -151,42 +151,38 @@ const PackageManagerTabs: React.FC = () => {
   };
 
   return (
-    <Tabs
+ <Tabs
       defaultValue={packageManager}
       onValueChange={setPackageManager}
       className="relative mt-6 w-full"
     >
       <TabsList className="w-full justify-start rounded-none border-b bg-transparent p-0">
-        <TabsTrigger
-          value="npm"
-          className="rounded-none border-b-2 border-b-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
-        >
-          npm
-        </TabsTrigger>
-        <TabsTrigger
-          value="yarn"
-          className="rounded-none border-b-2 border-b-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
-        >
-          yarn
-        </TabsTrigger>
-        <TabsTrigger
-          value="pnpm"
-          className="rounded-none border-b-2 border-b-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
-        >
-          pnpm
-        </TabsTrigger>
+        {Object.keys(commands).map((pkg) => (
+          <TabsTrigger
+            key={pkg}
+            value={pkg}
+            className="rounded-none border-b-2 border-b-transparent bg-transparent px-4 py-2 font-medium text-muted-foreground hover:text-foreground data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
+          >
+            {pkg}
+          </TabsTrigger>
+        ))}
       </TabsList>
+
       {Object.keys(commands).map((pkg) => (
-        <TabsContent
-          key={pkg}
-          value={pkg}
-          className="relative rounded-md border"
-        >
+        <TabsContent key={pkg} value={pkg} className="relative rounded-md border">
           <pre className="language-bash mt-2 ms-2">
             <code className="language-bash">{commands[pkg]}</code>
           </pre>
-          <button className="absolute right-4 top-3 text-slate-400 hover:text-slate-600">
-            <CopyIcon />
+
+          <button
+            onClick={() => copyToClipboard(pkg)}
+            className="absolute right-4 top-3 text-slate-400 hover:text-slate-600 transition-all duration-300"
+          >
+            {copiedState[pkg] ? (
+              <Check size={20} className="text-green-500 scale-110 transition-transform duration-300" />
+            ) : (
+              <Copy size={20} className="transition-opacity duration-300" />
+            )}
           </button>
         </TabsContent>
       ))}
@@ -227,19 +223,45 @@ const Pagination: React.FC<PaginationProps> = ({ prev, next, onNavigate }) => (
   </div>
 );
 
+
+import { Copy, Check } from "lucide-react";
+
 const CodeBlock: React.FC<{ language: string; children: React.ReactNode }> = ({
   language,
   children,
-}) => (
-  <div className="relative rounded-md border">
-    <pre className={`language-${language} ms-2 my-2`}>
-      <code className={`language-${language}`}>{children}</code>
-    </pre>
-    <button className="absolute right-4 top-3 text-slate-400 hover:text-slate-600">
-      <CopyIcon />
-    </button>
-  </div>
-);
+}) => {
+  const [copied, setCopied] = useState(false);
+
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(String(children));
+      setCopied(true);
+
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
+  };
+
+  return (
+    <div className="relative rounded-md border">
+      <pre className={`language-${language} ms-2 my-2`}>
+        <code className={`language-${language}`}>{children}</code>
+      </pre>
+
+      <button
+        onClick={copyToClipboard}
+        className="absolute right-4 top-3 text-slate-400 hover:text-slate-600 transition-all duration-300"
+      >
+        {copied ? (
+          <Check size={20} className="text-green-500 scale-110 transition-transform duration-300" />
+        ) : (
+          <Copy size={20} className="transition-opacity duration-300" />
+        )}
+      </button>
+    </div>
+  );
+};
 
 // main documentation component
 const ScopeoDocumentation: React.FC = () => {
@@ -422,7 +444,7 @@ const ScopeoDocumentation: React.FC = () => {
               id="installation"
               className="scroll-m-20 text-2xl font-semibold tracking-tight"
             >
-              1. Create project
+              1. Installation
             </h2>
             <p>Run the command to install Scopeo in your project:</p>
 
