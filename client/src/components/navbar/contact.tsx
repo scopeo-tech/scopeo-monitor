@@ -60,8 +60,8 @@ const ContactPage = () => {
         style={{ backgroundImage: 'url("")' }}
       >
         <div className="container mx-auto px-4 relative z-10 mb-6 mt-6">
-          <h1 className="text-4xl font-bold ">Contact us</h1>
-          <p className="text-lg">
+          <h1 className="text-3xl md:text-4xl font-bold">Contact us</h1>
+          <p className="text-base md:text-lg">
             Get in touch and let us know how we can help.
           </p>
         </div>
@@ -69,10 +69,10 @@ const ContactPage = () => {
 
       {/* Contact Information Section */}
       <section className="py-16 mb-12 px-5">
-        <div className="container mx-auto px-4 flex flex-col md:flex-row ">
+        <div className="container mx-auto px-4 flex flex-col md:flex-row">
           <div className="w-full md:w-1/2 mb-8 md:mb-0">
-            <h2 className="text-3xl font-bold mb-4">Get in touch</h2>
-            <p className="text-gray-600 mb-8">
+            <h2 className="text-2xl md:text-3xl font-bold mb-4">Get in touch</h2>
+            <p className="text-gray-600 mb-8 text-sm md:text-base">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. In vel
               neque vitae nulla adipiscing elit.
             </p>
@@ -103,7 +103,7 @@ const ContactPage = () => {
                 </div>
                 <div>
                   <h3 className="font-bold">Head Office</h3>
-                  <p className="text-gray-600 ">
+                  <p className="text-gray-600 text-sm md:text-base">
                     12121 Somewhere World Rd 22
                     <br />
                     City, State
@@ -130,7 +130,7 @@ const ContactPage = () => {
                 </div>
                 <div>
                   <h3 className="font-bold">Email us</h3>
-                  <p className="text-gray-600">scopeotech@gmail.com</p>
+                  <p className="text-gray-600 text-sm md:text-base">scopeotech@gmail.com</p>
                 </div>
               </div>
 
@@ -153,7 +153,7 @@ const ContactPage = () => {
                 </div>
                 <div>
                   <h3 className="font-bold">Call us</h3>
-                  <p className="text-gray-600">
+                  <p className="text-gray-600 text-sm md:text-base">
                     Phone: +1 (123) 456-7890
                     <br />
                     &nbsp;
@@ -163,7 +163,7 @@ const ContactPage = () => {
             </div>
           </div>
 
-          <div className="w-full md:w-1/2 relative">
+          <div className="hidden md:block w-full md:w-1/2 relative">
             <div className="relative h-64 md:h-full rounded-lg overflow-hidden">
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="relative w-full h-full">
@@ -188,16 +188,16 @@ const ContactPage = () => {
       <section className="bg-emerald-500 py-16 bg-gradient-to-br from-emerald-500 to-emerald-600 mb-96">
         <div className="container mx-auto px-4 h-36">
           <div className="text-center text-white mb-8">
-            <h2 className="text-3xl font-bold mb-2">Send us a message</h2>
-            <p className="max-w-xl mx-auto text-sm">
+            <h2 className="text-2xl md:text-3xl font-bold mb-2">Send us a message</h2>
+            <p className="max-w-xl mx-auto text-xs md:text-sm">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. In vel
               neque, lacinia nec ullamcorper mattis, pulvinar dapibus leo.
             </p>
           </div>
 
-          <div className="bg-white p-8 rounded shadow-lg max-w-2xl mx-auto">
+          <div className="bg-white p-4 md:p-8 rounded shadow-lg max-w-2xl mx-auto">
             {error && (
-              <div className=" text-red-700 px-4 py-3 rounded mb-4">
+              <div className="text-red-700 px-4 py-3 rounded mb-4">
                 {error}
               </div>
             )}
@@ -208,11 +208,11 @@ const ContactPage = () => {
                   <input
                     type="text"
                     placeholder="First Name"
-                    className="border hover:border-emerald-500 p-3 rounded-2xl w-full"
+                    className="border hover:border-emerald-500 p-2 md:p-3 rounded-2xl w-full text-sm md:text-base"
                     {...formik.getFieldProps("firstname")}
                   />
                   {formik.touched.firstname && formik.errors.firstname && (
-                    <p className="text-red-500 text-sm mt-1">
+                    <p className="text-red-500 text-xs md:text-sm mt-1">
                       {formik.errors.firstname}
                     </p>
                   )}
@@ -221,11 +221,11 @@ const ContactPage = () => {
                   <input
                     type="text"
                     placeholder="Last Name"
-                    className="border hover:border-emerald-500 p-3 rounded-2xl w-full"
+                    className="border hover:border-emerald-500 p-2 md:p-3 rounded-2xl w-full text-sm md:text-base"
                     {...formik.getFieldProps("lastname")}
                   />
                   {formik.touched.lastname && formik.errors.lastname && (
-                    <p className="text-red-500 text-sm mt-1">
+                    <p className="text-red-500 text-xs md:text-sm mt-1">
                       {formik.errors.lastname}
                     </p>
                   )}
@@ -237,11 +237,11 @@ const ContactPage = () => {
                   <input
                     type="email"
                     placeholder="Email"
-                    className="border hover:border-emerald-500  p-3 rounded-2xl w-full"
+                    className="border hover:border-emerald-500 p-2 md:p-3 rounded-2xl w-full text-sm md:text-base"
                     {...formik.getFieldProps("email")}
                   />
                   {formik.touched.email && formik.errors.email && (
-                    <p className="text-red-500 text-sm mt-1">
+                    <p className="text-red-500 text-xs md:text-sm mt-1">
                       {formik.errors.email}
                     </p>
                   )}
@@ -251,21 +251,21 @@ const ContactPage = () => {
               <div>
                 <textarea
                   placeholder="Message"
-                  className="border p-3 hover:border-emerald-500 rounded-2xl w-full h-32"
+                  className="border p-2 md:p-3 hover:border-emerald-500 rounded-2xl w-full h-32 text-sm md:text-base"
                   {...formik.getFieldProps("message")}
                 />
                 {formik.touched.message && formik.errors.message && (
-                  <p className="text-red-500 text-sm mt-1">
+                  <p className="text-red-500 text-xs md:text-sm mt-1">
                     {formik.errors.message}
                   </p>
                 )}
               </div>
               
-              <div className=" flex justify-center text-center">
+              <div className="flex justify-center text-center">
                 <LoadingButton
                   type="submit"
                   isLoading={mutation.isPending}
-                  className="bg-emerald-500 text-white py-3 px-6 rounded transition"
+                  className="bg-emerald-500 text-white py-2 md:py-3 px-4 md:px-6 rounded transition text-sm md:text-base"
                 >
                   SEND MESSAGE
                 </LoadingButton>
