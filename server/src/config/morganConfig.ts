@@ -3,7 +3,7 @@ import logger from "../lib/util/logger";
 
 const morganMiddleware = morgan("combined", {
     stream: {
-      write: (message) => logger.info(message.trim()), // Send Morgan logs to Winston
+      write: (message) => logger.info(message.trim()), 
     },
   });
 
