@@ -17,7 +17,7 @@ const Cards = ({ stats = { totalLogins: 0, successLogins: 0, failedLogins: 0, to
     
     return (
         <div className='w-full flex items-center justify-between h-20'>
-            <div className='w-52 flex p-1 h-full bg-white rounded-lg'>
+            <div className='w-64 flex py-1 px-5 h-full bg-white rounded-lg'>
                 <div>
                     <p className='text-gray-400 font-semibold text-sm'>Total logins</p>
                     {isLoading ? <p className='text-[#16C47F] text-3xl font-bold'>00</p> : <p className='text-[#16C47F] text-3xl font-bold'>{stats.totalLogins}</p>}
@@ -27,7 +27,7 @@ const Cards = ({ stats = { totalLogins: 0, successLogins: 0, failedLogins: 0, to
                     <AiOutlineCheckCircle className='text-[#16C47F] text-5xl' />
                 </div>
             </div>
-            <div className='w-52 flex p-1 h-full bg-white rounded-lg'>
+            <div className='w-64 flex py-1 px-5 h-full bg-white rounded-lg'>
                 <div>
                     <p className='text-gray-400 font-semibold text-sm'>Failed logins</p>
                     {isLoading ? <p className='text-[#16C47F] text-3xl font-bold'>00</p> : <p className='text-red-400 text-3xl font-bold'>{stats.failedLogins}</p>}
@@ -37,7 +37,7 @@ const Cards = ({ stats = { totalLogins: 0, successLogins: 0, failedLogins: 0, to
                     <MdErrorOutline className='text-[#16C47F] text-5xl' />
                 </div>
             </div>
-            <div className='w-52 flex p-1 h-full bg-white rounded-lg'>
+            <div className='w-64 flex py-1 px-5 h-full bg-white rounded-lg'>
                 <div>
                     <p className='text-gray-400 font-semibold text-sm'>Unusual logins</p>
                     {isLoading? <p className='text-[#16C47F] text-3xl font-bold'>00</p> : <p className='text-yellow-300 text-3xl font-bold'>{stats.totalUnusual}</p>}
@@ -47,7 +47,7 @@ const Cards = ({ stats = { totalLogins: 0, successLogins: 0, failedLogins: 0, to
                     <MdOutlineReportGmailerrorred className='text-[#16C47F] text-5xl' />
                 </div>
             </div>
-            <div className='w-52 flex p-1 h-full bg-white rounded-lg'>
+            <div className='w-64 flex py-1 px-5 h-full bg-white rounded-lg'>
                 <div>
                     <p className='text-gray-400 font-semibold text-sm'>Brute force attacks</p>
                     {isLoading ? <p className='text-[#16C47F] text-3xl font-bold'>00</p> : <p className='text-orange-400 text-3xl font-bold'>{stats.bruteForce}</p>}
