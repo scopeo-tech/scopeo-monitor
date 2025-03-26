@@ -6,35 +6,31 @@ interface NotificationStore {
   notifications: Notification[];
   socket: Socket | null;
   initializeSocket: (userId: string, token: string) => void;
-  clearNotifications: () => void; // Clears all notifications
+  clearNotifications: () => void;
 }
 
 export const useNotificationStore = create<NotificationStore>((set, get) => ({
   notifications: [],
   socket: null,
 
-  // Initialize socket connection
   initializeSocket: (userId, token) => {
-    if (get().socket) return; // Prevent multiple connections
+    if (get().socket) return;
 
     const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL as string, {
       auth: { pass: token },
     });
 
-    // Join the user's room
     socket.emit("join");
 
-    // Listen for new notifications
     socket.on("notification", (newNotification: Notification) => {
       set((state) => ({
-        notifications: [newNotification, ...state.notifications], // Prepend new notifications
+        notifications: [newNotification, ...state.notifications],
       }));
     });
 
     set({ socket });
   },
 
-  // Clear all notifications
   clearNotifications: () => {
     set({ notifications: [] });
   },

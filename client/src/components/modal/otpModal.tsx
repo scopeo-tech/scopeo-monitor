@@ -14,7 +14,7 @@ interface OtpModalProps {
 const OtpModal: React.FC<OtpModalProps> = ({ email, otp, setOtp, handleVerifyOtp, onClose }) => {
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
 
-  // Handle OTP input change
+ 
   const handleChange = (index: number, value: string) => {
     if (!/^\d?$/.test(value)) return; 
     const otpArray = otp.split("");

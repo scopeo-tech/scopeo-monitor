@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { getUserInfo, updateProfile, checkUsername, deleteProfile ,logoutUser} from '@/lib/api';
+import { getUserInfo, updateProfile, checkUsername, deleteProfile, logoutUser } from '@/lib/api';
 import LoadingButton from '@/components/ui/loadingButton';
 import withAuth from '@/lib/withAuth';
 
@@ -45,7 +45,6 @@ function ProfilePage() {
       try {
         const response = await checkUsername(username);
         setIsNameTaken(response.data);
-        console.log(response.data);
         setResMessage(response.message);
         setErrors(prev => ({ ...prev, username: response.data ? response.message : "" }));
       } catch {
@@ -73,7 +72,7 @@ function ProfilePage() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn : (userId: string) => deleteProfile(userId),
+    mutationFn: (userId: string) => deleteProfile(userId),
     onSuccess: () => {
       alert('Profile deleted successfully');
     },
@@ -95,13 +94,12 @@ function ProfilePage() {
 
   const handleDeleteProfile = () => {
     if (window.confirm("Are you sure you want to delete this project?")) {
-      console.log(user)
-      if(user){
+      if (user) {
         deleteMutation.mutate(user?._id);
         logoutUser()
         router.push('/');
-      } 
-           
+      }
+
     }
   };
 
@@ -115,10 +113,10 @@ function ProfilePage() {
       <div className="mb-6">
         <h3 className="text-xl font-medium mb-2">Personal Informations</h3>
         <label className="block font-normal text-gray-600">Username</label>
-        <input 
-          type="text" 
-          className="w-full p-2 border rounded mt-1" 
-          value={username} 
+        <input
+          type="text"
+          className="w-full p-2 border rounded mt-1"
+          value={username}
           onChange={handleUsernameChange}
         />
         {hasChangedUsername && isNameTaken !== null && (
@@ -133,18 +131,18 @@ function ProfilePage() {
       <div className="mb-6">
         <h3 className="text-lg font-medium mb-2">Change Your Password</h3>
         <label className="block text-gray-600 font-normal">Current Password</label>
-        <input 
-          type="password" 
+        <input
+          type="password"
           className="w-full p-2 border rounded mt-1"
           onChange={(e) => setCurrentPassword(e.target.value)}
         />
-        
+
         {errors.currentPassword && <p className="text-sm text-red-600">{errors.currentPassword}</p>}
 
         <label className="block text-gray-600 font-normal mt-3">New Password</label>
-        <input 
-          type="password" 
-          className="w-full p-2 border rounded mt-1" 
+        <input
+          type="password"
+          className="w-full p-2 border rounded mt-1"
           onChange={(e) => setNewPassword(e.target.value)}
         />
         {errors.newPassword && <p className="text-sm text-red-600">{errors.newPassword}</p>}
@@ -152,17 +150,16 @@ function ProfilePage() {
       <div className="mb-6 flex items-center justify-between">
         <span className="text-gray-600 font-normal">Allow Notifications</span>
         <button
-            onClick={handleToggle}
-            className={`relative w-12 h-6 rounded-full border border-gray-300 ${
-              notificationStatus ? "bg-white" : "bg-gray-500"
+          onClick={handleToggle}
+          className={`relative w-12 h-6 rounded-full border border-gray-300 ${notificationStatus ? "bg-white" : "bg-gray-500"
             }`}
->
+        >
           <div className={`absolute top-1 left-1 w-4 h-4 rounded-full transition-transform ${notificationStatus ? 'translate-x-6 bg-gray-500' : 'translate-x-0  bg-white'}`} />
         </button>
       </div>
-      <button 
-        onClick={handleSaveChanges} 
-        className={`mt-4 px-4 py-2 rounded-md ${isSubmitDisabled ? "bg-gray-400 cursor-not-allowed" : "bg-green-600"}`} 
+      <button
+        onClick={handleSaveChanges}
+        className={`mt-4 px-4 py-2 rounded-md ${isSubmitDisabled ? "bg-gray-400 cursor-not-allowed" : "bg-green-600"}`}
         disabled={isSubmitDisabled}
       >
         Save Changes
@@ -176,7 +173,7 @@ function ProfilePage() {
           onClick={handleDeleteProfile}
           isLoading={deleteMutation.isPending}
           className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
-            Delete Profile
+          Delete Profile
         </LoadingButton>
       </div>
     </div>
