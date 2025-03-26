@@ -202,7 +202,7 @@ const DefaultPage: FC = () => {
                             ? "text-yellow-500"
                             : "text-gray-400"
                         }`}
-                        size={16}
+                        size={15}
                       />
                     </td>
                     <td className="py-4 px-4 text-gray-600 relative">
@@ -235,7 +235,7 @@ const DefaultPage: FC = () => {
                             }
                             className="ml-2 text-gray-300 hover:text-gray-500 focus:outline-none"
                           >
-                            <FaCopy size={16} />
+                            <FaCopy size={15} />
                           </button>
                         </>
                       ) : (
@@ -251,9 +251,9 @@ const DefaultPage: FC = () => {
                         className="ml-2 text-gray-500 hover:text-gray-700 focus:outline-none"
                       >
                         {visiblePassKeys[project._id] ? (
-                          <FiEye size={16} />
+                          <FiEyeOff size={15} />
                         ) : (
-                          <FiEyeOff size={16} />
+                          <FiEye size={15} />
                         )}
                       </button>
                     </td>
