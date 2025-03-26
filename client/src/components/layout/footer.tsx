@@ -45,47 +45,53 @@ const Footer: React.FC = () => {
     },
   });
 
-
-
   return (
     <footer className="w-full">
-      <div className="bg-emerald-100 h-auto flex flex-row items-center justify-between py-10 px-20 ">
-  {/* Left Side - Heading Section */}
-  <div className="flex flex-col items-start space-y-5">
-          <h1 className="text-8xl font-bold text-emerald-500">
+      {/* Top Section - Contact Form */}
+      <div className="bg-emerald-100 h-auto flex flex-col md:flex-row items-center justify-between py-10 px-4 md:px-20 space-y-8 md:space-y-0">
+        {/* Left Side - Heading Section */}
+        <div className="flex flex-col items-center md:items-start space-y-5 w-full md:w-auto text-center md:text-left">
+          <h1 className="text-4xl md:text-8xl font-bold text-emerald-500">
             GET IN <br /> TOUCH
           </h1>
-          <h1 className="text-3xl font-bold text-emerald-500">Scopeo</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-emerald-500">Scopeo</h1>
         </div>
 
         {/* Right Side - Form */}
-        <form onSubmit={formik.handleSubmit} className="flex flex-col space-y-4 w-1/3">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <input
-            type="text"
-            name="firstname"
-            placeholder="Firstname"
-            value={formik.values.firstname}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className="border-2 border-emerald-500 p-3 rounded-2xl w-full"
-          />
-          {formik.touched.firstname && formik.errors.firstname && (
-            <p className="text-red-500 text-sm">{formik.errors.firstname}</p>
-          )}
+        <form 
+          onSubmit={formik.handleSubmit} 
+          className="flex flex-col space-y-4 w-full md:w-1/3"
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <input
+                type="text"
+                name="firstname"
+                placeholder="Firstname"
+                value={formik.values.firstname}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className="border-2 border-emerald-500 p-3 rounded-2xl w-full"
+              />
+              {formik.touched.firstname && formik.errors.firstname && (
+                <p className="text-red-500 text-sm">{formik.errors.firstname}</p>
+              )}
+            </div>
 
-          <input
-            type="text"
-            name="lastname"
-            placeholder="Lastname"
-            value={formik.values.lastname}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className="border-2 border-emerald-500 p-3 rounded-2xl w-full"
-          />
-          {formik.touched.lastname && formik.errors.lastname && (
-            <p className="text-red-500 text-sm">{formik.errors.lastname}</p>
-          )}
+            <div>
+              <input
+                type="text"
+                name="lastname"
+                placeholder="Lastname"
+                value={formik.values.lastname}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className="border-2 border-emerald-500 p-3 rounded-2xl w-full"
+              />
+              {formik.touched.lastname && formik.errors.lastname && (
+                <p className="text-red-500 text-sm">{formik.errors.lastname}</p>
+              )}
+            </div>
           </div>
 
           <input
@@ -125,63 +131,66 @@ const Footer: React.FC = () => {
           </button>
         </form>
       </div>
-      <div className="bg-emerald-500 text-white py-6 px-10 flex flex-col">
-  <div className="flex items-center space-x-3 mb-4">
-    <div className="w-12 h-12 bg-emerald-500 rounded-lg flex items-center justify-center">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="white"
-        className="w-7 h-7"
-      >
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 3.59 8 8 8-3.59 8-8 8z" />
-      </svg>
-    </div>
-    <h1 className="text-3xl font-bold text-white">Scopeo</h1>
-  </div>
 
-  {/* Main Content Below */}
-  <div className="flex">
-    <div className="mr-10">
-      <p className="text-lg">Effortless project tracking and</p>
-      <p className="text-lg">monitoring for seamless growth</p>
-      <p className="text-lg">and success.</p>
-    </div>
+      {/* Bottom Section - Footer Content */}
+      <div className="bg-emerald-500 text-white py-6 px-4 md:px-10 flex flex-col">
+        <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-3 mb-4">
+          <div className="w-12 h-12 bg-emerald-500 rounded-lg flex items-center justify-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="white"
+              className="w-7 h-7"
+            >
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 8-8 8-3.59 8-8 8z" />
+            </svg>
+          </div>
+          <h1 className="text-3xl font-bold text-white">Scopeo</h1>
+        </div>
 
-    <div className="flex flex-col space-y-2 ml-24">
-      <a href="/documentation" className="text-lg font-semibold hover:underline">Documentation</a>
-      <a href="/about" className="text-lg font-semibold hover:underline">About Us</a>
-      <a href="/contact" className="text-lg font-semibold hover:underline">Contact</a>
-    </div>
+        {/* Main Content Below */}
+        <div className="flex flex-col md:flex-row space-y-6 md:space-y-0">
+          <div className="mr-0 md:mr-10 text-center md:text-left">
+            <p className="text-lg">Effortless project tracking and</p>
+            <p className="text-lg">monitoring for seamless growth</p>
+            <p className="text-lg">and success.</p>
+          </div>
 
-    <div className="max-w-sm ml-24">
-      <p className="text-white text-lg max-w-sm">
-        Stay ahead with smart project <br /> monitoring—insights and <br /> updates, right at your fingertips.
-      </p>
-    </div>
+          <div className="flex flex-col space-y-2 text-center md:text-left md:ml-24 mb-4 md:mb-0">
+            <a href="/documentation" className="text-lg font-semibold hover:underline">Documentation</a>
+            <a href="/about" className="text-lg font-semibold hover:underline">About Us</a>
+            <a href="/contact" className="text-lg font-semibold hover:underline">Contact</a>
+          </div>
 
-    <div className="ml-24">
-      <h1 className="text-white text-xl font-semibold mb-2">FOLLOW US</h1>
-      <div className="flex space-x-4">
-        <a href=""><FaNpm className="text-white text-2xl hover:text-gray-300 transition" /></a>
-        <a href=""><AiOutlineInstagram className="text-white text-2xl hover:text-gray-300 transition" /></a>
-        <a href=""><FaGithub className="text-white text-2xl hover:text-gray-300 transition" /></a>
+          <div className="max-w-sm text-center md:text-left md:ml-24 mb-4 md:mb-0">
+            <p className="text-white text-lg max-w-sm">
+              Stay ahead with smart project <br /> monitoring—insights and <br /> updates, right at your fingertips.
+            </p>
+          </div>
+
+          <div className="md:ml-24 text-center md:text-left">
+            <h1 className="text-white text-xl font-semibold mb-2">FOLLOW US</h1>
+            <div className="flex justify-center md:justify-start space-x-4">
+              <a href=""><FaNpm className="text-white text-2xl hover:text-gray-300 transition" /></a>
+              <a href=""><AiOutlineInstagram className="text-white text-2xl hover:text-gray-300 transition" /></a>
+              <a href=""><FaGithub className="text-white text-2xl hover:text-gray-300 transition" /></a>
+            </div>
+          </div>
+
+          <div className="md:ml-24 text-center md:text-left">
+            <h1 className="text-white text-xl font-semibold mb-2">CONTACT US</h1>
+            <a href="mailto:scopeo.tech@gmail.com" className="text-white text-lg hover:underline">scopeo.tech@gmail.com</a>
+          </div>
+        </div>
+
+        {/* Copyright Section */}
+        <div className="bg-emerald-500 text-white text-center py-3 text-sm mt-4">
+          © {new Date().getFullYear()} Scopeo. All rights reserved.
+        </div>
       </div>
-    </div>
 
-    <div className="ml-24">
-      <h1 className="text-white text-xl font-semibold mb-2">CONTACT US</h1>
-      <a href="mailto:scopeo.tech@gmail.com" className="text-white text-lg hover:underline">scopeo.tech@gmail.com</a>
-    </div>
-  </div>
-
-  {/* Copyright Section */}
-  <div className="bg-emerald-500 text-white text-center py-3 text-sm mt-4">
-    © {new Date().getFullYear()} Scopeo. All rights reserved.
-  </div>
-</div>
-{showModal && <SuccessModal onClose={() => setShowModal(false)} isOpen={true} message="Message sent successfully!" />}
-   </footer>
+      {showModal && <SuccessModal onClose={() => setShowModal(false)} isOpen={true} message="Message sent successfully!" />}
+    </footer>
   );
 };
 
