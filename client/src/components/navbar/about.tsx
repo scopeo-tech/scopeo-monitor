@@ -39,7 +39,7 @@ Our lightweight monitoring agent seamlessly integrates into any project, collect
   <h2 className="text-4xl font-bold mb-12 text-gray-800">Our Mission</h2>
 
   <div className="flex justify-center flex-wrap gap-8 px-10">
-    <div className="w-72 h-64 p-6 bg-emerald-600 rounded-xl shadow-lg flex flex-col justify-center items-center text-white overflow-hidden group transition-transform duration-300 hover:scale-105">
+    <div className="w-72 h-64 p-6 bg-emerald-500 rounded-xl shadow-lg flex flex-col justify-center items-center text-white overflow-hidden group transition-transform duration-300 hover:scale-105">
       <FaShieldAlt className="text-3xl mb-3" />
       <h3 className="text-xl font-semibold mb-3">Empowering Developers</h3>
       <p className="text-center text-sm text-gray-200">
@@ -47,7 +47,7 @@ Our lightweight monitoring agent seamlessly integrates into any project, collect
       </p>
     </div>
 
-    <div className="w-72 h-64 p-6 bg-emerald-600 rounded-xl shadow-lg flex flex-col justify-center items-center text-white overflow-hidden group transition-transform duration-300 hover:scale-105">
+    <div className="w-72 h-64 p-6 bg-emerald-500 rounded-xl shadow-lg flex flex-col justify-center items-center text-white overflow-hidden group transition-transform duration-300 hover:scale-105">
       <FaLock className="text-3xl mb-3" />
       <h3 className="text-xl font-semibold mb-3">Enhancing Security</h3>
       <p className="text-center text-sm text-gray-200">
@@ -55,7 +55,7 @@ Our lightweight monitoring agent seamlessly integrates into any project, collect
       </p>
     </div>
 
-    <div className="w-72 h-64 p-6 bg-emerald-600 rounded-xl shadow-lg flex flex-col justify-center items-center text-white overflow-hidden group transition-transform duration-300 hover:scale-105">
+    <div className="w-72 h-64 p-6 bg-emerald-500 rounded-xl shadow-lg flex flex-col justify-center items-center text-white overflow-hidden group transition-transform duration-300 hover:scale-105">
       <FaEye className="text-3xl mb-3" />
       <h3 className="text-xl font-semibold mb-3">Simplifying Monitoring</h3>
       <p className="text-center text-sm text-gray-200">
@@ -63,7 +63,7 @@ Our lightweight monitoring agent seamlessly integrates into any project, collect
       </p>
     </div>
 
-    <div className="w-72 h-64 p-6 bg-emerald-600 rounded-xl shadow-lg flex flex-col justify-center items-center text-white overflow-hidden group transition-transform duration-300 hover:scale-105">
+    <div className="w-72 h-64 p-6 bg-emerald-500 rounded-xl shadow-lg flex flex-col justify-center items-center text-white overflow-hidden group transition-transform duration-300 hover:scale-105">
       <FaBolt className="text-3xl mb-3" />
       <h3 className="text-xl font-semibold mb-3">Prioritizing Privacy</h3>
       <p className="text-center text-sm text-gray-200">

@@ -149,10 +149,9 @@ const Footer: React.FC = () => {
     </div>
 
     <div className="flex flex-col space-y-2 ml-24">
-      <a href="#" className="text-lg font-semibold hover:underline">Developers</a>
-      <a href="#" className="text-lg font-semibold hover:underline">Documentation</a>
-      <a href="#" className="text-lg font-semibold hover:underline">About Us</a>
-      <a href="#" className="text-lg font-semibold hover:underline">Contact</a>
+      <a href="/documentation" className="text-lg font-semibold hover:underline">Documentation</a>
+      <a href="/about" className="text-lg font-semibold hover:underline">About Us</a>
+      <a href="/contact" className="text-lg font-semibold hover:underline">Contact</a>
     </div>
 
     <div className="max-w-sm ml-24">
@@ -172,7 +171,7 @@ const Footer: React.FC = () => {
 
     <div className="ml-24">
       <h1 className="text-white text-xl font-semibold mb-2">CONTACT US</h1>
-      <p className="text-white">zemdevwork@gmail.com</p>
+      <a href="mailto:scopeo.tech@gmail.com" className="text-white text-lg hover:underline">scopeo.tech@gmail.com</a>
     </div>
   </div>
 
