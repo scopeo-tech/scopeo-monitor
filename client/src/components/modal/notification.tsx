@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation"; // Get projectID from URL
+import { useParams } from "next/navigation"; 
 import { getNotification } from "@/lib/api";
 import { Notification } from "@/lib/interface";
 import { X } from "lucide-react";
-import { format } from "date-fns"; // Import date-fns
+import { format } from "date-fns"; 
 import { useNotificationStore } from "@/lib/stores/notificationStore";
 
 interface NotificationModalProps {
@@ -20,17 +20,17 @@ const severityColors: Record<Notification["severity"], string> = {
 };
 
 const NotificationModal: React.FC<NotificationModalProps> = ({ onClose }) => {
-  const { projectID } = useParams(); // Get projectID from URL
+  const { projectID } = useParams(); 
   const { notifications } = useNotificationStore();
   const [allNotifications, setAllNotifications] = useState<Notification[]>([])
 
   const { data: dbNotification = [], isLoading } = useQuery({
     queryKey: ["dbNotification", projectID],
     queryFn: () => getNotification(projectID as string),
-    enabled: !!projectID, // Only run when projectID is available
+    enabled: !!projectID, 
   });
   
-  // Merge notification
+  
   useEffect(() => {
     const projectNotifications = notifications.filter((n) => n.project === projectID);
     setAllNotifications([ ...dbNotification,...projectNotifications]);
