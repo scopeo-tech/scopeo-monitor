@@ -228,7 +228,7 @@ const Pagination: React.FC<PaginationProps> = ({ prev, next, onNavigate }) => (
   </div>
 );
 
-import { Copy, Check } from "lucide-react";
+import { Copy, Check, Menu, X } from "lucide-react";
 
 const CodeBlock: React.FC<{ language: string; children: React.ReactNode }> = ({
   language,
@@ -273,6 +273,8 @@ const CodeBlock: React.FC<{ language: string; children: React.ReactNode }> = ({
 // main documentation component
 const ScopeoDocumentation: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<string>("/docs/introduction");
+  const [isOpen, setIsOpen] = useState(false);
+
   const pages: Record<string, PageData> = {
     // Getting Started section
     "/docs/introduction": {
@@ -523,7 +525,7 @@ app.listen(3000, () => {
       title: "Basic Setup",
       section: "Getting Started",
       prev: { href: "/docs/installation", title: "Installation" },
-      next: { href: "/docs/configuration", title: "Configuration" },
+      next: { href: "/docs/library-agent", title: "Configuration" },
       content: () => (
         <div className="space-y-6">
           <h1 className="text-3xl font-bold tracking-tight">Basic Setup</h1>
@@ -596,123 +598,10 @@ app.listen(3000, () => {
         </div>
       ),
     },
-    // Components section
-    "/docs/configuration": {
-      title: "Configuration",
-      section: "Components",
-      prev: { href: "/docs/basic-setup", title: "Basic Setup" },
-      next: { href: "/docs/library-agent", title: "Library with Agent" },
-      content: () => (
-        <div className="space-y-6">
-          <h1 className="text-3xl font-bold tracking-tight">Configuration</h1>
-          <p className="text-lg text-muted-foreground">
-            Learn how to configure Scopeo for different environments and use
-            cases.
-          </p>
-
-          <div className="space-y-4">
-            <h2
-              id="configuration-options"
-              className="scroll-m-20 text-2xl font-semibold tracking-tight"
-            >
-              Configuration Options
-            </h2>
-            <p>
-              Scopeo provides a variety of configuration options to customize
-              its behavior:
-            </p>
-
-            <CodeBlock language="javascript">
-              {`import { configManager } from 'scopeo';
-
-configManager.setConfig({
-// Required options
-apiKey: process.env.SCOPEO_API_KEY,    // Your Scopeo API key
-passKey: process.env.SCOPEO_PASS_KEY,  // Your Scopeo pass key
-
-// Environment settings
-environment: 'production',  // 'development', 'staging', 'production'
-
-// Optional settings
-logLevel: 'info',          // 'debug', 'info', 'warn', 'error'
-sampling: {
-  errorRate: 1.0,          // Capture 100% of errors
-  metricRate: 0.1          // Sample 10% of metrics
-},
-
-// Feature toggles
-features: {
-  errorTracking: true,     // Enable error tracking
-  performanceMonitoring: true,  // Enable performance monitoring
-  securityScanning: true,  // Enable security scanning
-  userTracking: false      // Disable user tracking
-},
-
-// Custom tags
-tags: {
-  region: 'us-west',
-  service: 'payment-api'
-}
-});`}
-            </CodeBlock>
-
-            <h2
-              id="environment-specific"
-              className="scroll-m-20 text-2xl font-semibold tracking-tight"
-            >
-              Environment-Specific Configuration
-            </h2>
-            <p>
-              You can create different configurations for development, staging,
-              and production environments:
-            </p>
-
-            <CodeBlock language="javascript">
-              {`// config.js
-import { configManager } from 'scopeo';
-
-export const setupScopeoConfig = () => {
-const environment = process.env.NODE_ENV || 'development';
-
-const commonConfig = {
-  apiKey: process.env.SCOPEO_API_KEY,
-  passKey: process.env.SCOPEO_PASS_KEY,
-  environment
-};
-
-if (environment === 'development') {
-  configManager.setConfig({
-    ...commonConfig,
-    logLevel: 'debug',
-    sampling: { errorRate: 1.0, metricRate: 1.0 }
-  });
-} else if (environment === 'staging') {
-  configManager.setConfig({
-    ...commonConfig,
-    logLevel: 'info',
-    sampling: { errorRate: 1.0, metricRate: 0.5 }
-  });
-} else {
-  // Production
-  configManager.setConfig({
-    ...commonConfig,
-    logLevel: 'warn',
-    sampling: { errorRate: 1.0, metricRate: 0.1 }
-  });
-}
-};`}
-            </CodeBlock>
-          </div>
-        </div>
-      ),
-    },
-    // Library section
-
-    // Data section
     "/docs/library-agent": {
       title: "Library with Agent",
       section: "Library",
-      prev: { href: "/docs/configuration", title: "configuration" },
+      prev: { href: "/docs/basic-setup", title: "configuration" },
       next: { href: "/docs/aggregation", title: "Data Aggregation" },
       content: () => (
         <div className="max-w-4xl mx-auto px-4 py-8">
@@ -823,17 +712,11 @@ if (environment === 'development') {
               <li className="relative pl-6">
                 <span className="absolute left-0 top-2 h-2 w-2 "></span>
                 <strong>Structured Logging:</strong> Organized logs using
-                Winston with severity levels
+                Custom Logger with severity levels
               </li>
               <li className="relative pl-6">
                 <span className="absolute left-0 top-2 h-2 w-2 "></span>
-                <strong>User Activity Tracking:</strong> Monitor API usage
-                patterns and user behavior
-              </li>
-              <li className="relative pl-6">
-                <span className="absolute left-0 top-2 h-2 w-2 "></span>
-                <strong>Privacy-Focused:</strong> Automatically redacts
-                sensitive information in logs
+                <strong>Privacy-Focused:</strong> No information is collected from users Database
               </li>
             </ul>
           </div>
@@ -2080,7 +1963,7 @@ if (environment === 'development') {
                 <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
               </svg>
               <h2 className="text-xl font-semibold">
-                github.com/scopeo/scopeo
+              github.com/scopeo-tech/scopeo-monitor.git
               </h2>
             </div>
 
@@ -2107,7 +1990,7 @@ if (environment === 'development') {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
               <a
-                href="https://github.com/scopeo/scopeo"
+                href="https://github.com/scopeo-tech/scopeo-monitor.git"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center px-4 py-2 bg-black text-white font-medium rounded-md hover:bg-gray-800 transition-colors"
@@ -2603,10 +2486,6 @@ app.use(scopeoErrorHandler);`}
       ],
     },
     {
-      title: "Components",
-      links: [{ href: "/docs/configuration", title: "Configuration" }],
-    },
-    {
       title: "Library",
       links: [{ href: "/docs/library-agent", title: "Library with Agent" }],
     },
@@ -2658,14 +2537,24 @@ app.use(scopeoErrorHandler);`}
   }, [currentPage]);
 
   return (
-    <div className="flex min-h-screen bg-background">
-      <aside className="w-64 border-r border-border h-screen sticky top-0 overflow-y-auto scrollbar-hide">
-        <div className="flex h-14 items-center border-b px-4 ps-10 ">
+    <div className="flex min-h-screen h-screen bg-background">
+      <aside
+        className={`overflow-y-auto scrollbar-hide fixed left-0 w-64 bg-white border-r border-border shadow-lg transform transition-transform ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        } sm:translate-x-0 sm:relative sm:w-64 md:left-[-30px] sm:left-0 sm:block h-screen overflow-y-auto z-20`}
+      >
+        <div className="flex h-14 items-center border-b px-4 ps-10">
           <button
             onClick={() => handleNavigate("/docs/introduction")}
             className="flex items-center font-bold"
           >
             <LogoIcon />
+          </button>
+          <button
+            className="sm:hidden ml-auto p-2"
+            onClick={() => setIsOpen(false)}
+          >
+            <X size={24} />
           </button>
         </div>
 
@@ -2676,43 +2565,53 @@ app.use(scopeoErrorHandler);`}
               title={section.title}
               links={section.links}
               currentPage={currentPage}
-              onNavigate={handleNavigate}
+              onNavigate={(href) => {
+                handleNavigate(href);
+                setIsOpen(false);
+              }}
             />
           ))}
         </nav>
       </aside>
 
-      <div className="flex-1 overflow-auto">
-        <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background px-4 sm:px-6">
-          <div className="flex flex-1 items-center gap-4">
-            <nav className="flex items-center space-x-4 lg:space-x-6">
-              <button
-                onClick={() => handleNavigate("/docs/introduction")}
-                className="text-sm font-medium transition-colors hover:text-primary"
-              >
-                {currentPageData.title || "Docs"}
-              </button>
-            </nav>
-          </div>
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black opacity-50 sm:hidden"
+          onClick={() => setIsOpen(false)}
+        ></div>
+      )}
+      <div className="flex-1 overflow-y-auto scrollbar-hide">
+        <header className=" flex h-14 items-center gap-4 border-b bg-background px-4 sm:px-6">
+          <button className="sm:hidden p-2" onClick={() => setIsOpen(true)}>
+            <Menu size={24} />
+          </button>
+          <nav className="flex  items-center gap-4">
+            <button
+              onClick={() => handleNavigate("/docs/introduction")}
+              className="text-sm font-medium transition-colors hover:text-primary"
+            >
+              {currentPageData.title || "Docs"}
+            </button>
+          </nav>
         </header>
-        <div className="grid grid-cols-1 md:grid-cols-[1fr_220px] gap-6 p-4 sm:p-6">
-          <main className="prose max-w-full">
-            {currentPageData.content()}
 
+        <div className=" grid grid-cols-1 md:grid-cols-[1fr_220px] gap-6 p-4 sm:p-6">
+          <main className="prose max-w-full">
+            {currentPageData?.content()}
             <div className="mt-12 border-t pt-6">
               <Pagination
-                prev={currentPageData.prev}
-                next={currentPageData.next}
+                prev={currentPageData?.prev}
+                next={currentPageData?.next}
                 onNavigate={handleNavigate}
               />
             </div>
           </main>
 
           <div className="hidden md:block">
-            <div className="sticky top-16">
+            <div className="sticky top-16 ">
               <h4 className="mb-2 text-sm font-semibold">On This Page</h4>
               <ul className="m-0 list-none p-0 text-sm space-y-2">
-                {tableOfContents.map((item) => (
+                {tableOfContents?.map((item) => (
                   <li key={item.id} className="pl-4 border-l-2 border-border">
                     <a
                       href={`#${item.id}`}

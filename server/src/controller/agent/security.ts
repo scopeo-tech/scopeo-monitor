@@ -32,8 +32,6 @@ const handleIncomingSecurity = async (
     return next(new CustomError(400, "Missing required fields"));
   }
 
-  // const userId = project.user.toString() as string;
-
   const security = req.body as SecurityLogPayload;
 
   // Manage security log storage
