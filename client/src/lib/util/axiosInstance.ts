@@ -2,7 +2,7 @@ import axios from "axios";
 import axiosErrorManager from "./axiosErrorManager";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:3001/api",
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
   withCredentials: true,
 });
 
