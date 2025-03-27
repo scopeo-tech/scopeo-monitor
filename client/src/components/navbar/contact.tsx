@@ -104,9 +104,7 @@ const ContactPage = () => {
                 <div>
                   <h3 className="font-bold">Head Office</h3>
                   <p className="text-gray-600 text-sm md:text-base">
-                    12121 Somewhere World Rd 22
-                    <br />
-                    City, State
+                    coming soon..
                   </p>
                 </div>
               </div>
@@ -130,7 +128,7 @@ const ContactPage = () => {
                 </div>
                 <div>
                   <h3 className="font-bold">Email us</h3>
-                  <p className="text-gray-600 text-sm md:text-base">scopeotech@gmail.com</p>
+                  <p className="text-gray-600 text-sm md:text-base">scopeo.tech@gmail.com</p>
                 </div>
               </div>
 
@@ -154,7 +152,7 @@ const ContactPage = () => {
                 <div>
                   <h3 className="font-bold">Call us</h3>
                   <p className="text-gray-600 text-sm md:text-base">
-                    Phone: +1 (123) 456-7890
+                    Phone: +91 0000000000
                     <br />
                     &nbsp;
                   </p>
