@@ -23,7 +23,7 @@ const rateLimitMiddleware = async (req: Request, res: Response, next: NextFuncti
 
     next();
   } catch (error) {
-    console.error("❌ Rate limit error:", error);
+    console.error("Rate limit error:", error);
     next();
   }
 };
