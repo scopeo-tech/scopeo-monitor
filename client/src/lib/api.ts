@@ -19,18 +19,12 @@ export const loginUser = async (data: {
   return response.data;
 };
 
-export const registerUser = async (data: {
-  username: string;
-  email: string;
-  password: string;
-}) => {
-  const response = await api.post("/auth/register", data);
-  return response.data;
+export const registerUser = async (data: { username: string; email: string; password: string }) => {
+    const response = await api.post("/auth/register", data);
+    return response.data;
 };
-
 export const logoutUser = async () => {
   const response = await api.post("/auth/logout");
-  
   localStorage.removeItem("token");
   localStorage.removeItem("user");
   return response.data;

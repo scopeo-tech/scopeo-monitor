@@ -4,17 +4,15 @@ import Link from "next/link";
 import { FC, useEffect, useState, useRef } from "react";
 import { useUserStore } from "@/lib/stores/userStore";
 import { FiUser, FiSettings, FiLogOut, FiHelpCircle } from "react-icons/fi";
-import { logoutUser } from "@/lib/api";
 import { useRouter } from "next/navigation";
 
 const Navbar: FC = () => {
-  const { user } = useUserStore();
+  const { user,logout } = useUserStore();
   const router = useRouter();
   const path: string = user ? "/" : "/";
   const [isScrolled, setIsScrolled] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -25,9 +23,8 @@ const Navbar: FC = () => {
   }, []);
 
   const handleLogout =async ()=>{
-    await logoutUser();
+    await logout();
     router.push('/')
-
   }
 
   useEffect(() => {
