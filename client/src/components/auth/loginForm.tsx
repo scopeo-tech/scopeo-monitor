@@ -21,11 +21,23 @@ const LoginForm: FC = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false); 
   const [error, setError] = useState<string | null>(null);
+  const [hydrated, setHydrated] = useState(false);
   const setUser = useAuthStore((state) => state.setUser);
   const user = useAuthStore((state) => state.user);
   const router = useRouter();
 
   const { data: session, status } = useSession();
+
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+  
+  useEffect(() => {
+    if (hydrated && user) {
+      router.push("/home");
+    }
+  }, [hydrated, user, router]);
 
   useEffect(() => {
     if (status === "authenticated" && session?.idToken) {
@@ -33,9 +45,6 @@ const LoginForm: FC = () => {
     }
   }, [session, status]);
 
-  if(user) {
-    router.push("/home");
-  }
 
   const handleSignIn = async () => {
     try {
