@@ -12,7 +12,7 @@ const cacheMiddleware = async (req: Request, res: Response, next: NextFunction):
     }
 
     const originalSend = res.json.bind(res);
-
+    
     res.json = (body: any) => {
       redisClient
         .set(cacheKey, JSON.stringify(body), "EX", 180)
