@@ -5,6 +5,7 @@ import { FC, useEffect, useState, useRef } from "react";
 import { useUserStore } from "@/lib/stores/userStore";
 import { FiUser, FiSettings, FiLogOut, FiHelpCircle } from "react-icons/fi";
 import { useRouter } from "next/navigation";
+import { useSyncUser } from "@/lib/hooks/useSyncUser";
 
 const Navbar: FC = () => {
   const { user,logout } = useUserStore();
@@ -13,6 +14,9 @@ const Navbar: FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  
+  useSyncUser(); 
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
