@@ -4,9 +4,10 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { getUserInfo, updateProfile, checkUsername, deleteProfile, logoutUser } from '@/lib/api';
+import { getUserInfo, updateProfile, checkUsername, deleteProfile } from '@/lib/api';
 import LoadingButton from '@/components/ui/loadingButton';
 import withAuth from '@/lib/withAuth';
+import { useUserStore } from '@/lib/stores/userStore';
 
 function ProfilePage() {
   const { data: user, isLoading, isError } = useQuery({
@@ -21,7 +22,9 @@ function ProfilePage() {
   const [isNameTaken, setIsNameTaken] = useState<boolean | null>(null);
   const [resMessage, setResMessage] = useState("");
   const router = useRouter();
+  const {logout} = useUserStore(state => state);
   const [hasChangedUsername, setHasChangedUsername] = useState(false);
+
   const [errors, setErrors] = useState<{ username?: string; currentPassword?: string; newPassword?: string }>({});
 
   useEffect(() => {
@@ -92,11 +95,11 @@ function ProfilePage() {
     updateMutation.mutate({ username, currentPassword, newPassword });
   };
 
-  const handleDeleteProfile = () => {
+  const handleDeleteProfile = async() => {
     if (window.confirm("Are you sure you want to delete this project?")) {
       if (user) {
         deleteMutation.mutate(user?._id);
-        logoutUser()
+        await logout()
         router.push('/');
       }
 
