@@ -1,3 +1,4 @@
+import { log } from "console";
 import mongoose, { Schema, InferSchemaType, Model } from "mongoose";
 
 const logSchema = new Schema({
@@ -5,22 +6,9 @@ const logSchema = new Schema({
     type: String,
     required: true,
   },
-  level: {
-    type: String,
-    required: true,
-  },
-  statusCode: {
-    type: Number,
-    required: true,
-  },
-  method: {
-    type: String,
-    required: true,
-  },
-  duration: {
-    type: Number},
-  route: {
-    type: String,
+  type: {
+    type: [String], // Array of strings
+    enum: ["serverlog", "userlog"], // Only these values are allowed
     required: true,
   },
   project:{
@@ -30,7 +18,7 @@ const logSchema = new Schema({
 },  
 },{ timestamps: true });
 
-export type ILog = InferSchemaType<typeof logSchema>;
+type ILog = InferSchemaType<typeof logSchema>;
 
 const Log:Model<ILog>=mongoose.model("Log", logSchema);
 export default Log 

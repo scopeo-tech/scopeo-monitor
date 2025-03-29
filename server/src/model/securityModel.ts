@@ -1,52 +1,19 @@
-import { Schema, InferSchemaType, Model, model } from "mongoose";
+import mongoose, { Schema, InferSchemaType, Model } from "mongoose";
 
-const securitySchema = new Schema(
-  {
-    project: {
-      type: Schema.Types.ObjectId,
-      ref: "Project",
-      required: true,
-      index: true,
-    },
-    statusCode: {
-      type: Number,
+const securitySchema = new Schema({
+    type: {
+      type: [String], 
+      enum: ["total", "failed", "unusual", "apiabuse"], 
       required: true,
     },
-    isSuccess: {
-      type: Boolean,
-      required: true,
-    },
-    ip: {
-      type: String,
-      required: true,
-    },
-    userAgent: {
-      type: String,
-    },
-    duration: {
-      type: Number,
-    },
-    isBruteForce: {
-      type: Boolean,
-      default: false,
-    },
-    isUnusual: {
-      type: Boolean,
-      default: false, 
-    },
-    unusualReason: {
-      type: String, 
-      enum: [
-        "Rapid consecutive login failures followed by success",
-        "Unusually high number of logins within 24 hours",
-      ],
-      default: null,
-    },
-  },
-  { timestamps: true }
-);
+    project:{
+        type:Schema.Types.ObjectId,
+        ref:"Project",
+        required:true,
+    },  
+  },{ timestamps: true });
 
-export type ISecurity = InferSchemaType<typeof securitySchema>;
+  type ISecurity = InferSchemaType<typeof securitySchema>;
 
-const Security: Model<ISecurity> = model<ISecurity>("Security", securitySchema);
-export default Security;
+ const Security: Model<ISecurity> = mongoose.model("Security", securitySchema);
+ export default Security

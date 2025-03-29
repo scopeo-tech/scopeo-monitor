@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { useEffect, useState } from "react";
@@ -11,40 +10,23 @@ import * as Yup from "yup";
 import { FC } from "react";
 import { FaUser, FaLock } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import { getSession, signIn, useSession } from "next-auth/react";
+import { getSession, signIn, signOut, useSession } from "next-auth/react";
 import axios from "axios";
-import Link from "next/link";
-import LoadingButton from "../ui/loadingButton";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const LoginForm: FC = () => {
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false); 
   const [error, setError] = useState<string | null>(null);
-  const [hydrated, setHydrated] = useState(false);
   const setUser = useAuthStore((state) => state.setUser);
-  const user = useAuthStore((state) => state.user);
   const router = useRouter();
 
   const { data: session, status } = useSession();
 
-
-  useEffect(() => {
-    setHydrated(true);
-  }, []);
-  
-  useEffect(() => {
-    if (hydrated && user) {
-      router.push("/home");
-    }
-  }, [hydrated, user, router]);
-
   useEffect(() => {
     if (status === "authenticated" && session?.idToken) {
-      handleGoogleLogin(session?.idToken);
+      console.log("Session loaded:", session);
+      handleGoogleLogin(session.idToken);
     }
   }, [session, status]);
-
 
   const handleSignIn = async () => {
     try {
@@ -52,10 +34,10 @@ const LoginForm: FC = () => {
         if (!response?.error) {
           const updatedSession = await getSession();
           if (updatedSession?.idToken) {
-            await handleGoogleLogin(updatedSession?.idToken);
+            await handleGoogleLogin(updatedSession.idToken);
           }
         } else {
-          setError(response?.error);
+          setError(response.error);
         }
       });
     } catch (error) {
@@ -63,25 +45,25 @@ const LoginForm: FC = () => {
     }
   };
   
-  const handleGoogleLogin = async (idToken: string) => {
+    const handleGoogleLogin = async (idToken: string) => {
     setLoading(true);
     try {
+      console.log("before")
       const response = await googleLogin(idToken);
       const { user, token } = response as { user: User; token: string };
+      console.log(user,token,"user and token")
       if (user && token) {
         localStorage.setItem("user", JSON.stringify(user));
         localStorage.setItem("token", token);
-        useAuthStore.getState().setUser(user);
-        router.push("/home");
+        setUser(user);
+        await router.push("/");
       }
     } catch (error) {
       setError((error as Error).message);
-      if (
-        axios.isAxiosError(error) &&
-        error.response?.data?.message?.includes("Expiration time")
-      ) {
-        return;
-      }
+      if (axios.isAxiosError(error) && 
+      error.response?.data?.message?.includes("Expiration time")) {
+    return;
+  }
       console.error("Google login failed", error);
       localStorage.removeItem("user");
       localStorage.removeItem("token");
@@ -108,17 +90,12 @@ const LoginForm: FC = () => {
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("token", token);
       setUser(user);
-      router.push("/home")
-    }catch (err: unknown) {
-      if (axios.isAxiosError(err) && err.response) {
-        if (err.response.status === 401) {
-          setError("Incorrect password"); 
-        } else {
-          setError(err.response.data.message || "Login failed");
-        }
-      } else {
-        setError("Something went wrong");
-      }
+      console.log(user);
+      console.log("login Succefully");
+      // router.push("/home")
+    } catch (err) {
+      setError((err as Error).message);
+      console.log("error", error);
     } finally {
       setLoading(false);
     }
@@ -128,7 +105,7 @@ const LoginForm: FC = () => {
     <div className="flex h-screen items-center justify-center bg-white">
       <div className="flex w-3/4 max-w-4xl shadow-md rounded-lg overflow-hidden">
         {/* Left Side - Welcome Message */}
-        <div className="w-1/2 bg-emerald-500 text-white flex flex-col items-center justify-center p-10 rounded-l-lg">
+        <div className="w-1/2 bg-green-500 text-white flex flex-col items-center justify-center p-10 rounded-l-lg">
           <h2 className="text-3xl font-medium mb-6">Welcome Back</h2>
           <p className="text-center mb-1">To stay connected with us</p>
           <p className="text-center mb-14">
@@ -136,16 +113,17 @@ const LoginForm: FC = () => {
           </p>
 
           <p className="mt-8 mb-4">Don&apos;t have an account?</p>
-          <Link href="/auth/register"
-            className="px-8 py-2 border text-center border-white rounded-full text-white  hover:bg-white hover:text-emerald-500 transition w-64"  
+          <button
+            className="px-8 py-2 border border-white rounded-full text-white hover:bg-white hover:text-green-500 transition w-64"
+            onClick={() => router.push("/auth/register")}
           >
             Register now
-          </Link>
+          </button>
         </div>
 
         {/* Right Side - Login Form */}
         <div className="w-1/2 p-10 flex flex-col justify-center bg-white">
-          <h2 className="text-2xl font-medium text-emerald-500 mb-8">Login</h2>
+          <h2 className="text-2xl font-medium text-green-500 mb-8">Login</h2>
 
           <Formik
             initialValues={{ emailOrUsername: "", password: "" }}
@@ -169,12 +147,12 @@ const LoginForm: FC = () => {
             {({ isSubmitting }) => (
               <Form className="flex flex-col space-y-6">
                 <div className="relative">
-                  <FaUser className="absolute left-0 top-1/2 transform -translate-y-1/2 text-emerald-500" />
+                  <FaUser className="absolute left-0 top-1/2 transform -translate-y-1/2 text-green-500" />
                   <Field
                     name="emailOrUsername"
                     type="text"
                     placeholder="username / email"
-                    className="w-full pl-6 pb-2 border-b border-gray-300 focus:outline-none focus:border-emerald-500 bg-white"
+                    className="w-full pl-6 pb-2 border-b border-gray-300 focus:outline-none focus:border-green-500 bg-white"
                   />
                   <ErrorMessage
                     name="email"
@@ -183,34 +161,29 @@ const LoginForm: FC = () => {
                   />
                 </div>
                 <div className="relative">
-                  <FaLock className="absolute left-0 top-1/2 transform -translate-y-1/2 text-emerald-500" />
+                  <FaLock className="absolute left-0 top-1/2 transform -translate-y-1/2 text-green-500" />
                   <Field
                     name="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Password"
-                    className="w-full pl-6 pr-10 pb-2 border-b border-gray-300 focus:outline-none focus:border-emerald-500 bg-white"
+                    type="password"
+                    placeholder="password"
+                    className="w-full pl-6 pb-2 border-b border-gray-300 focus:outline-none focus:border-green-500 bg-white"
                   />
-                  <button
-                    type="button"
-                    className="absolute right-0 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                    onClick={() => setShowPassword((prev) => !prev)}
-                  >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
-                  </button>
-                  <ErrorMessage name="password" component="div" className="text-red-500 text-sm absolute -bottom-5" />
-                  {error && <div className="text-red-500 text-sm">{error}</div>}
+                  <ErrorMessage
+                    name="password"
+                    component="div"
+                    className="text-red-500 text-sm"
+                  />
                 </div>
-                <div className="text-right text-sm text-gray-400 cursor-pointer hover:text-emerald-500 mt-2">
+                <div className="text-right text-sm text-gray-400 cursor-pointer hover:text-green-500 mt-2">
                   Forgot Password?
                 </div>
-                <LoadingButton
+                <button
                   type="submit"
-                  isLoading={isSubmitting || loading}
-                  className="w-full bg-emerald-500 text-white py-3 rounded-full hover:bg-emerald-600 transition mt-4">
-                    Login
-                </LoadingButton>
-
-                
+                  className="w-full bg-green-500 text-white py-3 rounded-full hover:bg-green-600 transition mt-4"
+                  disabled={isSubmitting || loading}
+                >
+                  {loading ? "Logging in..." : "Login"}
+                </button>
               </Form>
             )}
           </Formik>

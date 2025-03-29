@@ -8,7 +8,7 @@ import {
 } from "../../lib/bodyValidations/auth";
 import bcrypt from "bcryptjs";
 import CustomError from "../../lib/util/CustomError";
-import { createAccessToken } from "../../lib/jwt";
+import { createAccessToken, createRefreshToken } from "../../lib/jwt";
 import jwt from "jsonwebtoken";
 import { sendRegisterOtpMail } from "../../lib/sendMail";
 import otpGenerator from "otp-generator";
@@ -24,7 +24,7 @@ export const sendOtpForRegister = async (
 
   const emailExists = await User.findOne({ email });
   if (emailExists) {
-    return next(new CustomError(400, "User already exists"));
+    return next(new CustomError(400, "Email already exists"));
   }
 
   const otp = otpGenerator.generate(6, {
@@ -123,6 +123,16 @@ const userLogin = async (req: Request, res: Response, next: NextFunction) => {
     user._id.toString(),
     process.env.JWT_TOKEN as string
   );
+  const refreshToken = createRefreshToken(
+    user._id.toString(),
+    process.env.JWT_REFRESH_TOKEN as string
+  );
+
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+  });
 
   const currUser = {
     _id: user._id,
@@ -161,9 +171,14 @@ const googleLogin = async (req: Request, res: Response , next: NextFunction) => 
     existingUser.password = hashedPassword;
     await existingUser.save();
 
-    const token = createAccessToken(
-      existingUser._id.toString(),
-      process.env.JWT_TOKEN as string
+    const token = jwt.sign(
+      {
+        _id: existingUser._id,
+        email: existingUser.email,
+        username: existingUser.username,
+      },
+      process.env.JWT_TOKEN!,
+      { expiresIn: "1h" }
     );
 
     const { password, createdAt, ...safeUser } = existingUser.toObject();
@@ -185,7 +200,7 @@ const googleLogin = async (req: Request, res: Response , next: NextFunction) => 
 
   const token = jwt.sign(
     {
-      userId: savedUser._id,
+      _id: savedUser._id,
       email: savedUser.email,
       username: savedUser.username,
     },
@@ -199,7 +214,41 @@ const googleLogin = async (req: Request, res: Response , next: NextFunction) => 
 };
 
 const userLogout = async (req: Request, res: Response) => {
+  res.clearCookie("refreshToken");
   res.json({ message: "Logout successful" });
 };
 
-export { userRegister, userLogin, userLogout, googleLogin };
+const refreshingToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const refreshToken = req.cookies?.refreshToken;
+    if (!refreshToken) {
+      return next(new CustomError(401, "No refresh token provided"));
+    }
+
+    const decoded = jwt.verify(
+      refreshToken,
+      process.env.JWT_REFRESH_TOKEN as string
+    ) as { _id: string };
+    if (!decoded || !decoded._id) {
+      return next(new CustomError(403, "Invalid refresh token"));
+    }
+    const accessToken = createAccessToken(
+      decoded._id,
+      process.env.JWT_TOKEN as string
+    );
+
+    res.status(200).json({
+      status: "success",
+      message: "Token refreshed successfully",
+      token: accessToken,
+    });
+  } catch (error) {
+    return next(new CustomError(403, "Invalid or expired refresh token"));
+  }
+};
+
+export { userRegister, userLogin, userLogout, refreshingToken, googleLogin };
