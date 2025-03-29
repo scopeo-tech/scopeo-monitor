@@ -1,6 +1,6 @@
 "use client";
 
-import { logoutUser } from "@/lib/api";
+import { useUserStore } from "@/lib/stores/userStore";
 import { useRouter } from "next/navigation";
 
 interface LogoutModalProps {
@@ -11,8 +11,9 @@ interface LogoutModalProps {
 const LogoutModal: React.FC<LogoutModalProps> = ({ isOpen, onClose }) => {
     const router = useRouter();
 
-  const handleLogout = () => {
-    logoutUser();  
+const { logout } = useUserStore(state => state);
+    const handleLogout = async() => {
+    await logout()  
     onClose();     
     router.push("/"); 
   };
