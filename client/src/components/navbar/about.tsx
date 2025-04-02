@@ -79,10 +79,10 @@ const About: React.FC = () => {
 
       <div className="flex flex-col md:flex-row justify-around gap-8 px-4 md:px-10">
         {[
-          { name: "Muhammed Irfan", github: "https://github.com/mohammedirfan244" ,pfp:"https://avatars.githubusercontent.com/u/179516613?v=4" },
-          { name: "Navaf", github: "https://github.com/Navaf-U" ,pfp:"https://avatars.githubusercontent.com/u/179516613?v=4" },
-          { name: "Fathima Harsha", github: "https://github.com/harsha-63" ,pfp:"https://avatars.githubusercontent.com/u/179516613?v=4" },
-          { name: "Mohammed Sabik", github: "https://github.com/sa7ik" ,pfp:"https://avatars.githubusercontent.com/u/179516613?v=4" },
+          { name: "Muhammed Irfan", github: "https://github.com/mohammedirfan244" ,pfp:"https://avatars.githubusercontent.com/u/179564628?v=4" },
+          { name: "Navaf", github: "https://github.com/Navaf-U" ,pfp:"https://avatars.githubusercontent.com/u/179564628?v=4" },
+          { name: "Fathima Harsha", github: "https://github.com/harsha-63" ,pfp:"https://avatars.githubusercontent.com/u/179564628?v=4" },
+          { name: "Mohammed Sabik", github: "https://github.com/sa7ik" ,pfp:"https://avatars.githubusercontent.com/u/179564628?v=4" },
         ].map((member, index) => (
             <div
               key={index}
