@@ -75,14 +75,14 @@ const About: React.FC = () => {
 
       {/* Who Are We Section */}
       <div className="py-20 text-center bg-white">
-      <h2 className="text-3xl font-bold mb-10">Who Are We</h2>
+      <h2 className="text-3xl font-bold mb-10">Who We Are</h2>
 
       <div className="flex flex-col md:flex-row justify-around gap-8 px-4 md:px-10">
         {[
-          { name: "Muhammed Irfan", github: "https://github.com/mohammedirfan244" ,pfp:"https://avatars.githubusercontent.com/u/179516613?v=4" },
-          { name: "Navaf", github: "https://github.com/Navaf-U" ,pfp:"https://avatars.githubusercontent.com/u/179516613?v=4" },
-          { name: "Fathima Harsha", github: "https://github.com/harsha-63" ,pfp:"https://avatars.githubusercontent.com/u/179516613?v=4" },
-          { name: "Mohammed Sabik", github: "https://github.com/sa7ik" ,pfp:"https://avatars.githubusercontent.com/u/179516613?v=4" },
+          { name: "Muhammed Irfan", github: "https://github.com/mohammedirfan244" ,pfp:"https://avatars.githubusercontent.com/u/179564628?v=4" },
+          { name: "Navaf", github: "https://github.com/Navaf-U" ,pfp:"https://avatars.githubusercontent.com/u/179564628?v=4" },
+          { name: "Fathima Harsha", github: "https://github.com/harsha-63" ,pfp:"https://avatars.githubusercontent.com/u/179564628?v=4" },
+          { name: "Mohammed Sabik", github: "https://github.com/sa7ik" ,pfp:"https://avatars.githubusercontent.com/u/179564628?v=4" },
         ].map((member, index) => (
             <div
               key={index}
