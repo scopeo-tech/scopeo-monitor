@@ -460,7 +460,6 @@ const ScopeoDocumentation: React.FC = () => {
           1. Installation
         </h2>
         <p>Run the command to install Scopeo in your project:</p>
-
         <PackageManagerTabs />
       </div>
 
@@ -469,7 +468,7 @@ const ScopeoDocumentation: React.FC = () => {
           id="configuration"
           className="scroll-m-20 text-2xl font-semibold tracking-tight"
         >
-          2. Add configuration
+          2. Add Configuration
         </h2>
         <p>Configure Scopeo with your API keys and environment settings:</p>
 
@@ -567,8 +566,6 @@ export default router;`}
     </div>
   ),
 },
-
-
     "/docs/basic-setup": {
       title: "Basic Setup",
       section: "Getting Started",
@@ -611,7 +608,7 @@ initializeScopeo(app);
 // 3. Initialize logger Before Routes
 app.use(scopeoRequestLogger)
 
-// Your routes and middleware
+// Your auth routes and middleware
 app.post('/login', accessMonitor , (req, res) => {
   res.send('Hello World!');
 });
@@ -638,13 +635,7 @@ app.listen(PORT, () => {
             </p>
 
             <div className="bg-muted p-4 rounded-md text-sm font-mono">
-              [Scopeo] Initializing Scopeo v1.2.3
-              <br />
               [Scopeo] Connected to metrics server
-              <br />
-              [Scopeo] Error handler registered
-              <br />
-              [Scopeo] Initialization complete
             </div>
           </div>
         </div>
