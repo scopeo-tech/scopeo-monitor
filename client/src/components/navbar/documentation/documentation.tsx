@@ -592,8 +592,6 @@ export default router;`}
 import express from 'express';
 import initializeScopeo from 'scopeo';
 import { configManager, scopeoRequestLogger, scopeoErrorHandler, accessMonitor } from 'scopeo';
-import initializeScopeo from 'scopeo';
-import { configManager, scopeoRequestLogger, scopeoErrorHandler, accessMonitor } from 'scopeo';
 
 const app = express();
 
@@ -610,13 +608,11 @@ initializeScopeo(app);
 // 3. Initialize logger Before Routes
 app.use(scopeoRequestLogger)
 
-// Your routes and middleware
-app.post('/login', accessMonitor , (req, res) => {
+// Your auth routes and middleware
 app.post('/login', accessMonitor , (req, res) => {
   res.send('Hello World!');
 });
 
-// 4. Add error handler (must be after all routes)
 // 4. Add error handler (must be after all routes)
 scopeoErrorHandler(app);
 
@@ -639,13 +635,7 @@ app.listen(PORT, () => {
             </p>
 
             <div className="bg-muted p-4 rounded-md text-sm font-mono">
-              [Scopeo] Initializing Scopeo v1.2.3
-              <br />
               [Scopeo] Connected to metrics server
-              <br />
-              [Scopeo] Error handler registered
-              <br />
-              [Scopeo] Initialization complete
             </div>
           </div>
         </div>
