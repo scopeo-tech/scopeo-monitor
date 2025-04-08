@@ -440,41 +440,41 @@ const ScopeoDocumentation: React.FC = () => {
         </div>
       ),
     },
-    "/docs/installation": {
-      title: "Installation",
-      section: "Getting Started",
-      prev: { href: "/docs/introduction", title: "Introduction" },
-      next: { href: "/docs/basic-setup", title: "Basic Setup" },
-      content: () => (
-        <div className="space-y-6">
-          <h1 className="text-3xl font-bold tracking-tight">Installation</h1>
-          <p className="text-lg text-muted-foreground">
-            How to install and set up Scopeo in your project.
-          </p>
+"/docs/installation": {
+  title: "Installation",
+  section: "Getting Started",
+  prev: { href: "/docs/introduction", title: "Introduction" },
+  next: { href: "/docs/basic-setup", title: "Basic Setup" },
+  content: () => (
+    <div className="space-y-6">
+      <h1 className="text-3xl font-bold tracking-tight">Installation</h1>
+      <p className="text-lg text-muted-foreground">
+        How to install and set up Scopeo in your project.
+      </p>
 
-          <div className="space-y-4">
-            <h2
-              id="installation"
-              className="scroll-m-20 text-2xl font-semibold tracking-tight"
-            >
-              1. Installation
-            </h2>
-            <p>Run the command to install Scopeo in your project:</p>
+      <div className="space-y-4">
+        <h2
+          id="installation"
+          className="scroll-m-20 text-2xl font-semibold tracking-tight"
+        >
+          1. Installation
+        </h2>
+        <p>Run the command to install Scopeo in your project:</p>
 
-            <PackageManagerTabs />
-          </div>
+        <PackageManagerTabs />
+      </div>
 
-          <div className="space-y-4">
-            <h2
-              id="configuration"
-              className="scroll-m-20 text-2xl font-semibold tracking-tight"
-            >
-              2. Add configuration
-            </h2>
-            <p>Configure Scopeo with your API keys and environment settings:</p>
+      <div className="space-y-4">
+        <h2
+          id="configuration"
+          className="scroll-m-20 text-2xl font-semibold tracking-tight"
+        >
+          2. Add configuration
+        </h2>
+        <p>Configure Scopeo with your API keys and environment settings:</p>
 
-            <CodeBlock language="javascript">
-              {`import { configManager } from "scopeo";
+        <CodeBlock language="javascript">
+{`import { configManager } from "scopeo";
 
 export const setupScopeoConfig = () => {
   try {
@@ -487,40 +487,88 @@ export const setupScopeoConfig = () => {
     console.log(error, "from scopeo package");
   }
 }`}
-            </CodeBlock>
-          </div>
+        </CodeBlock>
+      </div>
 
-          <div className="space-y-4">
-            <h2
-              id="initialize"
-              className="scroll-m-20 text-2xl font-semibold tracking-tight"
-            >
-              3. Initialize Scopeo
-            </h2>
-            <p>You can now start using Scopeo in your project:</p>
+      <div className="space-y-4">
+        <h2
+          id="initialize"
+          className="scroll-m-20 text-2xl font-semibold tracking-tight"
+        >
+          3. Initialize Scopeo
+        </h2>
+        <p>Initialize Scopeo and middleware in your main server file:</p>
 
-            <CodeBlock language="javascript">
-              {`import { setupScopeoConfig } from './config';
-import initializeScopeo from 'scopeo';
+        <CodeBlock language="javascript">
+{`import { setupScopeoConfig } from './config';
+import initializeScopeo, { scopeoRequestLogger, scopeoErrorHandler } from 'scopeo';
 import express from 'express';
 
 const app = express();
 
-// Call this in your entry file
+// 1. Set configuration
 setupScopeoConfig();
 
-// Initialize Scopeo with your app
+// 2. Initialize Scopeo
 initializeScopeo(app);
 
-// The rest of your app configuration
-app.listen(3000, () => {
+// 3. Use request logger middleware before routes
+app.use(scopeoRequestLogger);
+
+// Your app routes here
+app.get('/', (req, res) => {
+  res.send('Scopeo is running!');
+});
+
+// 4. Error handler middleware should be last
+scopeoErrorHandler(app);
+
+app.listen('PORT', () => {
   console.log('Server running on port 3000');
 });`}
-            </CodeBlock>
-          </div>
-        </div>
-      ),
-    },
+        </CodeBlock>
+      </div>
+
+      <div className="space-y-4">
+        <h2
+          id="auth-monitoring"
+          className="scroll-m-20 text-2xl font-semibold tracking-tight"
+        >
+          4. Authentication Monitoring
+        </h2>
+        <p>
+          You can monitor authentication routes like <code>/login</code> and{" "}
+          <code>/register</code> using Scopeo’s <code>accessMonitor</code>{" "}
+          middleware. It helps track login activity and detect unusual access.
+        </p>
+
+        <CodeBlock language="javascript">
+{`import express from "express";
+import { accessMonitor } from "scopeo";
+import {
+  registerUserController,
+  loginUserController,
+} from "../controllers/auth";
+
+const router = express.Router();
+
+router
+  .post("/register", accessMonitor, registerUserController)
+  .post("/login", accessMonitor, loginUserController);
+
+export default router;`}
+        </CodeBlock>
+
+        <p className="text-sm text-muted-foreground">
+          ⚠️ Ensure <code>accessMonitor</code> comes before your controller
+          functions to capture all request info.
+        </p>
+      </div>
+    </div>
+  ),
+},
+
+
     "/docs/basic-setup": {
       title: "Basic Setup",
       section: "Getting Started",
@@ -545,7 +593,8 @@ app.listen(3000, () => {
             <CodeBlock language="javascript">
               {`// index.js - Your application entry point
 import express from 'express';
-import { configManager, initializeScopeo, scopeoErrorHandler } from 'scopeo';
+import initializeScopeo from 'scopeo';
+import { configManager, scopeoRequestLogger, scopeoErrorHandler, accessMonitor } from 'scopeo';
 
 const app = express();
 
@@ -559,12 +608,15 @@ configManager.setConfig({
 // 2. Initialize Scopeo
 initializeScopeo(app);
 
+// 3. Initialize logger
+app.use(scopeoRequestLogger)
+
 // Your routes and middleware
-app.get('/', (req, res) => {
+app.post('/login', accessMonitor , (req, res) => {
   res.send('Hello World!');
 });
 
-// 3. Add error handler (must be after all routes)
+// 4. Add error handler (must be after all routes)
 scopeoErrorHandler(app);
 
 // Start your server
