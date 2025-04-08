@@ -460,7 +460,6 @@ const ScopeoDocumentation: React.FC = () => {
           1. Installation
         </h2>
         <p>Run the command to install Scopeo in your project:</p>
-
         <PackageManagerTabs />
       </div>
 
@@ -469,7 +468,7 @@ const ScopeoDocumentation: React.FC = () => {
           id="configuration"
           className="scroll-m-20 text-2xl font-semibold tracking-tight"
         >
-          2. Add configuration
+          2. Add Configuration
         </h2>
         <p>Configure Scopeo with your API keys and environment settings:</p>
 
@@ -567,8 +566,6 @@ export default router;`}
     </div>
   ),
 },
-
-
     "/docs/basic-setup": {
       title: "Basic Setup",
       section: "Getting Started",
@@ -595,6 +592,8 @@ export default router;`}
 import express from 'express';
 import initializeScopeo from 'scopeo';
 import { configManager, scopeoRequestLogger, scopeoErrorHandler, accessMonitor } from 'scopeo';
+import initializeScopeo from 'scopeo';
+import { configManager, scopeoRequestLogger, scopeoErrorHandler, accessMonitor } from 'scopeo';
 
 const app = express();
 
@@ -613,9 +612,11 @@ app.use(scopeoRequestLogger)
 
 // Your routes and middleware
 app.post('/login', accessMonitor , (req, res) => {
+app.post('/login', accessMonitor , (req, res) => {
   res.send('Hello World!');
 });
 
+// 4. Add error handler (must be after all routes)
 // 4. Add error handler (must be after all routes)
 scopeoErrorHandler(app);
 
