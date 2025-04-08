@@ -608,7 +608,7 @@ configManager.setConfig({
 // 2. Initialize Scopeo
 initializeScopeo(app);
 
-// 3. Initialize logger
+// 3. Initialize logger Before Routes
 app.use(scopeoRequestLogger)
 
 // Your routes and middleware
@@ -620,7 +620,7 @@ app.post('/login', accessMonitor , (req, res) => {
 scopeoErrorHandler(app);
 
 // Start your server
-app.listen(3000, () => {
+app.listen(PORT, () => {
   console.log('Server running on port 3000');
 });`}
             </CodeBlock>
