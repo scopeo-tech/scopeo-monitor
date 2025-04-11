@@ -80,7 +80,6 @@ const NavIcon: React.FC<{ direction?: "left" | "right" }> = ({
   </svg>
 );
 
-// SidebarLink component
 const SidebarLink: React.FC<SidebarLinkProps> = ({
   href,
   children,
@@ -99,7 +98,7 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({
   </button>
 );
 
-// SidebarSection component
+
 const SidebarSection: React.FC<SidebarSectionProps> = ({
   title,
   links,
@@ -123,7 +122,6 @@ const SidebarSection: React.FC<SidebarSectionProps> = ({
   </div>
 );
 
-// Package manager tabs component
 const PackageManagerTabs: React.FC = () => {
   const [packageManager, setPackageManager] = useState<string>("npm");
   const [copiedState, setCopiedState] = useState<{ [key: string]: boolean }>({
@@ -186,7 +184,7 @@ const PackageManagerTabs: React.FC = () => {
                 className="text-green-500 scale-110 transition-transform duration-300"
               />
             ) : (
-              <Copy size={20} className="transition-opacity duration-300" />
+              <Copy size={18} className="transition-opacity duration-300" />
             )}
           </button>
         </TabsContent>
@@ -195,7 +193,7 @@ const PackageManagerTabs: React.FC = () => {
   );
 };
 
-// Pagination component
+// pagination component
 const Pagination: React.FC<PaginationProps> = ({ prev, next, onNavigate }) => (
   <div className="flex items-center justify-between">
     {prev && (
@@ -263,7 +261,7 @@ const CodeBlock: React.FC<{ language: string; children: React.ReactNode }> = ({
             className="text-green-500 scale-110 transition-transform duration-300"
           />
         ) : (
-          <Copy size={20} className="transition-opacity duration-300" />
+          <Copy size={18} className="transition-opacity duration-300" />
         )}
       </button>
     </div>
@@ -276,7 +274,6 @@ const ScopeoDocumentation: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const pages: Record<string, PageData> = {
-    // Getting Started section
     "/docs/introduction": {
       title: "Introduction",
       section: "Getting Started",
