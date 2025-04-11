@@ -8,10 +8,11 @@ import { getProjectById, markAsRead } from "@/lib/api";
 import { Project } from "@/lib/interface";
 import { useNotificationStore } from "@/lib/stores/notificationStore";
 import { useAuthStore } from "@/lib/stores/authStore";
-import NotificationModal from "@/components/modal/notification"; 
+import NotificationModal from "@/components/modal/notification";
 
 const MonitoringNavbar = () => {
-  const { notifications, initializeSocket, clearNotifications } = useNotificationStore();
+  const { notifications, initializeSocket, clearNotifications } =
+    useNotificationStore();
   const [isOpen, setIsOpen] = useState(false);
   const token = localStorage.getItem("token");
   const { user } = useAuthStore();
@@ -42,15 +43,22 @@ const MonitoringNavbar = () => {
     }
   };
 
-  const projectNotifications = notifications.filter((n) => n.project === projectID);
+  const projectNotifications = notifications.filter(
+    (n) => n.project === projectID
+  );
 
   return (
     <nav className="fixed top-0 left-64 w-[calc(87%-36px)] bg-white shadow-md flex items-center z-50 justify-between px-10 py-3">
       <div className="flex items-center">
-        <span className="text-gray-600 text-lg font-semibold">{project?.name}</span>
+        <span className="text-gray-600 text-lg font-semibold">
+          {project?.name}
+        </span>
       </div>
       <div className="flex items-center gap-4">
-        <button onClick={toggleModal} className="text-gray-500 hover:text-gray-700 relative">
+        <button
+          onClick={toggleModal}
+          className="text-gray-500 hover:text-gray-700 relative"
+        >
           <FiBell />
           {projectNotifications.length > 0 && (
             <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
@@ -61,7 +69,6 @@ const MonitoringNavbar = () => {
         </div>
       </div>
 
-      {/* Render the Notification Modal */}
       {isOpen && <NotificationModal onClose={toggleModal} />}
     </nav>
   );

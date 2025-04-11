@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { CheckCircleIcon } from "lucide-react"; 
+import { CheckCircleIcon } from "lucide-react";
 
 interface SuccessModalProps {
   message: string;
