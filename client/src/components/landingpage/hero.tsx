@@ -18,7 +18,7 @@ function Hero() {
   return (
     <div className="w-full justify-between h-auto flex flex-col lg:flex-row relative">
       <FloatingCircle className="hidden lg:block w-24 bg-emerald-300 bottom-20 hover:w-28 hover:h-28 transition-all left-1/4 h-24" />
-      
+
       <div className="flex w-full lg:w-[35%] h-auto lg:h-screen px-4 sm:px-6 lg:px-10 flex-col gap-5 sm:gap-7 justify-center relative py-16 lg:py-0">
         <motion.h1
           className="text-4xl sm:text-5xl lg:text-6xl font-bold text-center lg:text-left"
@@ -53,7 +53,6 @@ function Hero() {
       </div>
 
       <div className="w-full lg:w-[65%] h-0 lg:h-[800px] lg:rounded-bl-full overflow-hidden bg-emerald-200 relative">
-        {/* Large Screen Layout */}
         <div className="hidden lg:block">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -113,7 +112,7 @@ function Hero() {
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4, ease: "easeIn" }}
-            whileHover={{ x: 3, y: -3 , opacity: 1}} 
+            whileHover={{ x: 3, y: -3, opacity: 1 }}
           >
             <Image
               src={padlock}
@@ -128,7 +127,7 @@ function Hero() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.2, delay: 0.3, ease: "easeOut" }}
-            whileHover={{scale:1.01,opacity:1}}
+            whileHover={{ scale: 1.01, opacity: 1 }}
           >
             <Image
               src={piechart}
@@ -189,8 +188,6 @@ function Hero() {
             />
           </motion.div>
         </div>
-
-        {/* Mobile Layout: No Images */}
         <div className="lg:hidden h-full bg-emerald-200"></div>
       </div>
     </div>
