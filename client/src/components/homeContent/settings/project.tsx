@@ -2,7 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { updateProject, getUserProjects, checkProjectName ,deleteProject} from "@/lib/api";
+import {
+  updateProject,
+  getUserProjects,
+  checkProjectName,
+  deleteProject,
+} from "@/lib/api";
 import { Project } from "@/lib/interface";
 import { FiAlertTriangle } from "react-icons/fi";
 import LoadingButton from "@/components/ui/loadingButton";
@@ -17,7 +22,11 @@ function ProjectPage() {
   const [isNameTaken, setIsNameTaken] = useState<boolean | null>(null);
   const [resMessage, setResMessage] = useState("");
 
-  const { data: projects, isLoading, isError } = useQuery<Project[]>({
+  const {
+    data: projects,
+    isLoading,
+    isError,
+  } = useQuery<Project[]>({
     queryKey: ["userProjects"],
     queryFn: getUserProjects,
   });
@@ -31,7 +40,6 @@ function ProjectPage() {
   useEffect(() => {
     setIsChanged(!!projectName || !!passkey);
   }, [projectName, passkey]);
-
 
   useEffect(() => {
     if (!projectName) {
@@ -50,14 +58,19 @@ function ProjectPage() {
         setIsNameTaken(true);
         setResMessage("Error checking project name");
       }
-    }, 500); 
+    }, 500);
 
     return () => clearTimeout(delayCheck);
   }, [projectName]);
 
   const mutation = useMutation({
-    mutationFn: ({ projectId, data }: { projectId: string; data: { name: string; passKey: string } }) =>
-      updateProject(projectId, data),
+    mutationFn: ({
+      projectId,
+      data,
+    }: {
+      projectId: string;
+      data: { name: string; passKey: string };
+    }) => updateProject(projectId, data),
     onSuccess: (data) => {
       setProjectName("");
       setPasskey("");
@@ -86,7 +99,10 @@ function ProjectPage() {
       return;
     }
 
-    const updateData: { name: string; passKey: string } = { name: "", passKey: "" };
+    const updateData: { name: string; passKey: string } = {
+      name: "",
+      passKey: "",
+    };
     if (projectName) {
       updateData.name = projectName;
     }
@@ -103,7 +119,7 @@ function ProjectPage() {
   const deleteMutation = useMutation({
     mutationFn: (projectId: string) => deleteProject(projectId),
     onSuccess: () => {
-      setSelectedProject(projects?.[0]?._id || ""); 
+      setSelectedProject(projects?.[0]?._id || "");
     },
     onError: (error) => {
       alert("Failed to delete project.");
@@ -123,8 +139,14 @@ function ProjectPage() {
     <div className="w-1/2">
       <h2 className="text-xl font-semibold mb-4">Project Management:</h2>
 
-      <label className="block text-gray-600 text-sm font-normal mb-1">Project:</label>
-      <select className="w-full p-2 border rounded-md mb-4" value={selectedProject} onChange={(e) => setSelectedProject(e.target.value)}>
+      <label className="block text-gray-600 text-sm font-normal mb-1">
+        Project:
+      </label>
+      <select
+        className="w-full p-2 border rounded-md mb-4"
+        value={selectedProject}
+        onChange={(e) => setSelectedProject(e.target.value)}
+      >
         {projects?.map((project) => (
           <option key={project._id} value={project._id}>
             {project.name}
@@ -132,7 +154,9 @@ function ProjectPage() {
         ))}
       </select>
 
-      <label className="block text-gray-600 text-sm font-normal mb-1">Change Project Name:</label>
+      <label className="block text-gray-600 text-sm font-normal mb-1">
+        Change Project Name:
+      </label>
       <input
         type="text"
         className="w-full p-2 border rounded-md mb-2"
@@ -140,45 +164,60 @@ function ProjectPage() {
         onChange={(e) => setProjectName(e.target.value)}
       />
       {isNameTaken !== null && (
-        <p className={`text-sm ${isNameTaken ? "text-red-600" : "text-green-600"}`}>
+        <p
+          className={`text-sm ${
+            isNameTaken ? "text-red-600" : "text-green-600"
+          }`}
+        >
           {isNameTaken ? `❌ ${resMessage}` : `✅ ${resMessage}`}
         </p>
       )}
 
-      <label className="block text-gray-600 text-sm font-normal mb-1">Change Passkey:</label>
-      <input 
-        type="password" 
-        className="w-full p-2 border rounded-md mb-2" 
-        value={passkey} 
-        onChange={(e) => setPasskey(e.target.value)} 
+      <label className="block text-gray-600 text-sm font-normal mb-1">
+        Change Passkey:
+      </label>
+      <input
+        type="password"
+        className="w-full p-2 border rounded-md mb-2"
+        value={passkey}
+        onChange={(e) => setPasskey(e.target.value)}
       />
       {passkey && (
         <p className="text-red-600 text-sm flex items-center gap-1">
-          <FiAlertTriangle/> Changing your passkey will log you out of all devices.
+          <FiAlertTriangle /> Changing your passkey will log you out of all
+          devices.
         </p>
       )}
 
-    <div className="mt-2">
-      <label className="text-gray-600 text-sm font-normal mr-2 mt-12">Allow Notifications</label>
-      <div className="flex justify-end">
-        <button
-          onClick={() => setNotificationStatus(!notificationStatus)}
-          className={`relative w-12 h-6 rounded-full border border-gray-300 ${
-            notificationStatus ? "bg-white" : "bg-gray-500"
-          }`}
-        >
-          <div
-            className={`absolute top-1 left-1 w-4 h-4 rounded-full transition-transform duration-200 ease-in-out ${
-              notificationStatus ? 'translate-x-6  bg-gray-500' : 'translate-x-0 bg-white'
+      <div className="mt-2">
+        <label className="text-gray-600 text-sm font-normal mr-2 mt-12">
+          Allow Notifications
+        </label>
+        <div className="flex justify-end">
+          <button
+            onClick={() => setNotificationStatus(!notificationStatus)}
+            className={`relative w-12 h-6 rounded-full border border-gray-300 ${
+              notificationStatus ? "bg-white" : "bg-gray-500"
             }`}
-          />
-        </button>
+          >
+            <div
+              className={`absolute top-1 left-1 w-4 h-4 rounded-full transition-transform duration-200 ease-in-out ${
+                notificationStatus
+                  ? "translate-x-6  bg-gray-500"
+                  : "translate-x-0 bg-white"
+              }`}
+            />
+          </button>
+        </div>
       </div>
-    </div>
 
       <button
         onClick={handleSubmit}
-        className={`mt-4 px-4 py-2 rounded-md ${isChanged ? "bg-green-600 text-white" : "bg-gray-400 text-gray-700 cursor-not-allowed"}`}
+        className={`mt-4 px-4 py-2 rounded-md ${
+          isChanged
+            ? "bg-green-600 text-white"
+            : "bg-gray-400 text-gray-700 cursor-not-allowed"
+        }`}
         disabled={!isChanged || mutation.isPending}
       >
         {mutation.isPending ? "Updating..." : "Save Changes"}
@@ -187,19 +226,21 @@ function ProjectPage() {
       <div className="mt-8 border-t pt-4">
         <h3 className="text-lg font-semibold">Delete Project:</h3>
         <p className="text-gray-600 text-sm">
-          Once deleted, this project and all its associated data will be permanently removed and cannot be recovered. Please remove configuration and associated functionalities after deletion. Make sure before proceeding.
+          Once deleted, this project and all its associated data will be
+          permanently removed and cannot be recovered. Please remove
+          configuration and associated functionalities after deletion. Make sure
+          before proceeding.
         </p>
-      <LoadingButton
-        onClick={handleDelete}
-        isLoading={deleteMutation.isPending}
-        className="mt-4 bg-red-600 text-white px-4 py-2 rounded-md">
+        <LoadingButton
+          onClick={handleDelete}
+          isLoading={deleteMutation.isPending}
+          className="mt-4 bg-red-600 text-white px-4 py-2 rounded-md"
+        >
           Delete Project
-      </LoadingButton>
-
+        </LoadingButton>
       </div>
     </div>
   );
 }
-
 
 export default withAuth(ProjectPage);
