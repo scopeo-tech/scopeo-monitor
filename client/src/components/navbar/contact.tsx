@@ -54,7 +54,6 @@ const ContactPage = () => {
         />
       )}
 
-      {/* Hero Section */}
       <section
         className="relative text-center text-black bg-cover bg-center"
         style={{ backgroundImage: 'url("")' }}
@@ -67,11 +66,12 @@ const ContactPage = () => {
         </div>
       </section>
 
-      {/* Contact Information Section */}
       <section className="py-16 mb-12 px-5">
         <div className="container mx-auto px-4 flex flex-col md:flex-row">
           <div className="w-full md:w-1/2 mb-8 md:mb-0">
-            <h2 className="text-2xl md:text-3xl font-bold mb-4">Get in touch</h2>
+            <h2 className="text-2xl md:text-3xl font-bold mb-4">
+              Get in touch
+            </h2>
             <p className="text-gray-600 mb-8 text-sm md:text-base">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. In vel
               neque vitae nulla adipiscing elit.
@@ -128,7 +128,9 @@ const ContactPage = () => {
                 </div>
                 <div>
                   <h3 className="font-bold">Email us</h3>
-                  <p className="text-gray-600 text-sm md:text-base">scopeo.tech@gmail.com</p>
+                  <p className="text-gray-600 text-sm md:text-base">
+                    scopeo.tech@gmail.com
+                  </p>
                 </div>
               </div>
 
@@ -175,18 +177,18 @@ const ContactPage = () => {
               </div>
             </div>
 
-            {/* Decorative dots */}
             <div className="absolute bottom-0 right-0 w-32 h-32 bg-green-100 opacity-50 -z-10 rounded-full"></div>
             <div className="absolute bottom-16 right-16 w-16 h-16 bg-green-100 opacity-50 -z-10 rounded-full"></div>
           </div>
         </div>
       </section>
 
-      {/* Contact Form Section */}
       <section className="bg-emerald-500 py-16 bg-gradient-to-br from-emerald-500 to-emerald-600 mb-96">
         <div className="container mx-auto px-4 h-36">
           <div className="text-center text-white mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold mb-2">Send us a message</h2>
+            <h2 className="text-2xl md:text-3xl font-bold mb-2">
+              Send us a message
+            </h2>
             <p className="max-w-xl mx-auto text-xs md:text-sm">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. In vel
               neque, lacinia nec ullamcorper mattis, pulvinar dapibus leo.
@@ -195,9 +197,7 @@ const ContactPage = () => {
 
           <div className="bg-white p-4 md:p-8 rounded shadow-lg max-w-2xl mx-auto">
             {error && (
-              <div className="text-red-700 px-4 py-3 rounded mb-4">
-                {error}
-              </div>
+              <div className="text-red-700 px-4 py-3 rounded mb-4">{error}</div>
             )}
 
             <form onSubmit={formik.handleSubmit} className="space-y-4">
@@ -258,7 +258,7 @@ const ContactPage = () => {
                   </p>
                 )}
               </div>
-              
+
               <div className="flex justify-center text-center">
                 <LoadingButton
                   type="submit"
