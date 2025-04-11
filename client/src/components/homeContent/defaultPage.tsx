@@ -14,7 +14,6 @@ import { IoNotificationsSharp } from "react-icons/io5";
 import TableSkeleton from "../skeltons/homePageTable";
 import withAuth from "@/lib/withAuth";
 
-
 const DefaultPage: FC = () => {
   const { notifications, initializeSocket } = useNotificationStore();
   const [formattedDate, setFormattedDate] = useState<string>("");
@@ -129,7 +128,6 @@ const DefaultPage: FC = () => {
 
   return (
     <div className="p-8 min-h-screen">
-      {/* Header */}
       <div className="flex justify-between items-center mb-12">
         <div>
           <h1 className="text-base font-medium text-gray-700">
@@ -147,7 +145,6 @@ const DefaultPage: FC = () => {
         </button>
       </div>
 
-      {/* Project List */}
       <h2 className="mt-6 mb-4 text-base font-medium text-gray-700">
         Project list
       </h2>
