@@ -95,14 +95,17 @@ const RegisterForm: FC = () => {
     }
   };
 
-  const handleGetOtp = async (email: string,setErrors: (errors: Record<string, string>) => void) => {
+  const handleGetOtp = async (
+    email: string,
+    setErrors: (errors: Record<string, string>) => void
+  ) => {
     setLoading(true);
     setError(null);
     try {
       await sendOtpForRegister(email);
       setUserEmail(email);
       setIsOtpModalOpen(true);
-    }catch (error) {
+    } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         const message = error.response.data?.message || "Registration failed";
         if (message.includes("User already exists")) {
@@ -131,11 +134,14 @@ const RegisterForm: FC = () => {
       setLoading(false);
     }
   };
-  const handleRegister = async (data: {
-    username: string;
-    email: string;
-    password: string;
-  }, setErrors: (errors: Record<string, string>) => void) => {
+  const handleRegister = async (
+    data: {
+      username: string;
+      email: string;
+      password: string;
+    },
+    setErrors: (errors: Record<string, string>) => void
+  ) => {
     setLoading(true);
     setError(null);
     try {
@@ -174,7 +180,6 @@ const RegisterForm: FC = () => {
           />
         </div>
 
-        {/* Right Side - Sign Up Form */}
         <div className="w-full md:w-1/2 p-10 flex flex-col justify-center">
           <h2 className="text-3xl font-medium text-emerald-500 mb-6">
             Sign up
@@ -199,15 +204,18 @@ const RegisterForm: FC = () => {
                 .required("Required"),
               terms: Yup.boolean().oneOf([true], "You must accept the terms"),
             })}
-            onSubmit={async (values,{ setErrors }) => {
+            onSubmit={async (values, { setErrors }) => {
               if (!isOtpVerified) {
-                await handleGetOtp(values.email,setErrors);
+                await handleGetOtp(values.email, setErrors);
               } else {
-                await handleRegister({
-                  username: values.username,
-                  email: values.email,
-                  password: values.password,
-                },setErrors);
+                await handleRegister(
+                  {
+                    username: values.username,
+                    email: values.email,
+                    password: values.password,
+                  },
+                  setErrors
+                );
               }
             }}
           >
@@ -340,7 +348,6 @@ const RegisterForm: FC = () => {
         </div>
       </div>
 
-      {/* OTP Modal */}
       {isOtpModalOpen && (
         <OtpModal
           email={userEmail}

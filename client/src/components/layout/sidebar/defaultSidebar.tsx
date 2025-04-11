@@ -14,12 +14,20 @@ const Sidebar: FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
 
-  const { data: user, isLoading, isError } = useQuery({
+  const {
+    data: user,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["userInfo"],
     queryFn: getUserInfo,
   });
 
-  const { data: projectCount, isLoading: countLoading, isError: countError } = useQuery({
+  const {
+    data: projectCount,
+    isLoading: countLoading,
+    isError: countError,
+  } = useQuery({
     queryKey: ["userProjectCount"],
     queryFn: getUserProjectCount,
   });
@@ -34,7 +42,7 @@ const Sidebar: FC = () => {
     return `${day}-${month}-${year}`;
   };
 
-  if (isLoading || countLoading) return <SidebarSkeleton/>;
+  if (isLoading || countLoading) return <SidebarSkeleton />;
   if (isError || countError) return <div>Error</div>;
 
   return (
@@ -48,7 +56,6 @@ const Sidebar: FC = () => {
         </button>
       </span>
 
-
       {user && (
         <div className="mt-6 rounded-lg p-3">
           <div className="flex items-center w-48 gap-3 border-2 border-gray-400 rounded-3xl bg-gray-300 p-1 shadow-sm">
@@ -56,7 +63,9 @@ const Sidebar: FC = () => {
               {user?.username[0].toUpperCase()}
             </div>
             <div>
-              <h2 className="text-sm font-medium text-gray-900">{user?.username}</h2>
+              <h2 className="text-sm font-medium text-gray-900">
+                {user?.username}
+              </h2>
               <p className="text-xs text-gray-700">{user.email}</p>
             </div>
           </div>
@@ -74,14 +83,17 @@ const Sidebar: FC = () => {
       )}
 
       <div className="mt-64 space-y-4 p-3">
-        <Link href={"/home/settings/profile"}
+        <Link
+          href={"/home/settings/profile"}
           className="flex items-center space-x-2 text-white hover:text-white/80"
         >
           <FaCog />
           <span>Settings</span>
         </Link>
-        <Link href="/faq"
-          className="flex items-center space-x-2 text-white hover:text-white/80">
+        <Link
+          href="/faq"
+          className="flex items-center space-x-2 text-white hover:text-white/80"
+        >
           <FaQuestionCircle />
           <span>Get Help</span>
         </Link>
@@ -94,8 +106,14 @@ const Sidebar: FC = () => {
         </button>
       </div>
 
-      <CreateProjectModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
-      <LogoutModal isOpen={isLogoutOpen} onClose={() => setIsLogoutOpen(false)} />
+      <CreateProjectModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
+      <LogoutModal
+        isOpen={isLogoutOpen}
+        onClose={() => setIsLogoutOpen(false)}
+      />
     </div>
   );
 };

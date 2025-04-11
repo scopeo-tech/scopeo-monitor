@@ -19,7 +19,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const LoginForm: FC = () => {
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false); 
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
   const setUser = useAuthStore((state) => state.setUser);
@@ -28,11 +28,10 @@ const LoginForm: FC = () => {
 
   const { data: session, status } = useSession();
 
-
   useEffect(() => {
     setHydrated(true);
   }, []);
-  
+
   useEffect(() => {
     if (hydrated && user) {
       router.push("/home");
@@ -44,7 +43,6 @@ const LoginForm: FC = () => {
       handleGoogleLogin(session?.idToken);
     }
   }, [session, status]);
-
 
   const handleSignIn = async () => {
     try {
@@ -62,7 +60,7 @@ const LoginForm: FC = () => {
       console.error("Google sign-in error:", error);
     }
   };
-  
+
   const handleGoogleLogin = async (idToken: string) => {
     setLoading(true);
     try {
@@ -108,11 +106,11 @@ const LoginForm: FC = () => {
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("token", token);
       setUser(user);
-      router.push("/home")
-    }catch (err: unknown) {
+      router.push("/home");
+    } catch (err: unknown) {
       if (axios.isAxiosError(err) && err.response) {
         if (err.response.status === 401) {
-          setError("Incorrect password"); 
+          setError("Incorrect password");
         } else {
           setError(err.response.data.message || "Login failed");
         }
@@ -127,7 +125,6 @@ const LoginForm: FC = () => {
   return (
     <div className="flex h-screen items-center justify-center bg-white">
       <div className="flex w-3/4 max-w-4xl shadow-md rounded-lg overflow-hidden">
-        {/* Left Side - Welcome Message */}
         <div className="w-1/2 bg-emerald-500 text-white flex flex-col items-center justify-center p-10 rounded-l-lg">
           <h2 className="text-3xl font-medium mb-6">Welcome Back</h2>
           <p className="text-center mb-1">To stay connected with us</p>
@@ -136,14 +133,14 @@ const LoginForm: FC = () => {
           </p>
 
           <p className="mt-8 mb-4">Don&apos;t have an account?</p>
-          <Link href="/auth/register"
-            className="px-8 py-2 border text-center border-white rounded-full text-white  hover:bg-white hover:text-emerald-500 transition w-64"  
+          <Link
+            href="/auth/register"
+            className="px-8 py-2 border text-center border-white rounded-full text-white  hover:bg-white hover:text-emerald-500 transition w-64"
           >
             Register now
           </Link>
         </div>
 
-        {/* Right Side - Login Form */}
         <div className="w-1/2 p-10 flex flex-col justify-center bg-white">
           <h2 className="text-2xl font-medium text-emerald-500 mb-8">Login</h2>
 
@@ -197,7 +194,11 @@ const LoginForm: FC = () => {
                   >
                     {showPassword ? <FaEyeSlash /> : <FaEye />}
                   </button>
-                  <ErrorMessage name="password" component="div" className="text-red-500 text-sm absolute -bottom-5" />
+                  <ErrorMessage
+                    name="password"
+                    component="div"
+                    className="text-red-500 text-sm absolute -bottom-5"
+                  />
                   {error && <div className="text-red-500 text-sm">{error}</div>}
                 </div>
                 <div className="text-right text-sm text-gray-400 cursor-pointer hover:text-emerald-500 mt-2">
@@ -206,11 +207,10 @@ const LoginForm: FC = () => {
                 <LoadingButton
                   type="submit"
                   isLoading={isSubmitting || loading}
-                  className="w-full bg-emerald-500 text-white py-3 rounded-full hover:bg-emerald-600 transition mt-4">
-                    Login
+                  className="w-full bg-emerald-500 text-white py-3 rounded-full hover:bg-emerald-600 transition mt-4"
+                >
+                  Login
                 </LoadingButton>
-
-                
               </Form>
             )}
           </Formik>
