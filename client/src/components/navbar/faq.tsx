@@ -8,7 +8,7 @@ import faqImage3 from "../../assets/faqImage3.svg";
 import faqImage4 from "../../assets/faqImage4.svg";
 
 import { Faq } from "@/lib/interface";
-import {  
+import {
   getTopFaqs,
   searchFaqs,
   getAISuggestion,
@@ -90,24 +90,24 @@ const FAQ = () => {
 
   const contentVariants = {
     hidden: { height: 0, opacity: 0 },
-    visible: { 
-      height: "auto", 
+    visible: {
+      height: "auto",
       opacity: 1,
-      transition: { 
+      transition: {
         height: { duration: 0.2, ease: "easeOut" },
-        opacity: { duration: 0.15, ease: "easeOut" } 
-      }
+        opacity: { duration: 0.15, ease: "easeOut" },
+      },
     },
-    exit: { 
-      height: 0, 
+    exit: {
+      height: 0,
       opacity: 0,
-      transition: { 
+      transition: {
         height: { duration: 0.2, ease: "easeIn" },
-        opacity: { duration: 0.05, ease: "easeIn" } 
-      }
-    }
+        opacity: { duration: 0.05, ease: "easeIn" },
+      },
+    },
   };
-  
+
   return (
     <div className="px-5 md:px-20 overflow-hidden">
       <div className="flex flex-col-reverse md:flex-row gap-10">
@@ -223,10 +223,10 @@ const FAQ = () => {
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -50 }}
-              transition={{ 
-                duration: 0.8, 
+              transition={{
+                duration: 0.8,
                 ease: [0.25, 0.1, 0.25, 1.0],
-                opacity: { duration: 0.5 }
+                opacity: { duration: 0.5 },
               }}
             >
               <Image

@@ -98,7 +98,6 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({
   </button>
 );
 
-
 const SidebarSection: React.FC<SidebarSectionProps> = ({
   title,
   links,
@@ -437,40 +436,40 @@ const ScopeoDocumentation: React.FC = () => {
         </div>
       ),
     },
-"/docs/installation": {
-  title: "Installation",
-  section: "Getting Started",
-  prev: { href: "/docs/introduction", title: "Introduction" },
-  next: { href: "/docs/basic-setup", title: "Basic Setup" },
-  content: () => (
-    <div className="space-y-6">
-      <h1 className="text-3xl font-bold tracking-tight">Installation</h1>
-      <p className="text-lg text-muted-foreground">
-        How to install and set up Scopeo in your project.
-      </p>
+    "/docs/installation": {
+      title: "Installation",
+      section: "Getting Started",
+      prev: { href: "/docs/introduction", title: "Introduction" },
+      next: { href: "/docs/basic-setup", title: "Basic Setup" },
+      content: () => (
+        <div className="space-y-6">
+          <h1 className="text-3xl font-bold tracking-tight">Installation</h1>
+          <p className="text-lg text-muted-foreground">
+            How to install and set up Scopeo in your project.
+          </p>
 
-      <div className="space-y-4">
-        <h2
-          id="installation"
-          className="scroll-m-20 text-2xl font-semibold tracking-tight"
-        >
-          1. Installation
-        </h2>
-        <p>Run the command to install Scopeo in your project:</p>
-        <PackageManagerTabs />
-      </div>
+          <div className="space-y-4">
+            <h2
+              id="installation"
+              className="scroll-m-20 text-2xl font-semibold tracking-tight"
+            >
+              1. Installation
+            </h2>
+            <p>Run the command to install Scopeo in your project:</p>
+            <PackageManagerTabs />
+          </div>
 
-      <div className="space-y-4">
-        <h2
-          id="configuration"
-          className="scroll-m-20 text-2xl font-semibold tracking-tight"
-        >
-          2. Add Configuration
-        </h2>
-        <p>Configure Scopeo with your API keys and environment settings:</p>
+          <div className="space-y-4">
+            <h2
+              id="configuration"
+              className="scroll-m-20 text-2xl font-semibold tracking-tight"
+            >
+              2. Add Configuration
+            </h2>
+            <p>Configure Scopeo with your API keys and environment settings:</p>
 
-        <CodeBlock language="javascript">
-{`import { configManager } from "scopeo";
+            <CodeBlock language="javascript">
+              {`import { configManager } from "scopeo";
 
 export const setupScopeoConfig = () => {
   try {
@@ -483,20 +482,20 @@ export const setupScopeoConfig = () => {
     console.log(error, "from scopeo package");
   }
 }`}
-        </CodeBlock>
-      </div>
+            </CodeBlock>
+          </div>
 
-      <div className="space-y-4">
-        <h2
-          id="initialize"
-          className="scroll-m-20 text-2xl font-semibold tracking-tight"
-        >
-          3. Initialize Scopeo
-        </h2>
-        <p>Initialize Scopeo and middleware in your main server file:</p>
+          <div className="space-y-4">
+            <h2
+              id="initialize"
+              className="scroll-m-20 text-2xl font-semibold tracking-tight"
+            >
+              3. Initialize Scopeo
+            </h2>
+            <p>Initialize Scopeo and middleware in your main server file:</p>
 
-        <CodeBlock language="javascript">
-{`import { setupScopeoConfig } from './config';
+            <CodeBlock language="javascript">
+              {`import { setupScopeoConfig } from './config';
 import initializeScopeo, { scopeoRequestLogger, scopeoErrorHandler } from 'scopeo';
 import express from 'express';
 
@@ -522,24 +521,25 @@ scopeoErrorHandler(app);
 app.listen('PORT', () => {
   console.log('Server running on port 3000');
 });`}
-        </CodeBlock>
-      </div>
+            </CodeBlock>
+          </div>
 
-      <div className="space-y-4">
-        <h2
-          id="auth-monitoring"
-          className="scroll-m-20 text-2xl font-semibold tracking-tight"
-        >
-          4. Authentication Monitoring
-        </h2>
-        <p>
-          You can monitor authentication routes like <code>/login</code> and{" "}
-          <code>/register</code> using Scopeo’s <code>accessMonitor</code>{" "}
-          middleware. It helps track login activity and detect unusual access.
-        </p>
+          <div className="space-y-4">
+            <h2
+              id="auth-monitoring"
+              className="scroll-m-20 text-2xl font-semibold tracking-tight"
+            >
+              4. Authentication Monitoring
+            </h2>
+            <p>
+              You can monitor authentication routes like <code>/login</code> and{" "}
+              <code>/register</code> using Scopeo’s <code>accessMonitor</code>{" "}
+              middleware. It helps track login activity and detect unusual
+              access.
+            </p>
 
-        <CodeBlock language="javascript">
-{`import express from "express";
+            <CodeBlock language="javascript">
+              {`import express from "express";
 import { accessMonitor } from "scopeo";
 import {
   registerUserController,
@@ -553,16 +553,16 @@ router
   .post("/login", accessMonitor, loginUserController);
 
 export default router;`}
-        </CodeBlock>
+            </CodeBlock>
 
-        <p className="text-sm text-muted-foreground">
-          ⚠️ Ensure <code>accessMonitor</code> comes before your controller
-          functions to capture all request info.
-        </p>
-      </div>
-    </div>
-  ),
-},
+            <p className="text-sm text-muted-foreground">
+              ⚠️ Ensure <code>accessMonitor</code> comes before your controller
+              functions to capture all request info.
+            </p>
+          </div>
+        </div>
+      ),
+    },
     "/docs/basic-setup": {
       title: "Basic Setup",
       section: "Getting Started",
@@ -751,12 +751,13 @@ app.listen(PORT, () => {
             <ul className="space-y-3 pl-5 list-disc">
               <li className="relative pl-6">
                 <span className="absolute left-0 top-2 h-2 w-2 "></span>
-                <strong>Structured Logging:</strong> Organized logs using
-                Custom Logger with severity levels
+                <strong>Structured Logging:</strong> Organized logs using Custom
+                Logger with severity levels
               </li>
               <li className="relative pl-6">
                 <span className="absolute left-0 top-2 h-2 w-2 "></span>
-                <strong>Privacy-Focused:</strong> No information is collected from users Database
+                <strong>Privacy-Focused:</strong> No information is collected
+                from users Database
               </li>
             </ul>
           </div>
@@ -2003,7 +2004,7 @@ app.listen(PORT, () => {
                 <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
               </svg>
               <h2 className="text-xl font-semibold">
-              github.com/scopeo-tech/scopeo-monitor.git
+                github.com/scopeo-tech/scopeo-monitor.git
               </h2>
             </div>
 
