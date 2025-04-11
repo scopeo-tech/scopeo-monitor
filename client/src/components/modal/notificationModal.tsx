@@ -1,4 +1,3 @@
-
 interface NotificationModalProps {
   projectName: string;
   message: string;

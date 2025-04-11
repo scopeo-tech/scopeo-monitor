@@ -8,14 +8,14 @@ import { useRouter } from "next/navigation";
 import { useSyncUser } from "@/lib/hooks/useSyncUser";
 
 const Navbar: FC = () => {
-  const { user,logout } = useUserStore();
+  const { user, logout } = useUserStore();
   const router = useRouter();
   const path: string = user ? "/" : "/";
   const [isScrolled, setIsScrolled] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  
-  useSyncUser(); 
+
+  useSyncUser();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,14 +26,17 @@ const Navbar: FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleLogout =async ()=>{
+  const handleLogout = async () => {
     await logout();
-    router.push('/')
-  }
+    router.push("/");
+  };
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setDropdownOpen(false);
       }
     }
@@ -47,7 +50,6 @@ const Navbar: FC = () => {
         isScrolled ? "bg-white shadow-md" : "bg-transparent"
       }`}
     >
-      {/* Logo */}
       <Link href={path} className="flex items-center">
         <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
           <svg
@@ -65,10 +67,15 @@ const Navbar: FC = () => {
       </Link>
 
       <div className="hidden md:flex font-semibold items-center space-x-12">
-      {user && (
-          <Link href="/home" className="text-gray-600 hover:text-gray-900">Home</Link>
+        {user && (
+          <Link href="/home" className="text-gray-600 hover:text-gray-900">
+            Home
+          </Link>
         )}
-        <Link href="/documentation" className="text-gray-600 hover:text-gray-900">
+        <Link
+          href="/documentation"
+          className="text-gray-600 hover:text-gray-900"
+        >
           Documentation
         </Link>
         <Link href="/about" className="text-gray-600 hover:text-gray-900">
@@ -80,7 +87,6 @@ const Navbar: FC = () => {
         <Link href="/faq" className="text-gray-600 hover:text-gray-900">
           Faq
         </Link>
-       
       </div>
 
       {user ? (
@@ -103,22 +109,34 @@ const Navbar: FC = () => {
                 </div>
               </div>
               <div className="flex flex-col space-y-4">
-              <Link href="/home/settings/profile" className="flex items-center space-x-3 text-gray-700 hover:text-gray-900">
-                <FiUser className="w-5 h-5" />
-                <span>Profile</span>
-              </Link>
-              <Link href="/home/settings/project" className="flex items-center space-x-3 text-gray-700 hover:text-gray-900">
-                <FiSettings className="w-5 h-5" />
-                <span>Preferences</span>
-              </Link>
-              <Link href="/faq" className="flex items-center space-x-3 text-gray-700 hover:text-gray-900">
-               <FiHelpCircle className="w-5 h-5" />
-                <span>Help & Support</span>
-              </Link>
-              <button onClick ={handleLogout} className="flex items-center space-x-3 text-gray-700 hover:text-gray-900 w-full">
-                <FiLogOut className="w-5 h-5" />
-                <span>Log out</span>
-              </button>
+                <Link
+                  href="/home/settings/profile"
+                  className="flex items-center space-x-3 text-gray-700 hover:text-gray-900"
+                >
+                  <FiUser className="w-5 h-5" />
+                  <span>Profile</span>
+                </Link>
+                <Link
+                  href="/home/settings/project"
+                  className="flex items-center space-x-3 text-gray-700 hover:text-gray-900"
+                >
+                  <FiSettings className="w-5 h-5" />
+                  <span>Preferences</span>
+                </Link>
+                <Link
+                  href="/faq"
+                  className="flex items-center space-x-3 text-gray-700 hover:text-gray-900"
+                >
+                  <FiHelpCircle className="w-5 h-5" />
+                  <span>Help & Support</span>
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center space-x-3 text-gray-700 hover:text-gray-900 w-full"
+                >
+                  <FiLogOut className="w-5 h-5" />
+                  <span>Log out</span>
+                </button>
               </div>
             </div>
           )}
