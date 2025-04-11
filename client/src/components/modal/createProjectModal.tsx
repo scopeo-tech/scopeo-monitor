@@ -1,9 +1,14 @@
 "use client";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getApiKey, getPassKey, createProject,checkProjectName } from "@/lib/api";
+import {
+  getApiKey,
+  getPassKey,
+  createProject,
+  checkProjectName,
+} from "@/lib/api";
 import { useAuthStore } from "@/lib/stores/authStore";
-import { AiOutlineClose } from "react-icons/ai"
+import { AiOutlineClose } from "react-icons/ai";
 import LoadingButton from "../ui/loadingButton";
 
 interface CreateProjectModalProps {
@@ -11,8 +16,10 @@ interface CreateProjectModalProps {
   onClose: () => void;
 }
 
-
-const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, onClose }) => {
+const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
+  isOpen,
+  onClose,
+}) => {
   const [projectName, setProjectName] = useState("");
   const [isNameTaken, setIsNameTaken] = useState<boolean | null>(null);
   const [notificationStatus, setNotificationStatus] = useState(false);
@@ -20,40 +27,47 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, onClose
   const queryClient = useQueryClient();
   const userName = useAuthStore((state) => state.user?.username);
 
-  const { data: apiData, refetch: fetchApiKey, isFetching: apiLoading } = useQuery<{ data: string }>({
+  const {
+    data: apiData,
+    refetch: fetchApiKey,
+    isFetching: apiLoading,
+  } = useQuery<{ data: string }>({
     queryKey: ["apiKey"],
     queryFn: getApiKey,
-    enabled: false, 
+    enabled: false,
   });
 
-  const { data: passData, refetch: fetchPassKey, isFetching: passLoading } = useQuery<{ data: string }>({
+  const {
+    data: passData,
+    refetch: fetchPassKey,
+    isFetching: passLoading,
+  } = useQuery<{ data: string }>({
     queryKey: ["passKey"],
     queryFn: getPassKey,
-    enabled: false, 
-
+    enabled: false,
   });
 
-   useEffect(() => {
-      if (!projectName) {
-        setIsNameTaken(null);
-        setResMessage("");
-        return;
-      };
+  useEffect(() => {
+    if (!projectName) {
+      setIsNameTaken(null);
+      setResMessage("");
+      return;
+    }
 
-      const delayCheck = setTimeout(async () => {
-        try {
-          const response = await checkProjectName(projectName);
-          setIsNameTaken(response.data);
-          setResMessage(response.message);
-        } catch (error) {
-          console.error("Error checking project name:", error);
-          setIsNameTaken(true);
-          setResMessage("Error checking project name");
-        }
-      }, 500); 
-  
-      return () => clearTimeout(delayCheck);
-    }, [projectName]);
+    const delayCheck = setTimeout(async () => {
+      try {
+        const response = await checkProjectName(projectName);
+        setIsNameTaken(response.data);
+        setResMessage(response.message);
+      } catch (error) {
+        console.error("Error checking project name:", error);
+        setIsNameTaken(true);
+        setResMessage("Error checking project name");
+      }
+    }, 500);
+
+    return () => clearTimeout(delayCheck);
+  }, [projectName]);
 
   const mutation = useMutation({
     mutationFn: createProject,
@@ -87,17 +101,20 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, onClose
   return (
     <div className="fixed inset-0 bg-black text-black bg-opacity-30 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-10 px-12 w-[750px]">
-
         <div className="flex justify-end">
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700"
+          >
             <AiOutlineClose size={20} />
           </button>
         </div>
 
-
         <div className="space-y-6">
-          <h2 className="text-lg font-semibold text-center mb-10">Create New Project</h2>
-          
+          <h2 className="text-lg font-semibold text-center mb-10">
+            Create New Project
+          </h2>
+
           <div className="grid grid-cols-[120px,1fr] items-center gap-4">
             <label className="text-sm text-gray-600">Project Name</label>
             <div className="relative">
@@ -109,18 +126,24 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, onClose
                 className="w-96 px-3 py-2 border rounded-2xl"
                 placeholder="Enter project name"
               />
-             {isNameTaken !== null && (
-              <p className={`text-sm ${isNameTaken ? "text-red-600" : "text-emerald-600"}`}>
-                {isNameTaken ? `❌ ${resMessage}` : `✅ ${resMessage}`}
-              </p>
-            )}
+              {isNameTaken !== null && (
+                <p
+                  className={`text-sm ${
+                    isNameTaken ? "text-red-600" : "text-emerald-600"
+                  }`}
+                >
+                  {isNameTaken ? `❌ ${resMessage}` : `✅ ${resMessage}`}
+                </p>
+              )}
             </div>
 
             <label className="text-sm text-gray-600">Created by</label>
             <span className="text-sm text-gray-700">{userName}</span>
 
             <label className="text-sm text-gray-600">Created at</label>
-            <span className="text-sm text-gray-700">{new Date().toLocaleDateString()}</span>
+            <span className="text-sm text-gray-700">
+              {new Date().toLocaleDateString()}
+            </span>
 
             <label className="text-sm text-gray-600">API Key</label>
             <div className="relative">
@@ -145,7 +168,6 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, onClose
               type="text"
               value={passData?.data || ""}
               readOnly
-
               className="w-96 px-3 py-2 border rounded-2xl"
             />
 
@@ -157,28 +179,25 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ isOpen, onClose
               >
                 <div
                   className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform duration-200 ease-in-out ${
-                    notificationStatus ? 'translate-x-6' : 'translate-x-0'
+                    notificationStatus ? "translate-x-6" : "translate-x-0"
                   }`}
                 />
               </button>
             </div>
           </div>
           <div className="flex justify-center">
-          <LoadingButton
-            onClick={handleSubmit}
-            isLoading={mutation.isPending}
-            className="w-96 py-2 mt-4 bg-emerald-500 text-white rounded-2xl hover:bg-emerald-600 transition-colors">              
+            <LoadingButton
+              onClick={handleSubmit}
+              isLoading={mutation.isPending}
+              className="w-96 py-2 mt-4 bg-emerald-500 text-white rounded-2xl hover:bg-emerald-600 transition-colors"
+            >
               Create Project
-          </LoadingButton>
-
+            </LoadingButton>
           </div>
-
         </div>
       </div>
     </div>
   );
 };
 
-
 export default CreateProjectModal;
-
