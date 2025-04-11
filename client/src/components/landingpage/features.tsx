@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React from "react";
 import { IoSettingsSharp } from "react-icons/io5";
@@ -34,36 +34,39 @@ function Features() {
   ];
 
   return (
-    <motion.div 
+    <motion.div
       className="w-full flex flex-col lg:flex-row px-4 sm:px-6 lg:px-10 gap-8 lg:gap-14"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
     >
-      {/* Left Section */}
       <div className="flex flex-col w-full lg:w-1/2 justify-between gap-5">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.1 }}
         >
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-black">Features our service</h1>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl text-emerald-500 font-bold">provides you</h1>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-black">
+            Features our service
+          </h1>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl text-emerald-500 font-bold">
+            provides you
+          </h1>
         </motion.div>
-        
-        <motion.p 
+
+        <motion.p
           className="font-semibold text-[#515151] w-full lg:w-2/3 text-sm sm:text-base"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.2 }}
         >
-          Our platform provides powerful monitoring tools to help you secure your system, track errors, and optimize performance efficiently.
+          Our platform provides powerful monitoring tools to help you secure
+          your system, track errors, and optimize performance efficiently.
         </motion.p>
 
-        {/* Background Design Elements */}
         <div className="w-full h-[150px] sm:h-[300px] lg:h-[600px] relative flex items-center justify-center overflow-hidden">
           <motion.div
-            initial={{ opacity: 0}}
+            initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.1 }}
             whileHover={{ scale: 1.1 }}
@@ -71,51 +74,55 @@ function Features() {
           >
             <IoSettingsSharp className="absolute text-[50px] lg:text-[100px] text-emerald-700 top-5 left-[100px] lg:left-[250px]" />
           </motion.div>
-          
+
           <motion.div
-            initial={{ opacity: 0}}
-            whileInView={{ opacity: 1}}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             transition={{ duration: 0.7, delay: 0.2 }}
             whileHover={{ y: -15, scale: 1.1 }}
             className="hidden lg:block"
           >
-            <Image src={login} alt="login" className="bottom-[60px] lg:bottom-[120px] absolute right-[20px] lg:right-[80px] -z-10 w-[150px] lg:w-[250px] h-[150px] lg:h-[250px]" />
+            <Image
+              src={login}
+              alt="login"
+              className="bottom-[60px] lg:bottom-[120px] absolute right-[20px] lg:right-[80px] -z-10 w-[150px] lg:w-[250px] h-[150px] lg:h-[250px]"
+            />
           </motion.div>
-          
-          <motion.div 
+
+          <motion.div
             className="hidden lg:block w-10 h-10 lg:w-20 lg:h-20 bg-emerald-200 rounded-md absolute top-10 lg:top-20 right-20 lg:right-40"
             initial={{ opacity: 0, scale: 0.5 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.3 }}
             whileHover={{ scale: 1.2, rotate: 10, backgroundColor: "#6ee7b7" }}
           />
-          
-          <motion.div 
-            className="hidden lg:block w-10 h-10 lg:w-20 lg:h-20 bg-emerald-700 rounded-md absolute top-20 lg:top-52 left-[100px] lg:left-[250px]" 
+
+          <motion.div
+            className="hidden lg:block w-10 h-10 lg:w-20 lg:h-20 bg-emerald-700 rounded-md absolute top-20 lg:top-52 left-[100px] lg:left-[250px]"
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
             whileHover={{ scale: 1.2, x: 10, backgroundColor: "#047857" }}
           />
-          
-          <motion.div 
-            className="hidden lg:block w-20 h-8 lg:w-36 lg:h-14 bg-emerald-600 rounded-md absolute top-40 lg:top-70 left-[100px] lg:left-[250px]" 
+
+          <motion.div
+            className="hidden lg:block w-20 h-8 lg:w-36 lg:h-14 bg-emerald-600 rounded-md absolute top-40 lg:top-70 left-[100px] lg:left-[250px]"
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.4 }}
             whileHover={{ y: -10, scale: 1.05, backgroundColor: "#059669" }}
           />
-          
-          <motion.div 
-            className="hidden lg:block w-14 h-14 lg:w-28 lg:h-28 bg-emerald-300 shadow-md rounded-md absolute top-20 lg:top-36 right-10 lg:right-20" 
+
+          <motion.div
+            className="hidden lg:block w-14 h-14 lg:w-28 lg:h-28 bg-emerald-300 shadow-md rounded-md absolute top-20 lg:top-36 right-10 lg:right-20"
             initial={{ opacity: 0, y: -40 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.3 }}
             whileHover={{ rotate: 15, scale: 1.1, backgroundColor: "#6ee7b7" }}
           />
-          
+
           <motion.div
-            initial={{ opacity: 0}}
+            initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.4 }}
             whileHover={{ scale: 1.2 }}
@@ -123,7 +130,7 @@ function Features() {
           >
             <IoSettingsSharp className="absolute text-4xl lg:text-7xl text-emerald-700 bottom-[60px] lg:bottom-[130px] right-[60px] lg:right-[130px]" />
           </motion.div>
-          
+
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -133,101 +140,118 @@ function Features() {
           >
             <IoSettingsSharp className="absolute text-2xl lg:text-3xl text-emerald-400 bottom-[70px] lg:bottom-[140px] right-[50px] lg:right-[100px]" />
           </motion.div>
-          
+
           <motion.div
-            initial={{ opacity: 0, }}
-            whileInView={{ opacity: 1}}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.3 }}
             whileHover={{ x: 10, y: -10, scale: 1.1 }}
             className="hidden lg:block"
           >
-            <Image src={server} alt="server" className="bottom-[100px] lg:bottom-[200px] left-[0px] absolute w-[150px] h-[150px] lg:w-[250px] lg:h-[250px]" />
+            <Image
+              src={server}
+              alt="server"
+              className="bottom-[100px] lg:bottom-[200px] left-[0px] absolute w-[150px] h-[150px] lg:w-[250px] lg:h-[250px]"
+            />
           </motion.div>
-          
+
           <motion.div
-            initial={{ opacity: 0}}
+            initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.4 }}
             whileHover={{ y: -20, scale: 1.05 }}
             className="hidden lg:block"
           >
-            <Image src={sheildtwo} alt="sheildtwo" className="-bottom-[150px] lg:-bottom-[250px] absolute right-[80px] lg:right-[150px]" width={300} height={300} />
+            <Image
+              src={sheildtwo}
+              alt="sheildtwo"
+              className="-bottom-[150px] lg:-bottom-[250px] absolute right-[80px] lg:right-[150px]"
+              width={300}
+              height={300}
+            />
           </motion.div>
-          
-          <motion.div 
-            className="hidden lg:block h-10 w-10 lg:h-20 lg:w-20 rounded-full bg-green-300 absolute bottom-[80px] lg:bottom-[150px] right-[130px] lg:right-[250px]" 
+
+          <motion.div
+            className="hidden lg:block h-10 w-10 lg:h-20 lg:w-20 rounded-full bg-green-300 absolute bottom-[80px] lg:bottom-[150px] right-[130px] lg:right-[250px]"
             initial={{ opacity: 0, scale: 0.2 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3, delay: 0.5 }}
             whileHover={{ scale: 1.3, backgroundColor: "#86efac" }}
           />
-          
-          <motion.div 
+
+          <motion.div
             className="hidden lg:block w-[100px] lg:w-[200px] rounded-xl p-3 lg:p-5 h-[200px] lg:h-[350px] bg-emerald-500"
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.2 }}
             whileHover={{ y: -15, backgroundColor: "#10b981" }}
           >
-            <motion.div 
+            <motion.div
               className="w-full h-full bg-green-200"
-              whileHover={{ scale: 0.95, rotate: 2, backgroundColor: "#bbf7d0" }}
+              whileHover={{
+                scale: 0.95,
+                rotate: 2,
+                backgroundColor: "#bbf7d0",
+              }}
               transition={{ duration: 0.2 }}
             />
           </motion.div>
         </div>
       </div>
 
-      {/* Right Section */}
       <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 lg:py-36 w-full lg:w-auto">
-        {/* Vertical Line with Nodes on the Left */}
-        <motion.div 
+        <motion.div
           className="hidden lg:flex w-l flex-col justify-between py-10 h-full border-l-2 border-[#515151] relative"
           initial={{ opacity: 0, scaleY: 0 }}
           whileInView={{ opacity: 1, scaleY: 1 }}
           transition={{ duration: 0.4 }}
         >
           {features.map((_, index) => (
-            <motion.div 
-              key={index} 
+            <motion.div
+              key={index}
               className="relative w-20 border-b-2 border-[#515151]"
               initial={{ opacity: 0, width: 0 }}
               whileInView={{ opacity: 1, width: 80 }}
-              transition={{ duration: 0.3, delay: 0.3 + (index * 0.1) }}
+              transition={{ duration: 0.3, delay: 0.3 + index * 0.1 }}
             >
-              {/* Node on the Left */}
-              <motion.div 
+              <motion.div
                 className="absolute -right-2 w-3 h-3 bg-[#515151] rounded-full"
                 initial={{ scale: 0 }}
                 whileInView={{ scale: 1 }}
-                transition={{ duration: 0.2, delay: 0.4 + (index * 0.1) }}
+                transition={{ duration: 0.2, delay: 0.4 + index * 0.1 }}
                 whileHover={{ scale: 1.8, backgroundColor: "#10b981" }}
               />
             </motion.div>
           ))}
         </motion.div>
 
-        {/* Details Section on the Right */}
         <div className="flex flex-col justify-between h-full gap-4 lg:gap-0">
           {features.map((feature, index) => (
-            <motion.div 
-              key={index} 
+            <motion.div
+              key={index}
               className="flex items-center gap-4 p-4 bg-emerald-100 rounded-lg shadow-md"
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3, delay: 0.2 + (index * 0.1) }}
+              transition={{ duration: 0.3, delay: 0.2 + index * 0.1 }}
               whileHover={{ scale: 1.05, backgroundColor: "#a7f3d0", y: -5 }}
             >
-              {/* Circular Icon Container */}
-              <motion.div 
+              <motion.div
                 className="w-12 h-12 lg:w-16 lg:h-16 flex items-center justify-center rounded-full bg-emerald-200"
-                whileHover={{ rotate: 20, backgroundColor: "#6ee7b7", scale: 1.1 }}
+                whileHover={{
+                  rotate: 20,
+                  backgroundColor: "#6ee7b7",
+                  scale: 1.1,
+                }}
               >
                 {feature.img}
               </motion.div>
               <div className="max-w-xs">
-                <h2 className="text-base lg:text-lg font-bold text-black">{feature.title}</h2>
-                <p className="text-xs lg:text-sm font-semibold text-gray-600">{feature.desc}</p>
+                <h2 className="text-base lg:text-lg font-bold text-black">
+                  {feature.title}
+                </h2>
+                <p className="text-xs lg:text-sm font-semibold text-gray-600">
+                  {feature.desc}
+                </p>
               </div>
             </motion.div>
           ))}
