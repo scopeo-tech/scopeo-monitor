@@ -132,7 +132,7 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
                     isNameTaken ? "text-red-600" : "text-emerald-600"
                   }`}
                 >
-                  {isNameTaken ? `❌ ${resMessage}` : `✅ ${resMessage}`}
+                  {isNameTaken ? `${resMessage}` : `${resMessage}`}
                 </p>
               )}
             </div>

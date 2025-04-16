@@ -153,7 +153,7 @@ function ProfilePage() {
               isNameTaken ? "text-red-600" : "text-green-600"
             }`}
           >
-            {isNameTaken ? `❌ ${resMessage}` : `✅ ${resMessage}`}
+            {isNameTaken ? `${resMessage}` : `${resMessage}`}
           </p>
         )}
 
