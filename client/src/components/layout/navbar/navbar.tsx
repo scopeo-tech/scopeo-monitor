@@ -4,13 +4,11 @@ import Link from "next/link";
 import { FC, useEffect, useState, useRef } from "react";
 import { useUserStore } from "@/lib/stores/userStore";
 import { FiUser, FiSettings, FiLogOut, FiHelpCircle } from "react-icons/fi";
-import { useRouter } from "next/navigation";
 import { useSyncUser } from "@/lib/hooks/useSyncUser";
 import LogoutModal from "@/components/modal/logoutModal";
 
 const Navbar: FC = () => {
-  const { user, logout } = useUserStore();
-  const router = useRouter();
+  const { user } = useUserStore();
   const path: string = user ? "/" : "/";
   const [isScrolled, setIsScrolled] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
