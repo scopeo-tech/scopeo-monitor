@@ -29,11 +29,6 @@ const Navbar: FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleLogout = async () => {
-    await logout();
-    router.push("/");
-  };
-
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
