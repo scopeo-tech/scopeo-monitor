@@ -14,10 +14,10 @@ import { BsFileEarmarkPdfFill } from 'react-icons/bs';
 
 const timeFilters = [
     { label: "All", value: "" },
-    { label: "Last Hour", value: "1h" },
-    { label: "Last 24 Hours", value: "24h" },
-    { label: "Last 7 Days", value: "7d" },
-    { label: "Last 30 Days", value: "30d" },
+    { label: "Last Hour", value: "1hour" },
+    { label: "Last 24 Hours", value: "1day" },
+    { label: "Last 7 Days", value: "1week" },
+    { label: "Last 30 Days", value: "1month" },
 ];
 
 const Activity = () => {

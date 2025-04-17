@@ -154,7 +154,7 @@ const ContactPage = () => {
                 <div>
                   <h3 className="font-bold">Call us</h3>
                   <p className="text-gray-600 text-sm md:text-base">
-                    Phone: +91 0000000000
+                    currently not available
                     <br />
                     &nbsp;
                   </p>
