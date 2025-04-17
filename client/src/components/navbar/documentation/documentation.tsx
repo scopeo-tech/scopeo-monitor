@@ -2242,7 +2242,7 @@ app.listen(PORT, () => {
                 </p>
                 <div className="flex flex-wrap justify-center md:justify-start gap-3 mt-4">
                   <a
-                    href="https://www.buymeacoffee.com/scopeo"
+                    href="https://www.buymeacoffee.com/scopeo-tech"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center px-4 py-2 bg-amber-500 text-white font-medium rounded-md hover:bg-amber-600 transition-colors"
@@ -2251,7 +2251,7 @@ app.listen(PORT, () => {
                     <span>Buy us a coffee</span>
                   </a>
                   <a
-                    href="https://github.com/sponsors/scopeo"
+                    href="https://github.com/sponsors/scopeo-tech"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center px-4 py-2 bg-white text-gray-800 border border-gray-300 font-medium rounded-md hover:bg-gray-50 transition-colors"
