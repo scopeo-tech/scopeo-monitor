@@ -2504,7 +2504,7 @@ app.listen(3000, () => {
             </p>
             <pre className="bg-muted p-3 rounded-md text-sm">
               {`import { scopeoErrorHandler } from 'scopeo';
-app.use(scopeoErrorHandler);`}
+scopeoErrorHandler(app);`}
             </pre>
             <p>
               This ensures that all unhandled errors are logged and tracked in
