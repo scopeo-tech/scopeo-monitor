@@ -34,7 +34,7 @@ const handleIncomingSecurity = async (
 
   const security = req.body as SecurityLogPayload;
 
-  // Manage security log storage
+
   const securityCount = await Security.countDocuments({ project: project._id });
   if (securityCount >= 120) {
     const oldSecurity = await Security.find({ project: project._id })

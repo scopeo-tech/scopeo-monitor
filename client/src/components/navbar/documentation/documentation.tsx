@@ -372,7 +372,6 @@ const ScopeoDocumentation: React.FC = () => {
                 The collected data is securely transmitted to the monitoring
                 server in real-time.
               </p>
-
               <h3
                 id="real-time analysis & dashboard display"
                 className="text-xl font-semibold"
@@ -401,7 +400,6 @@ const ScopeoDocumentation: React.FC = () => {
                 <strong>Socket.IO</strong> ensures that all updates appear
                 instantly on the dashboard.
               </p>
-
               <h3
                 id="alert & issue detection"
                 className="text-xl font-semibold"
@@ -418,7 +416,6 @@ const ScopeoDocumentation: React.FC = () => {
                 Alerts can be sent via{" "}
                 <strong>email, Slack, or other integrations</strong>.
               </p>
-
               <h3
                 id="taking action & optimizing performance"
                 className="text-xl font-semibold"
