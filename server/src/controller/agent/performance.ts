@@ -197,7 +197,6 @@ const checkUptimeStatus = async () => {
 };
 
 
-//filtering
 
 const getTimeFilter = (filter: string) => {
   const now = new Date();

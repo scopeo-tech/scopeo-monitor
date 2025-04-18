@@ -132,7 +132,7 @@ const flagOldStatuses=async ()=> {
     );
   }
 
-//updateProject
+
 const updateProject = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   const {projectId} = req.params
   const {passKey,name } = req.body

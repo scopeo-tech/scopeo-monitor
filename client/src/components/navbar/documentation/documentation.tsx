@@ -372,7 +372,6 @@ const ScopeoDocumentation: React.FC = () => {
                 The collected data is securely transmitted to the monitoring
                 server in real-time.
               </p>
-
               <h3
                 id="real-time analysis & dashboard display"
                 className="text-xl font-semibold"
@@ -401,7 +400,6 @@ const ScopeoDocumentation: React.FC = () => {
                 <strong>Socket.IO</strong> ensures that all updates appear
                 instantly on the dashboard.
               </p>
-
               <h3
                 id="alert & issue detection"
                 className="text-xl font-semibold"
@@ -418,7 +416,6 @@ const ScopeoDocumentation: React.FC = () => {
                 Alerts can be sent via{" "}
                 <strong>email, Slack, or other integrations</strong>.
               </p>
-
               <h3
                 id="taking action & optimizing performance"
                 className="text-xl font-semibold"
@@ -447,7 +444,6 @@ const ScopeoDocumentation: React.FC = () => {
           <p className="text-lg text-muted-foreground">
             How to install and set up Scopeo in your project.
           </p>
-
           <div className="space-y-4">
             <h2
               id="installation"
@@ -574,7 +570,6 @@ export default router;`}
           <p className="text-lg text-muted-foreground">
             Quick start guide to get Scopeo running in your application.
           </p>
-
           <div className="space-y-4">
             <h2
               id="quick-start"
@@ -630,7 +625,6 @@ app.listen(PORT, () => {
               your application logs. You should see messages indicating that
               Scopeo has initialized successfully.
             </p>
-
             <div className="bg-muted p-4 rounded-md text-sm font-mono">
               [Scopeo] Connected to metrics server
             </div>
@@ -648,7 +642,6 @@ app.listen(PORT, () => {
           <h1 className="text-4xl font-bold mb-6 pb-2 border-b-2 border-gray-200">
             Library with Agent
           </h1>
-
           <p className="text-lg text-gray-600 mb-8">
             Welcome to the Scopeo agent library documentation. This library
             provides a comprehensive suite of monitoring and observability tools
@@ -774,7 +767,6 @@ app.listen(PORT, () => {
           <h1 className="text-3xl font-bold tracking-tight">
             Data Aggregation
           </h1>
-
           <div className="space-y-4">
             <h2 id="overview" className="text-2xl font-semibold tracking-tight">
               Overview
@@ -1398,7 +1390,6 @@ app.listen(PORT, () => {
         </>
       ),
     },
-    // project Info section
     "/docs/architecture": {
       title: "Architecture",
       section: "Project Info",
