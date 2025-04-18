@@ -33,7 +33,8 @@ const LoginForm: FC = () => {
   }, []);
 
   useEffect(() => {
-    if (hydrated && user) {
+    const token = localStorage.getItem("token");
+    if (hydrated && user && token) {
       router.push("/home");
     }
   }, [hydrated, user, router]);
