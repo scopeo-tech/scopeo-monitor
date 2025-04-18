@@ -45,6 +45,13 @@ const LoginForm: FC = () => {
     }
   }, [session, status]);
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      useAuthStore.getState().setUser(null);
+    }
+  }, []);
+
   const handleSignIn = async () => {
     try {
       await signIn("google", { redirect: false }).then(async (response) => {
