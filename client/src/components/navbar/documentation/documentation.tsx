@@ -2129,7 +2129,7 @@ app.listen(PORT, () => {
               We are committed to fostering an open and welcoming environment.
               Please read our
               <a
-                href="https://github.com/scopeo/scopeo/blob/main/CODE_OF_CONDUCT.md"
+                href="https://github.com/scopeo-tech/scopeo/blob/main/CODE_OF_CONDUCT.md"
                 className="text-blue-600 hover:underline ml-1"
               >
                 Code of Conduct
@@ -2145,7 +2145,7 @@ app.listen(PORT, () => {
             <p>
               Check our
               <a
-                href="https://github.com/scopeo/scopeo/projects"
+                href="https://github.com/scopeo-tech/scopeo/projects"
                 className="text-blue-600 hover:underline mx-1"
               >
                 GitHub Projects
