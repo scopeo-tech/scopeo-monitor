@@ -1,16 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
-
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect, FC } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { googleLogin, registerUser } from "@/lib/api";
-import { sendOtpForRegister } from "@/lib/api";
-import { verifyOtp } from "@/lib/api";
+import { googleLogin, sendOtpForRegister, verifyOtp, registerUser } from "@/lib/api";
 import OtpModal from "../modal/otpModal";
 import { useRouter } from "next/navigation";
 import * as Yup from "yup";
-import { FC } from "react";
 import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import Image from "next/image";
