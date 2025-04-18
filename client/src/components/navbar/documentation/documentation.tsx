@@ -2087,9 +2087,11 @@ app.listen(PORT, () => {
                   with development.
                 </p>
                 <div className="mt-2 p-3 bg-gray-100 rounded-md font-mono text-sm">
-                  git clone https://github.com/scopeo/scopeo.git
+                  git clone https://github.com/scopeo-tech/scopeo-monitor.git
                   <br />
-                  cd scopeo
+                  cd SCOPEO-MONITOR
+                  <br />
+                  cd client / server
                   <br />
                   npm install
                 </div>
