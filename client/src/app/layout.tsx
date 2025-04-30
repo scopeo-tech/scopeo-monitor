@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Geist ,Geist_Mono} from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import SessionWrapper from "../components/SessionWrapper";
 import QueryProvider from "../components/queryProvider"
 
@@ -29,8 +29,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-       <QueryProvider>
-        <SessionWrapper>{children}</SessionWrapper>
+        <QueryProvider>
+          <SessionWrapper>{children}</SessionWrapper>
         </QueryProvider>
       </body>
     </html>
