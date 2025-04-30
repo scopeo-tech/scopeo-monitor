@@ -10,7 +10,7 @@ export default function ProjectLayout({
   return (
     <div>
       <Navbar />
-      <main className="pt-16 px-10">{children}</main> 
+      <main className="pt-16 px-10">{children}</main>
     </div>
   );
 }
