@@ -2,35 +2,47 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-const withAuth = (WrappedComponent: React.FC) => {
-  const AuthComponent = (props: React.ComponentProps<typeof WrappedComponent>) => {
+const withAuth = (WrappedComponent : React.FC ) => {
+  const AuthComponent = (props : React.ComponentProps<typeof WrappedComponent> ) => {
     const router = useRouter();
-    const [authChecked, setAuthChecked] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     useEffect(() => {
       const checkAuth = () => {
-        const token = localStorage.getItem("token");
-        if (!token) {
+        try {
+          const token = localStorage.getItem("token");
+          if (!token) {
+            router.replace("/auth/login");
+          } else {
+            setIsAuthenticated(true);
+          }
+        } catch (error) {
+          console.error("Auth check failed:", error);
           router.replace("/auth/login");
-        } else {
-          setAuthChecked(true);
+        } finally {
+          setIsLoading(false);
         }
       };
-
-      try {
-        checkAuth();
-      } catch (error) {
-        console.error("Auth check failed:", error);
-        router.replace("/auth/login");
-      }
+      
+      checkAuth();
     }, [router]);
-    if (!authChecked) return null;
-  
-    return <WrappedComponent {...props} />;
+
+    if (isLoading) {
+      return (
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading...</p>
+          </div>
+        </div>
+      );
+    }
+
+    return isAuthenticated ? <WrappedComponent {...props} /> : null;
   };
 
   AuthComponent.displayName = `withAuth(${WrappedComponent.displayName || "Component"})`;
-
   return AuthComponent;
 };
 

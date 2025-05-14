@@ -23,7 +23,6 @@ const LoginForm: FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
   const setUser = useAuthStore((state) => state.setUser);
-  const user = useAuthStore((state) => state.user);
   const router = useRouter();
 
   const { data: session, status } = useSession();
@@ -34,10 +33,10 @@ const LoginForm: FC = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (hydrated && user && token) {
+    if (hydrated && token) {
       router.push("/home");
     }
-  }, [hydrated, user, router]);
+  }, [hydrated, router]);
 
   useEffect(() => {
     if (status === "authenticated" && session?.idToken) {
