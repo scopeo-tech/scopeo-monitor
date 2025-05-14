@@ -5,19 +5,27 @@ import { useRouter } from "next/navigation";
 const withAuth = (WrappedComponent: React.FC) => {
   const AuthComponent = (props: React.ComponentProps<typeof WrappedComponent>) => {
     const router = useRouter();
-    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+    const [authChecked, setAuthChecked] = useState(false);
 
     useEffect(() => {
-      const token = localStorage.getItem("token");
-      if (!token) {
+      const checkAuth = () => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          router.replace("/auth/login");
+        } else {
+          setAuthChecked(true);
+        }
+      };
+
+      try {
+        checkAuth();
+      } catch (error) {
+        console.error("Auth check failed:", error);
         router.replace("/auth/login");
-      } else {
-        setIsAuthenticated(true);
       }
-    }, []);
-
-    if (isAuthenticated === null) return null;
-
+    }, [router]);
+    if (!authChecked) return null;
+  
     return <WrappedComponent {...props} />;
   };
 
