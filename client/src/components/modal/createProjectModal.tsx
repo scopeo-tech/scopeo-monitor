@@ -7,9 +7,9 @@ import {
   createProject,
   checkProjectName,
 } from "@/lib/api";
-import { useAuthStore } from "@/lib/stores/authStore";
 import { AiOutlineClose } from "react-icons/ai";
 import LoadingButton from "../ui/loadingButton";
+import { useUserStore } from "@/lib/stores/userStore";
 
 interface CreateProjectModalProps {
   isOpen: boolean;
@@ -25,7 +25,7 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
   const [notificationStatus, setNotificationStatus] = useState(false);
   const [resMessage, setResMessage] = useState("");
   const queryClient = useQueryClient();
-  const userName = useAuthStore((state) => state.user?.username);
+  const userName = useUserStore((state) => state.user?.username);
 
   const {
     data: apiData,

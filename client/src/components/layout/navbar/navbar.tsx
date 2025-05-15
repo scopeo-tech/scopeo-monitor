@@ -16,6 +16,7 @@ const Navbar: FC = () => {
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+
   useSyncUser();
 
   useEffect(() => {
@@ -43,9 +44,8 @@ const Navbar: FC = () => {
   return (
     <div>
       <nav
-        className={`fixed z-50 w-full px-10 py-3 flex items-center justify-between transition-all duration-300 ${
-          isScrolled ? "bg-white shadow-md" : "bg-transparent"
-        }`}
+        className={`fixed z-50 w-full px-10 py-3 flex items-center justify-between transition-all duration-300 ${isScrolled ? "bg-white shadow-md" : "bg-transparent"
+          }`}
       >
         <Link href={path} className="flex items-center">
           <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
