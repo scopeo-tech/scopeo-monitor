@@ -3,7 +3,6 @@
 
 import { useEffect, useState } from "react";
 import { User } from "@/lib/interface";
-import { useAuthStore } from "@/lib/stores/authStore";
 import { useRouter } from "next/navigation";
 import { googleLogin, loginUser } from "@/lib/api";
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -16,13 +15,14 @@ import axios from "axios";
 import Link from "next/link";
 import LoadingButton from "../ui/loadingButton";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useUserStore } from "@/lib/stores/userStore";
 
 const LoginForm: FC = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
-  const setUser = useAuthStore((state) => state.setUser);
+  const setUser = useUserStore((state) => state.setUser);
   const router = useRouter();
 
   const { data: session, status } = useSession();
@@ -33,10 +33,10 @@ const LoginForm: FC = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (hydrated && token) {
+    if (hydrated && token && useUserStore.getState().user ) {
       router.push("/home");
     }
-  }, [hydrated, router]);
+  }, [hydrated, router]); 
 
   useEffect(() => {
     if (status === "authenticated" && session?.idToken) {
@@ -47,7 +47,7 @@ const LoginForm: FC = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
-      useAuthStore.getState().setUser(null);
+      useUserStore.getState().setUser(null);
     }
   }, []);
 
@@ -76,7 +76,7 @@ const LoginForm: FC = () => {
       if (user && token) {
         localStorage.setItem("user", JSON.stringify(user));
         localStorage.setItem("token", token);
-        useAuthStore.getState().setUser(user);
+        useUserStore.getState().setUser(user);
         router.push("/home");
       }
     } catch (error) {

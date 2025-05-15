@@ -11,10 +11,10 @@ import { FcGoogle } from "react-icons/fc";
 import Image from "next/image";
 import { getSession, signIn, useSession } from "next-auth/react";
 import { User } from "@/lib/interface";
-import { useAuthStore } from "@/lib/stores/authStore";
 import axios from "axios";
 import Link from "next/link";
 import signup from "@/assets/signup.svg";
+import { useUserStore } from "@/lib/stores/userStore";
 
 const RegisterForm: FC = () => {
   const router = useRouter();
@@ -26,7 +26,7 @@ const RegisterForm: FC = () => {
   const [isOtpVerified, setIsOtpVerified] = useState(false);
   const [otp, setOtp] = useState("");
   const [hydrated, setHydrated] = useState(false);
-  const user = useAuthStore((state) => state.user);
+  const user = useUserStore((state) => state.user);
 
   const { data: session, status } = useSession();
 
@@ -71,7 +71,7 @@ const RegisterForm: FC = () => {
       if (user && token) {
         localStorage.setItem("user", JSON.stringify(user));
         localStorage.setItem("token", token);
-        useAuthStore.getState().setUser(user);
+        useUserStore.getState().setUser(user);
         router.push("/home");
       }
     } catch (error) {
