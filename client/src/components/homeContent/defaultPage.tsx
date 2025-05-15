@@ -1,7 +1,6 @@
 "use client";
 
 import { FC, useState, useEffect } from "react";
-import { useAuthStore } from "@/lib/stores/authStore";
 import { useQuery } from "@tanstack/react-query";
 import { getUserProjects, getProjectPassKey } from "@/lib/api";
 import { Project } from "@/lib/interface";
@@ -13,6 +12,7 @@ import { useNotificationStore } from "@/lib/stores/notificationStore";
 import { IoNotificationsSharp } from "react-icons/io5";
 import TableSkeleton from "../skeltons/homePageTable";
 import withAuth from "@/lib/withAuth";
+import { useUserStore } from "@/lib/stores/userStore";
 
 const DefaultPage: FC = () => {
   const { notifications, initializeSocket } = useNotificationStore();
@@ -24,7 +24,7 @@ const DefaultPage: FC = () => {
   const [passKeys, setPassKeys] = useState<Record<string, string>>({});
   const [copiedApiKey, setCopiedApiKey] = useState<string | null>(null);
   const [copiedPassKey, setCopiedPassKey] = useState<string | null>(null);
-  const { user } = useAuthStore();
+  const { user } = useUserStore();
   const [projectWithNotification, setProjectWithNotification] = useState<
     string[]
   >([]);

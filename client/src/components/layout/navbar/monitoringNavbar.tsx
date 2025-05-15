@@ -7,15 +7,15 @@ import { useQuery } from "@tanstack/react-query";
 import { getProjectById, markAsRead } from "@/lib/api";
 import { Project } from "@/lib/interface";
 import { useNotificationStore } from "@/lib/stores/notificationStore";
-import { useAuthStore } from "@/lib/stores/authStore";
 import NotificationModal from "@/components/modal/notification";
+import { useUserStore } from "@/lib/stores/userStore";
 
 const MonitoringNavbar = () => {
   const { notifications, initializeSocket, clearNotifications } =
     useNotificationStore();
   const [isOpen, setIsOpen] = useState(false);
   const token = localStorage.getItem("token");
-  const { user } = useAuthStore();
+  const { user } = useUserStore();
   const { projectID } = useParams<{ projectID: string }>();
 
   const { data: project } = useQuery<Project>({
